@@ -4,7 +4,8 @@ import numpy as np
 masks3D_20xRenamed = []
 with open('save_data/masks/20xRenamed/masks3D_CELLPOSE_RUN_1.pkl', 'rb') as f:
     masks3D_20xRenamed = pickle.load(f)
-    
+blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
+
 images3D_20xRenamed_full = []
 with open('save_data/3D_images_Renamed/imgs_20xRenamed.pkl', 'rb') as f:
     images3D_20xRenamed_full = pickle.load(f)
@@ -23,7 +24,7 @@ class BlobDataHelper:
         self.lum = len(np.unique(self.mask))
         self.blob = self.mask == 1
 
-    def get_blob(self, image_index, blob_index, offset=5):
+    def get_blob(self, image_index, blob_index, start_size = 45, offset=2):
         # Load new image only if necessary
         if not self.last_image == image_index:
             # image index overflow protect
@@ -35,16 +36,20 @@ class BlobDataHelper:
             self.image = images3D_20xRenamed[image_index]
             self.mask = masks3D_20xRenamed[image_index]
             self.lum = len(np.unique(self.mask))
-            print(f"image changed from {self.last_image} to {image_index} -> loaded img of shape {self.image.shape} and mask of shape {self.mask.shape} which has {self.lum} indices.")
+            print(f"image changed from {self.last_image} to {image_index} -> loaded img of shape {self.image.shape} and mask of shape {self.mask.shape} which has {self.lum} indices. The selected blob is {blob_index}")
+        
         else:
-            print(f"still at {self.last_image} == {image_index} -> Still img of shape {self.image.shape} and mask of shape {self.mask.shape} which has {self.lum} indices.")
+            print(f"still at {self.last_image} == {image_index} -> Still img of shape {self.image.shape} and mask of shape {self.mask.shape} which has {self.lum} indices. . The selected blob is {blob_index}")
         self.last_image = image_index
 
         # blob index overflow protect
-        blob_index = blob_index % self.lum
+        if blob_index == self.lum:
+            blob_index = 1
         # blob index underflow protect
         if blob_index < 0:
-            blob_index = self.lum - blob_index
+            blob_index = self.lum + blob_index
+        if blob_index == 0:
+            blob_index = self.lum - 1
         self.blob = self.mask == blob_index
 
         if not np.any(self.blob):
@@ -53,17 +58,73 @@ class BlobDataHelper:
         # Get coordinates where mask is True
         coords = np.argwhere(self.blob)
         z_min, z_max = coords[:, 0].min(), coords[:, 0].max()
-        x_min, x_max = max(0, coords[:, 1].min() - offset), min(self.image.shape[1], coords[:, 1].max() + offset + 1)
-        y_min, y_max = max(0, coords[:, 2].min() - offset), min(self.image.shape[2], coords[:, 2].max() + offset + 1)
 
-        edge_blob = x_min == 0 or x_max == self.image.shape[1] or y_min == 0 or y_max == self.image.shape[2]
+        x_min_abs = coords[:, 1].min()
+        x_max_abs = coords[:, 1].max()
+        y_min_abs = coords[:, 2].min()
+        y_max_abs = coords[:, 2].max()
 
-        # absolute_coords = {'z_min': z_min, 'z_max': z_max, 'y_min': y_min, 'y_max': y_max, 'x_min': x_min, 'x_max': x_max}
+        x_center = (x_min_abs + x_max_abs) // 2
+        y_center = (y_min_abs + y_max_abs) // 2
+
+        # Desired size
+        square_size = start_size + offset
+        half_size = square_size // 2
+
+        # Calculate initial x and y bounds
+        x_min = x_center - half_size
+        x_max = x_min + square_size
+        y_min = y_center - half_size
+        y_max = y_min + square_size
+
+        # Correct for boundary clipping in x
+        edge_blob = False
+        if x_min < 0:
+            x_max += -x_min
+            x_min = 0
+            x_min_abs += 2
+            edge_blob = True
+        if x_max > self.image.shape[1]:
+            x_min -= x_max - self.image.shape[1]
+            x_max = self.image.shape[1]
+            x_max_abs -= 2
+            edge_blob = True
+        x_min = max(x_min, 0)
+        x_max = min(x_max, self.image.shape[1])
+
+        # Correct for boundary clipping in y
+        if y_min < 0:
+            y_max += -y_min
+            y_min = 0
+            y_min_abs += 2
+            edge_blob = True
+        if y_max > self.image.shape[2]:
+            y_min -= y_max - self.image.shape[2]
+            y_max = self.image.shape[2]
+            y_max_abs -= 2
+            edge_blob = True
+        y_min = max(y_min, 0)
+        y_max = min(y_max, self.image.shape[2])
+
+        #min (gesamte return bbox) - min_abs (eigentliche minimalste bbox) = Abstand inside_box_min von relativer 0
+        #min (gesamte return bbox) - max_abs (eigentliche minimalste bbox) = Abstand inside_box_max von relativer 0
+        inside_box = (x_min_abs - 2 - x_min, x_max_abs + 2 - x_min, y_min_abs - 2 - y_min , y_max_abs + 2 - y_min)
+
         bbox = self.image[z_min:z_max, x_min:x_max, y_min:y_max]
-        return bbox, blob_index, image_index, edge_blob#, absolute_coords
+        return bbox, blob_index, image_index, edge_blob, inside_box
 
 
-
+def get_next_undef(label_store):
+    num_images = len(blobs_per_image)
+    for img_idx in range(num_images):
+        img_key = f"img{img_idx}"
+        labeled_blobs = label_store.get(img_key, {})
+        total_blobs = blobs_per_image[img_idx]
+        for blob_idx in range(1, total_blobs):# + 1):
+            if str(blob_idx) not in labeled_blobs:
+                return img_idx, blob_idx
+    return None, None  
+    return img_idx, blob_idx
 
 
 

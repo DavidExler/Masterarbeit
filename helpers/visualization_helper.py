@@ -4,6 +4,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def plot_mask_with_all_contours(mask2D, contours_all, title="Mask with Contours"):
+    """
+    Plot a 2D mask with overlaid contours for each labeled region.
+
+    Parameters:
+        mask2D: 2D array representing the segmentation mask.
+        contours_all (list of dict): List of contour dictionaries, each with keys:
+            - 'label' (int): Label ID of the region.
+            - 'contour' (np.ndarray): Contour coordinates as (N, 2) array.
+        title (str, optional): Title of the plot. Defaults to "Mask with Contours".
+
+    Returns:
+        None: Displays a matplotlib plot showing the mask and contours.
+    """
+
     plt.figure(figsize=(5, 5))
     plt.imshow(mask2D, cmap='gray')
     
@@ -19,6 +33,17 @@ def plot_mask_with_all_contours(mask2D, contours_all, title="Mask with Contours"
 
 
 def extract_contours_from_mask(mask2D):
+    """
+    Extract contours for each labeled region in a 2D segmentation mask.
+
+    Parameters:
+        mask2D: 2D array of integer labels representing segmented regions.
+
+    Returns:
+        list of dict: List where each dict contains:
+            - 'label' (int): The label ID for the segmented region.
+            - 'contour' (np.ndarray): Coordinates of the contour points for the region.
+    """
     contours_all = []
 
     # Find each unique label (exclude background 0)
@@ -38,8 +63,6 @@ def extract_contours_from_mask(mask2D):
 
     return contours_all
 
-
-import numpy as np
 
 def normalize_with_cutoffs(data, lower_pct=1, upper_pct=99):
     """

@@ -25,6 +25,28 @@ class BlobDataHelper:
         self.blob = self.mask == 1
 
     def get_blob(self, image_index, blob_index, start_size = 45, offset=2):
+        """
+        Extract a Region containing the cell specified by the blob_index in the image specified by the image_index.
+        This function uses preloaded, caced images and masks, that should be available at the relative paths:
+            - save_data/masks/20xRenamed/masks3D_CELLPOSE_RUN_1.pkl 
+            - save_data/3D_images_Renamed/imgs_20xRenamed.pkl
+
+
+        Parameters:
+            self: ignore
+            image_index: Index of the image to extract the cell from.
+            blob_index: Value of the 3D mask associated with a specific cell.
+            start_size: Minimal size of the region to  extract. Relative size of cells is imperative, thus every extracted cell region begins at this size.
+            offset: Size offset for the region to extract. The exracted region grows by this number of pixels in every direction.
+
+        Returns:
+            bbox: The Extracted Region of the original image containing the relevant cell.
+            blob_index: Over-/Underflow protected blob index.
+            image_index: Over-/Underflow protected image index.
+            edge_blob: bool that specifies, wether or not the region touches the image border.
+            inside_box: (x_min , x_max, y_min , y_max): Bounding box of the Cell within the extracted region with coordinates relative to the extracted region.
+        """
+
         # Load new image only if necessary
         if not self.last_image == image_index:
             # image index overflow protect
@@ -115,6 +137,19 @@ class BlobDataHelper:
 
 
 def get_next_undef(label_store):
+    """
+    Find the next unlabeled blob in the preloaded, cached collection of images.
+
+    Parameters:
+        label_store (dict): Dictionary containing the label_store.json storing labeled blobs per image with keys like "img0", "img1", etc.
+
+    Returns:
+        tuple: (img_idx, blob_idx) where:
+            img_idx (int): Index of the image containing the next unlabeled blob.
+            blob_idx (int): Index of the unlabeled blob within the image.
+        Returns (None, None) if all blobs are labeled.
+    """
+
     num_images = len(blobs_per_image)
     for img_idx in range(num_images):
         img_key = f"img{img_idx}"
@@ -124,7 +159,6 @@ def get_next_undef(label_store):
             if str(blob_idx) not in labeled_blobs:
                 return img_idx, blob_idx
     return None, None  
-    return img_idx, blob_idx
 
 
 

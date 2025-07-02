@@ -2,12 +2,12 @@ import pickle
 import numpy as np
 # load the masks
 masks3D_20xRenamed = []
-with open('save_data/masks/20xRenamed/masks3D_CELLPOSE_RUN_1.pkl', 'rb') as f:
+with open('helpers/masks3D_CELLPOSE_RUN_1.pkl', 'rb') as f:
     masks3D_20xRenamed = pickle.load(f)
 blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
 
 images3D_20xRenamed_full = []
-with open('save_data/3D_images_Renamed/imgs_20xRenamed.pkl', 'rb') as f:
+with open('helpers/imgs_20xRenamed.pkl', 'rb') as f:
     images3D_20xRenamed_full = pickle.load(f)
 
 images3D_20xRenamed = []

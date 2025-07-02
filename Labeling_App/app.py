@@ -16,7 +16,7 @@ blob_index = 1
 offset = 0
 upper_pct = 100
 lower_pct = 0
-SAVE_FILE = "label_store.json"
+SAVE_FILE = os.path.join("output", "label_store.json")
 SAVE_INTERVAL = 3
 save_counter = 0
 

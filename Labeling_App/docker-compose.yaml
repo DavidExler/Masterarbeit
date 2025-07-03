@@ -4,5 +4,5 @@ services:
     ports:
       - "8050:8050"
     volumes:
-      - ./output:/app/output
+      - .:/app 
     restart: unless-stopped

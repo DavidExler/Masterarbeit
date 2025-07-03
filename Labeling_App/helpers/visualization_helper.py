@@ -82,3 +82,23 @@ def normalize_with_cutoffs(data, lower_pct=1, upper_pct=99):
     clipped = np.clip(data, lower, upper)
     normalized = (clipped - lower) / (upper - lower)
     return normalized
+
+
+def plot_image_with_clustered_contours_RGB(image, contours_with_classes):
+    plt.figure(figsize=(10, 10))
+    plt.imshow(image)
+
+    custom_colors = ["#00FF00", "#0000FF",  "#FFFF00", "#FF00FF", "#00FFFF"] 
+    
+    for label_id, data in contours_with_classes.items():
+        contour = data['contours']
+        cls = data['class']
+        
+        color = custom_colors[cls % len(custom_colors)]  # Cycle colors if classes > len(colors)
+        
+        plt.plot(contour[:, 1], contour[:, 0], color=color, linewidth=2)
+    
+
+    plt.title('Image with Contours. Colors correspond to classes')
+    plt.axis('off')
+    plt.show()

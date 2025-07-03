@@ -32,7 +32,7 @@ else:
 # ---- Load first blob ----
 volume, blob_index, image_index, edge_blob, abs_coords = blob_data_helper.get_blob(image_index, blob_index, offset=offset)
 z_slices = volume.shape[0]
-
+print("loaded first blob")
 # ---- Initialize Dash App ----
 app = dash.Dash(__name__)
 app.title = "3D Blob Labeling App"
@@ -45,13 +45,13 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
         html.Div(style={'flex': '0 0 200px', 'paddingRight': '20px'}, children=[
 
             html.Div([
-                html.Button("Prev Image", id='prev-image', n_clicks=0, style={'width': '90px'}),
-                html.Button("Next Image", id='next-image', n_clicks=0, style={'width': '90px'}),
+                html.Button("Vorheriges Bild", id='prev-image', n_clicks=0, style={'width': '90px'}),
+                html.Button("Nächstes Bild", id='next-image', n_clicks=0, style={'width': '90px'}),
             ], style={'display': 'flex', 'flexWrap': 'wrap', 'marginBottom': '10px', 'gap': '10px'}),
 
             html.Div([
-                html.Button("Prev Blob", id='prev-blob', n_clicks=0, style={'width': '90px'}),
-                html.Button("Next Blob", id='next-blob', n_clicks=0, style={'width': '90px'}),
+                html.Button("Vorherige Zelle", id='prev-blob', n_clicks=0, style={'width': '90px'}),
+                html.Button("Nächste Zelle", id='next-blob', n_clicks=0, style={'width': '90px'}),
             ], style={'display': 'flex', 'flexWrap': 'wrap', 'marginBottom': '30px', 'gap': '10px'}),
 
             html.Div([
@@ -66,7 +66,7 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
             ]),
 
             html.Div([
-                html.Button("Save Now", id='save-now', n_clicks=0, style={'width': '190px', 'marginTop': '30px'})
+                html.Button("Speichern", id='save-now', n_clicks=0, style={'width': '190px', 'marginTop': '30px'})
             ]),
 
             html.Div([
@@ -74,7 +74,7 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
                 dcc.Input(id='lower-pct', type='number', value=1, min=0, max=100, step=0.1, style={'width': '60px'}),
                 html.Label("Obere % Abschneiden:", style={'marginRight': '5px', 'font-size': 12, 'font-family': 'Arial'}),
                 dcc.Input(id='upper-pct', type='number', value=97, min=0, max=100, step=0.1, style={'width': '60px'}),
-                html.Button("Normalize", id='normalize-btn', n_clicks=0, style={'marginTop': '10px', 'width': '190px'})
+                html.Button("Normalisieren", id='normalize-btn', n_clicks=0, style={'marginTop': '10px', 'width': '190px'})
             ], style={'marginTop': '20px'}),
 
             html.Div([
@@ -104,6 +104,7 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
     dcc.Store(id='selected-class', data=None),
 ])
 
+print("loaded html")
 # ---- Unified CALLBACK ----
 @app.callback(
     Output('image-display', 'figure'),
@@ -138,6 +139,7 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
     State('lower-pct', 'value'),
     State('upper-pct', 'value')
 )
+
 def update_view(
     z,                 # Input('z-slider', 'value')
     next_img,          # Input('next-image', 'n_clicks')
@@ -264,4 +266,7 @@ def update_view(
 
 # ---- Run App ----
 if __name__ == "__main__":
-    app.run(debug=True)
+    print("starting App")
+    app.run(debug=False, host="0.0.0.0")
+    print("App run finished somehow")
+

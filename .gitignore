@@ -1,4 +1,6 @@
 .venv/
+.env
+save_data
 dataset
 dataset 2
 pages

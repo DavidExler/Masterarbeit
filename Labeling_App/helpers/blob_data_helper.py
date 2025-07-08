@@ -23,6 +23,7 @@ class BlobDataHelper:
         self.mask = masks3D_20xRenamed[self.last_image]
         self.lum = len(np.unique(self.mask))
         self.blob = self.mask == 1
+        self.abs_coords = (0,0,0,0)
 
     def get_blob(self, image_index, blob_index, start_size = 45, offset=2):
         """
@@ -131,9 +132,17 @@ class BlobDataHelper:
         #min (gesamte return bbox) - min_abs (eigentliche minimalste bbox) = Abstand inside_box_min von relativer 0
         #min (gesamte return bbox) - max_abs (eigentliche minimalste bbox) = Abstand inside_box_max von relativer 0
         inside_box = (x_min_abs - 2 - x_min, x_max_abs + 2 - x_min, y_min_abs - 2 - y_min , y_max_abs + 2 - y_min)
+        self.abs_coords = (x_min_abs, x_max_abs, y_min_abs, y_max_abs, z_min, z_max)
 
         bbox = self.image[z_min:z_max, x_min:x_max, y_min:y_max]
         return bbox, blob_index, image_index, edge_blob, inside_box
+    
+    def get_fullscreen_for_current_blob(self, z_offset, offset=0):
+        (x_min_abs, x_max_abs, y_min_abs, y_max_abs, z_min, z_max) = self.abs_coords
+        z = z_min + z_offset
+        fullscreen = self.image[z]
+
+        return fullscreen, (x_min_abs, x_max_abs, y_min_abs, y_max_abs, z_min, z_max)
 
 
 def get_next_undef(label_store):

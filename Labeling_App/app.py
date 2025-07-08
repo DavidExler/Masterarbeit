@@ -30,7 +30,9 @@ else:
     print("[INFO] Initialized new label store")
 
 # ---- Load first blob ----
-volume, blob_index, image_index, edge_blob, abs_coords = blob_data_helper.get_blob(image_index, blob_index, offset=offset)
+volume, blob_index, image_index, edge_blob, rel_coords = blob_data_helper.get_blob(image_index, blob_index, offset=offset)
+fullscreen, abs_coords = blob_data_helper.get_fullscreen_for_current_blob(0)
+
 z_slices = volume.shape[0]
 print("loaded first blob")
 # ---- Initialize Dash App ----
@@ -85,17 +87,24 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
 
         ]),
 
-        html.Div(style={'flex': '1'}, children=[
-            dcc.Graph(id='image-display', style={'height': '600px'}),
-            dcc.Slider(
-                id='z-slider',
-                min=0,
-                max=z_slices - 1,
-                step=1,
-                value=0,
-                tooltip={"placement": "bottom", "always_visible": True},
-            ),
+        html.Div(style={'flex': '1', 'display': 'flex', 'flexDirection': 'row', 'gap': '20px'}, children=[
+            html.Div(children=[
+                dcc.Graph(id='image-display', style={'height': '600px'}),
+                dcc.Slider(
+                    id='z-slider',
+                    min=0,
+                    max=z_slices - 1,
+                    step=1,
+                    value=0,
+                    tooltip={"placement": "bottom", "always_visible": True},
+                ),
+            ], style={'flex': '1'}),
+
+            html.Div(children=[
+                dcc.Graph(id='fullscreen-display', style={'height': '600px'})
+            ], style={'flex': '1'})
         ])
+
     ]),
 
     dcc.Store(id='image-index', data=image_index),
@@ -108,6 +117,7 @@ print("loaded html")
 # ---- Unified CALLBACK ----
 @app.callback(
     Output('image-display', 'figure'),
+    Output('fullscreen-display', 'figure'),
     Output('z-slider', 'max'),
     Output('title', 'children'),
     Output('image-index', 'data'),
@@ -220,10 +230,11 @@ def update_view(
             save_counter = 0
 
     # Load blob
-    start_blob = time.time()
+    #start_blob = time.time()
     print(f"[INFO] before get_blob: blob index: {blob_idx}, image index: {img_idx} ")
-    volume, blob_index, image_index, edge_blob, abs_coords = blob_data_helper.get_blob(image_index=img_idx, blob_index=blob_idx, offset=offset)
+    volume, blob_index, image_index, edge_blob, rel_coords = blob_data_helper.get_blob(image_index=img_idx, blob_index=blob_idx, offset=offset)
     print(f"[INFO] after get_blob: blob index: {blob_index}, image index: {image_index} ")
+
     #print(f"[INFO] get_blob took {time.time() - start_blob:.2f}s")
 
     # Preselect class from store if exists
@@ -241,13 +252,28 @@ def update_view(
 
     fig = px.imshow(slice_img, color_continuous_scale='gray')
     fig.update_layout(coloraxis_showscale=False)
-    (x_min, x_max, y_min, y_max) = abs_coords
+    (x_min, x_max, y_min, y_max) = rel_coords
     fig.add_shape(
         type="rect",
         x0=y_min, x1=y_max,  # note: Plotly X-axis is image Y
         y0=x_min, y1=x_max,  # and Y-axis is image X
         line=dict(color="red", width=2)
     )
+
+    print(f"[INFO] before get_fullscreen:")
+    fullscreen_img, abs_coords = blob_data_helper.get_fullscreen_for_current_blob(z)
+    print(f"[INFO] after get_fullscreen")
+    (x_min_abs, x_max_abs, y_min_abs, y_max_abs, z_min, z_max) = abs_coords
+    
+    fig_full = px.imshow(fullscreen_img, color_continuous_scale='gray')
+    fig_full.update_layout(coloraxis_showscale=False)
+    fig_full.add_shape(
+        type="rect",
+        x0=y_min_abs, x1=y_max_abs,
+        y0=x_min_abs, y1=x_max_abs,
+        line=dict(color="red", width=2)
+    )
+
 
     title = f"Zelle Nummer {blob_index} im Bild {image_index}"
     if edge_blob:
@@ -261,7 +287,7 @@ def update_view(
         return base
 
     print(f"retruns: {image_index}, {blob_index}")
-    return (fig, z_slices - 1, title, image_index, blob_index, selected,
+    return (fig, fig_full, z_slices - 1, title, image_index, blob_index, selected,
             style(selected == 1), style(selected == 2), style(selected == 3), style(selected == 4), offset)
 
 # ---- Run App ----

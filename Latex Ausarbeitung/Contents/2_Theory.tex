@@ -1,0 +1,122 @@
+% !TeX root = ../Thesis.tex
+
+\chapter{Theory} \label{ch:Theory}
+This chapter should introduce to the theoretical background of your thesis. Any (already existing) method you use to obtain the results later should be introduced and explained. The mathematics needed to understand the possibly new methods in the next chapter is also part of this chapter. 
+
+%https://www.ebi.ac.uk/biostudies/BioImages/studies/S-BIAD1518?query=3D%20nuclei%20segmentation
+
+\section{Überblick}
+Im nachfolgenden Kapitel wird der theoretische Hintergrund der vorliegenden Thesis behandelt. Hierzu werden sowohl die Methoden verwandter Projekte und Studien, als auch die Literatur zum aktuellen "Stand der Technik" beleuchtet. Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
+
+\section{Methoden}
+\subsection{Benchmark}
+Um die Leistungsfähigkeit der Applikation, die im Rahmen der vorliegenden Thesis erstellt wird, zu validieren und verifizieren sind umfangreiche Datensätze notwendig. 
+Für jede isolierbare Aufgabe muss ein Datensatz gewählt werden, der eine \ac{gt} entsprechend dieser Aufgabe mitbringt.
+Die in diesem Datensatz enthaltenen Daten (Quelldaten) müssen dabei den Daten, mit denen die Anwendung genutzt wird (Zieldaten) \textit{ähnlich} sein.
+So wird sichergestellt, dass sich die auf den Quelldaten gemessene Qualität der Anwendung auf die Zieldaten übertragen lässt \cite{ganin2015domain_big}.
+Die Ambiguität des \textit{Ähnlichkeit}-Begriffs geht mit der eigentlichen Herausforderung einher, sinnvolle Merkmale in Daten zu finden, die einen Vergleich von Daten verschiedenen Ursprungs ermöglichen.
+Metriken die als Maß für \textit{Ähnlichkeit} genutzt werden müssen maßgeschneidert zur Anwendung passen und sind bereits breit erforscht \cite{zhu2020domain_similarity, koohi2018similarity, cai2009similarity}.
+Daten können mithilfe passender Metriken \textit{Ähnlichkeits-}gruppen, sogenannten \textit{Domänen}, zugeordnet werden \cite{yuan2005domainsimilarity}.
+Ein Beispiel für Domänenunterschiede sind verschiedene Darstellungen gleicher Objekte in Bildern. 
+%\newline BILD AUSKOMMENTIERT \newline
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.18\textwidth]{Figures/Katze_0.jpg} \hfill
+    \includegraphics[width=0.24\textwidth]{Figures/Katze_1.jpg}\hfill
+    \includegraphics[width=0.24\textwidth]{Figures/Katze_3.jpg}\hfill
+    \includegraphics[width=0.24\textwidth]{Figures/Katze_2.jpg}
+    \caption{Vier Bilder \cite{jrfarm_katze, Egan_Katzen} der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad.}
+    \label{fig:enter-label}
+\end{figure}
+Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Katze}, aber die Merkmale wie Detailgrad, Abstraktion und Stil unterscheiden sich stark - Sie unterscheiden sich in ihrer Domäne.
+In der Bildverarbeitung ist es essenziell die Domäne der Quelldaten im Hinblick auf die Aufgabe der Applikation zu beachten \cite{wang2018domain,peng2017domain}. 
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{SAM_Architecture.png}
+\end{figure}
+Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenadaption durchgeführt werden \cite{han2022binsimilarity_domain,pinheiro2018domain,ganin2016domain}.
+
+
+\subsection{Segmentierung}
+\textbf{KOMMENTAR} ist das notwendig?
+\begin{itemize}
+    \item Was ist Segmentierung?
+    \item Welche klassischen Ansätze gibt es?
+    \item Welche KI-Lösungen gibt es?
+    \item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
+\end{itemize}
+
+\subsection{Klassifikation}
+\begin{itemize}
+    \item Was ist Klassifikation generell?
+    \item Was ist Klassifikation durch panoptische Segmentierung?
+    \item Welche klassischen Ansätze gibt es?
+    \item Welche KI-Lösungen gibt es?
+\end{itemize}
+
+\textit{Foundation-models} sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
+Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
+In der aktuellen Forschung werden verschiedene \textit{foundation-models} für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
+Ein besonders prominentes Exemplar ist das \ac{sam} \cite{kirillov2023sam} von Meta AI. Es besteht aus einem Bild Encoder, einem Prompt Encoder und einem Masken Decoder. Der Bild Encoder ist Vision Transformer \cite{dosovitskiy2020ViT}, mit Vortraining als Masked Auto Encoder \cite{he2022mae} und zusätzlichem Training für höhere Bildauflösung.
+\section{Literaturrecherche}
+
+\subsection{Benchmark}
+Da das manuelle Erstellen der \ac{gt} für die Segmentierung von Zelldaten mit erheblichem manuellem Aufwand verbunden ist und zusätzlich Expertenwissen voraussetzt, sind Datensätze hierfür selten. 
+Einige prominente Datensätze, deren Domänen zu den Zieldaten der Anwendung dieser Arbeit \textit{ähnlich} sind, sind:  
+\begin{itemize}
+    \item LiveCell \cite{edlund2021livecell}, ein manuell annotierter und Experten-validierter Datensatz aus 5,239 2D-Bildern. Die Daten sind mit incucyter HD Phasenkontrastmikroskopie gesammelt und enthalten 1,686,352 individuelle Zellen von acht verschiedenen Zelltypen.
+    \item YeaZ \cite{dietler2020YeaZ}, ein zweiteiliger Datensatz von Hefe Zellen aus 87 Phasenkontrast-Bildern mit insgesamt 10,422 Zellen und 614 Hellfeld-Bildern mit insgesamt 3,841 Zellen in 6 Beleuchtungsstufen aufgenommen. Die Annotationen sind semi-manuell erstellt, da die Phasenkontrast-Bilder manuell, und die Lichtfeld-Bilder aus den Phasenkonstrast-Segmentierungsmasken annotiert wurden. 
+    \item DeepBas \cite{holden2021deepbacs, cspahn2021deepbacs}, ein Datensatz von \textit{B. subtilis strain SH130} Bakterien. Er besteht aus Weitfeldaufnahmen (Fluoreszenz), aufgenommen mit einem inversen Mikroskop, bestehend aus sieben manuell annotierten Bildern mit je zwischen 46 und 335 Zellen.
+    \item die Cell Tracking Challenge \cite{ulman2017cellTrackingChallenge}, eine Sammlung aus 13 Datensätzen verschiedener Mikroskopiemodalitäten, die sich zum Messen der Segmentierungs- und Verfolgungsfähigkeiten für verschiedene Zelltypen eignen.
+    \item MoNuSeg \cite{kumar2017MoNuSeg}, eine Zusammenstellung manuell annotierter Gewebeschnitte von sieben verschiedenen Organen. Über 21,000 Zellen sind pro Bild in den 30 Bildern mit verschiedenen Färbungen und Aufnahmetechniken verteilt.
+    \item TissueNet \cite{greenwald2022Tissuenet} ein umfassender Datensatz mit über 1,000,000 Zellen mit diversen Gewebearten und unterschiedlichen Aufnahmetechniken.
+    \item S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset}, ein Datensatz der neben manuell annotierten Bildern von acht Fverschiedenen Zellarten sind synthetisch erzeugte Daten enthält. Mit Hilfe von SpCycleGAN \cite{fu2018cycleGAN} wurden dazu auf Basis von simulierten \ac{gt}s Bilder generiert, die anstreben die Merkmale der realen Bilder zu reproduzieren. Es handelt sich hierbei um 3D-multispektrale Daten, aufgenommen mittels Fluoreszenzbildgebung. 
+\end{itemize}
+Aufgrund des geringen Volumen frei zugänglicher Daten sind diese Sammlungen auch für das Training von Segmentierungsnetzen begehrt. 
+Jeder Datensatz, der bereits im Trainingssatz eines gewählten Segmentierungsnetzes enthalten war eignet sich nicht mehr zur unabhängigen Bewertung der Netze. 
+Neben annotierten Datensätzen existiert auch Literatur die das eigenständige Erzeugen domänenspezifischer Datensätze erforscht und Methoden bereitstellt.
+Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generieren von 3D-Trainingsdaten mit realistischer Zellform und -ausrichtung und kohärenten Membran- und Nuklearsignalen. Zudem umfasst das Framework eine Trainingsroutine, um ein \ac{gan} zu trainieren, das Bilddaten und passende Annotationen automatisch erzeugt. 
+%
+%\begin{itemize}
+%    \item \cite{zhu2020domain_similarity} Speech recognition - Herrausforderung der Anpassung an Audio domänen
+%    \item \cite{han2022binsimilarity_domain} Domain adaption für Bilder (in domain "bins")
+%    \item \cite{koohi2018similarity} Maß für Ähnlichkeit in Workflows
+%    \item \cite{cai2009similarity} Maß für Ähnlichkeit in Netzwerken
+%    \item \cite{wang2018domain}
+%    \item \cite{peng2017domain}
+%    \item \cite{pinheiro2018domain}
+%    \item \cite{ganin2015domain_big}
+%    \item \cite{yuan2005domainsimilarity}
+%    \item \cite{ganin2016domain}
+%\end{itemize}
+
+\subsection{Segmentierungsnetz}
+\ac{sam} wurde bereits für viele Mikroskopie-Zelldaten downstream Anwendungen \textit{fine-tuned} \cite{archit2025samfine, israel2023samfine, vandeloo2025samfine}. 
+Auch das Cellpose-Team, das schon zuvor leistungsstarke Segmentierungsmodelle für Zellen hervorgebracht hat \cite{stringer2021cellpose} hat einen \textit{fine-tune} von \ac{sam} veröffentlicht \cite{pachitariu2025samcellpose}.
+
+
+Notizen:
+Architekturen:
+CellposeSam:
+Foundation Model + Finetune
+
+Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell}  Caliban: \cite{moen2019DeepcellCaliban} Ohne Foundation Model - Backbone und pyramid \newline
+The deep learning model for nuclear segmentation was based on the design of feature pyramid networks. The network was constructed from an EfficientNetV2L backbone68 connected to a feature pyramid. Input images were concatenated with a coordinate map before entering the backbone. We used backbone layers C1–C5 and pyramid layers P1–P7. The final pyramid layers were connected to three semantic segmentation heads that predict transforms of the labeled image.
+
+nnU-Net \cite{isensee2021nnu} am meisten zitiert, dynamische Architektur:
+We present nnU-Net, a deep learning-based segmentation method
+that automatically configures itself including preprocessing, net-
+work architecture, training and post-processing for any new task
+in the biomedical domain. nnU-Net sets a new state of the art for
+the majority of tasks on which it was evaluated, outperforming all
+respective specialized processing pipelines. The strong performance
+of nnU-Net is not achieved by a new network architecture, loss func-
+tion or training scheme (hence the name nnU-Net, ‘no new net’), but
+by systematizing the complex process of manual method configura-
+tion, 
+
+
+%Mask R-CNN, or CondInst
+\section{Offene Probleme}
+
+\section{Zielsetzung}

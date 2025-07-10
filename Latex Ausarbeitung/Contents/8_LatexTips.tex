@@ -1,0 +1,174 @@
+% !TeX root = ../Thesis.tex
+
+\chapter{Getting Started with \LaTeX} \label{ch:LatexTips}
+\LaTeX\ is a typesetting system widely used in academia. It is free software and outperforms WYSIWYG  (what you see is what you get) programs like word in many ways. pdfLaTeX is commonly used to get a PDF as output. However, the development of pdfLaTeX is nearly finished. LuaLaTeX is a  successor to pdfLaTeX and also enables the use of Lua. 
+
+In this chapter, some advice for writing a thesis with \LaTeX\ is given. The choice to use LuaLaTeX and the TeX Live distribution with the TeXworks editor is based on my personal preferences and experiences\footnote{Tim Scherr, Automated Image and Data Analysis (AIDA), \href{mailto:tim.scherr@kit.edu}{tim.scherr@kit.edu}}. Big advantages of LuaLaTeX are new packages and the Unicode support. Using a modern keyboard layout, e.g., \href{https://neo-layout.org/}{Neo}, and Unicode supporting fonts (in this document: Linux Libertine, Linux Biolinum and XITS math) allows to write more readable \LaTeX\ code. If you have some remarks, please send me an e-mail.
+
+\section{Installation}
+The installation of the TeX Live distribution on a windows system is briefly described on the \href{https://www.tug.org/texlive/acquire-netinstall.html}{\TeX\ Users Group web site}. Install biber to process bibliographies (no \href{https://texwelt.de/wissen/fragen/1909/wie-verwende-ich-biber-in-meinem-editor}{installation} needed since TeX Live 2018). BibTeX is obsolete and not recommended anymore.
+
+For the Debian based Linux distributions Linux Mint and Ubuntu, the package manager can be used to install TeX Live. However, the provided TeX Live version may be quite old. See \href{https://wiki.ubuntuusers.de/TeX_Live/}{here}, how to get a newer version. Using the Arch Linux based Manjaro distribution enables to get an up-to-date TeX Live and biber within the package manager.
+
+\section{Manuals}
+Overleaf provides an \href{https://de.overleaf.com/learn/latex/Free_online_introduction_to_LaTeX_(part_1)}{introduction into \LaTeX} and some further information about \href{https://www.overleaf.com/learn/latex/Articles/An_Introduction_to_LuaTeX_(Part_1):_What_is_it\%E2\%80\%94and_what_makes_it_so_different\%3F}{LuaTex}. The so-called TeXdocs provide the documentation of packages such as graphicx to include graphics into the document. To open an TeXdoc, open a command-line or terminal and execute \verb|texdoc packagename| (or use google to find it). TeXdocs can be very detailed. 
+
+\section{Document Classes}
+I recommend to use the KOMA-Skript document classes scrbook (for books), scrreprt (ideal for theses), scrartcl (for articles), and scrlttr2 (for letters). This thesis template is based on the scrreprt class. The TeXdoc scrguide is a very interesting documentation, going far beyond the simple use of the KOMA-Skript classes. I really recommend to read at least the beginning of this TeXdoc. If something cannot be changed within the KOMA-Skript, it should not be changed probably.
+
+\section{Document Structure}\label{sec:Structure}
+Structure your document using chapters (\verb|\chapter{}|), sections (\verb|\section{}|), subsections (\verb|\subsection{}|), subsubsections (\verb|\subsubsection{}|), and paragraphs (\verb|\paragraph{}| or an empty line in the code). The commands \verb|\chapter*{}|, \verb|\section*{}|, … suppress the numbering and the table of contents entry.  \verb|\addchapter{}| adds an unnumbered chapter with table of contents entry.
+
+\subsubsection{Exemplary Subsubsection}
+This is an example for a subsection. Subsubsections are not numbered in this template.
+
+\paragraph{Paragraph} This is an example for the paragraph command. In contrast to a subsubsection, no new line is started. The \verb|\paragraph{}| command sets its argument bold.
+
+In contrast, an empty line in the code starts new indented paragraphs such as this paragraph. Paragraphs may help to improve the readability of your thesis. Be aware of \href{https://en.wikipedia.org/wiki/Widows_and_orphans}{widows and orphans}!
+
+ Use the \verb|\label{}| and  the \verb|\ref{}| or \verb|\autoref{}| command to reference to figures, chapters, sections, tables, …, e.g., section \ref{sec:Structure}, \autoref{ch:results}, or \autoref{eq:pythagoras}. The autoref names can be changed in the header.tex file.
+
+\section*{Exemplary Section Without Numbering}
+There is no table of contents entry for this unnumbered section.
+
+\section{Tips}
+If you need some help with a package, read its texdoc first. If you do not know the command for some symbol or what package it provides, use \href{http://detexify.kirelabs.org/classify.html}{Detexify}. Detexify is a really useful tool.
+
+Use the right click and “go to pdf“ or “go source code” to switch between your source code and pdf. The use of \verb|% !TeX root = ../Thesis.tex| in the first line of a sub-file allows to build your document without opening the main file Thesis.tex.
+
+\subsection{Spell Checker}
+Install some spell checker for your editor. For TeXworks, go to Help → A short manual for TeXworks → spell-checking.
+
+\subsection{Settings}
+Activate the line numbers in the TeXworks settings and disable the closing of the console output (Edit → Preferences → Typesetting). Set LuaLaTeX as default. Fill in your name and topic in the hypersetup in the header.tex file. If you want to write your thesis in German, set the main language to ngerman for the babel package and the documentclass in header.tex. Replace 0\_Titlepage with 0\_Titlepage\_german in the Thesis.tex file. Change the siunitx language as well. If you know your needed binding offset for the printed version, change the first optional \verb|\areaset[1.3cm]{15.3cm}{23.5cm}| argument.
+
+\section{Math}
+Use punctuation marks if you are writing some equations and embed them into your text. Describe all used variables. Useful environments are \verb|equation|, e.g., 
+\begin{equation}\label{eq:pythagoras}
+	a² = b² + c² \; ,
+\end{equation}
+\verb|align| for multiple equations with alignment, e.g., 
+\begin{align}
+	x &= y + z \; ,\\
+	3\, y &= \SI{21}{\metre} \; , \\
+	z &= \SI{3}{\metre} \; ,
+\end{align}
+ \verb|split|, e.g.,
+\begin{equation}
+	\begin{split}
+		x &= y + z \\
+		&= \SI{7}{\metre} + \SI{3}{\metre} \\
+		&= \SI{10}{\metre}  \; ,
+	\end{split}
+\end{equation}
+and \verb|dcases|, e.g.,
+\begin{equation*}
+	 y \coloneq \begin{dcases} 3\, x + 4& \text{for\;} x \in \left[ \num{0}, \num{20} \right] \; , \\ 0 & \text{else}\; . \end{dcases}\; 
+\end{equation*}
+The TeXdocs of amsmath and unicode-math provide further environments and help. Use the package siunitx to specify values and the units of measurement. Use spaces (\verb|\|), short spaces (\verb|\,|), long spaces (\verb|\;|), and negative spaces (\verb|\!|) to optimize the spaces between variables. Use \verb|\frac{numerator}{denominator}| or \verb|\tfrac| for fractions.
+
+\section{Bibliography}
+Take a look into the TeXdoc biblatex to get some insight how citing works in \LaTeX\ and which publication types exist. There, it is also described which arguments are needed for every single publication type. Fill the mybib.bib file with your bibliography. Usually, journals provide some bib information, e.g., \href{https://doi.org/10.1371/journal.pcbi.1006128}{here for the EmbryoMiner publication} (go to Download Citation). 
+
+If the mybib.bib file is filled with your bibliography, the needed literature can be cited using the \verb|\textcite{}| command for in-text citations,, e.g., \textcite{Schott2018} present a new framework for interactive knowledge discovery in large-scale cell tracking data of developing embryos, and the \verb|\parencite{}| command for citations in parentheses, e.g., an advantage of formulating a problem as a convex optimization problem is the reliable and efficient solving \parencite{Boyd2009}. To get the (new) references, the document has to be set with LuaLaTeX, then with biber, and again with LuaLaTeX. Of course, the used \href{https://www.apastyle.org/learn/quick-guide-on-references}{APA} citation style can be changed.
+
+In the references are examples for books \parencite{Boyd2009, Jaehne2012}, an article \parencite{Schott2018}, a Master's thesis \parencite{Scherr2017}, an arXiv article \parencite{Hashemi2018}, and an in-proceeding article \parencite{Szegedy2015}. With the hyphenation argument of the entries in the mybib.bib file the capitalization can be adjusted. If english is chosen, the title is written in small letters regardless of the capitalization in the bib-file, cf. \textcite{Scherr2017}. If ngerman is chosen, the capitalization within the bib-file is used, cf. \textcite{Scherr2017-2}. Thus, an easy way to enforce a mixed notation is just to use the ngerman option always. However, also with brackets \verb|{}| a capitalization can be enforced, cf. \textcite{Schott2018}. Note, that in the chosen APA style, some information is not printed if a digital object identifier (doi) exists, cf. the publishers in the books \textcite{Boyd2009} and \textcite{Jaehne2012} (not with TeX Live 2017). However, with the digital object identifier alone, a unique identification of the reference is possible.
+
+Also multiple citations in a single command are possible, e.g.,  \parencite{Hashemi2018, Jaehne2012, Scherr2017, Scherr2017-2}. The cite commands have also optional arguments, e.g., \parencite[to write text before][and after the citation]{Scherr2017}. This is useful in captions.
+
+\section{Figures and Tables}
+Use the float environments \verb|figure| and \verb|table| to include figures and tables inside. This allows \LaTeX\ to arrange them properly. If you are reusing some figure or table, check the license. If possible, use vector graphics. Refer to every single figure and table in your text. Try to write captions so that the figure/table can be understood without the main text.
+
+\subsection{Figures}
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/CameraModel.pdf}
+	\caption{\textbf{Physical Model of a Camera and Mathematical Model of a Single Pixel.} The number of photons is Poisson distributed. Noise sources that are related to the sensor read out and the amplifier circuits can be described as a signal independent normal-distributed noise source with variance $σ_d²$. Another noise source is the analog digital conversion. Modified from \textcite[][]{EMVA1288}. \scriptsize{This figure and caption (and some of the following) are taken from my Master's thesis. This is self-plagiarism and is forbidden in this form generally!}}
+	\label{fig:CameraModel}
+\end{figure}
+\autoref{fig:CameraModel} shows some exemplary figure included with the \verb|\includegraphics[]{}| command from the graphicx package. With the optional argument (square brackets) the width, height or scale of the included figure can be set, e.g. \verb|width=0.5\textwidth|. Captions are placed beneath figures. If more than one figure should be placed in one figure environment, use the subfig package which provides the \verb|subfloat| environment. \autoref{fig:CardinalBsplines} shows some example for the use of the subfloat environment.
+
+\subsection{Tables}
+Tabu is a powerful package for tables and provides the \verb|tabu| environment. \autoref{tab:ExemplaryTable} shows some exemplary table. Please, avoid to use vertical lines in tables. In contrast to figures, captions are placed above tables. 
+\begin{table}[t]
+	\center
+	\small
+	\caption{\textbf{Exemplary Table.} The caption is placed above tables and describes the table content. This tabu-table has one left aligned column that is twice as wide as the other centered columns. The last column is a math-column, which means the math-mode is activated automatically.}
+	\begin{tabu} to 1\textwidth {X[2,l] X[1,c] X[1,c] X[1,c,$]}
+	\toprule
+	\textbf{Column Title Wide Column} & \multicolumn{3}{c}{\textbf{Column Title 3 Cols Wide}} \\
+	\midrule
+	Method 1& \num{9e-4} &  x+y & x+y\\
+	Method 2& \num{8e-3} &  x+y & x+y\\
+	\cmidrule{2-4}
+	Method 3& \num{0.17(2)}&  x+y & x+y\\
+	Method 4& \num{2.62(1)}&  x+y & x+y\\
+	\bottomrule
+	\end{tabu}
+	\label{tab:ExemplaryTable}
+\end{table}
+
+\subsection{TikZ and Inkscape}
+TikZ  is a graphics language with a TeXdoc of over a thousand pages and many tutorials. TikZ is a recursive acronym and means “TikZ ist kein Zeichenprogram” (”TikZ is not a drawing program”). It defines a number of commands that draw graphics. Advantages are the quick creation of simple graphics, precise positioning, and often superior typography. Disadvantages are the steep learning curve and no WYSIWYG. For example, the code \verb|\tikz \draw (0pt,0pt) --(20pt,6pt);| yields the line \tikz \draw (0pt,0pt) --(20pt,6pt);. \autoref{fig:SimplePendulum} shows a simple gravity pendulum drawn with TikZ.
+\begin{figure}[t]
+	\centering
+	\begin{tikzpicture}[>=stealth] 
+	\useasboundingbox (-3,0) rectangle (3,-5); 
+		\filldraw (-2,0) -- (2,0) (0:0) -- (240:3) circle (3pt) node [midway,above left] {$l$} node [at end, below left] {$m$};
+		\draw[->,thick] (240:3) -- +(60:2*cos 30) node[midway,left] {$\vect{F}_{\symup{S}}$};
+		\draw[->,thick] (240:3) -- +(270:2) node[midway,left] {$\vect{F}_{\symup{G}}$}; 
+		\draw[->,thick] (240:3) -- +(330:2*sin 30) node[near end, above] {$\vect{F}_{\symup{R}}$}; 
+		\draw[dashed] +(3*cos 210,3*sin 210) arc (210:330:3);
+		\draw[dashed] +(0,0) -- (0,-4);
+		\draw +(1.1*cos 240,1.1*sin 240) arc (230:265:1) node[very near start, above right] {$φ$};
+	\end{tikzpicture} 
+	\caption{\textbf{Forces Acting on a Simple Gravity Pendulum.} The gravity $\vect{F}_{\symup{G}}$ and the “Seilkraft” $\vect{F}_{\symup{S}}$ are acting on the point mass $m$ resulting in the restoring force $\vect{F}_{\symup{R}}$. The cord with length $l$ on which the mass $m$ swings is massless, inextensible and always remains taut. In that simple model, there are no friction forces. Using a small-angle approximation for the angle $φ$ yields the well-known harmonic oscillator equation.}
+	\label{fig:SimplePendulum}
+\end{figure}\
+
+In contrast to TikZ, \href{https://inkscape.org/}{Inkscape} is a drawing program and may be a quick alternative for beginners. Take care of the fonts and font sizes you use. With Inkscape it is possible to extract vector graphics out of PDFs.
+
+\subsection{PGFPLOTS}
+PGFPLOTS is a TikZ-based package which provide tools to generate plots. Among other things, line plots, scatter plots, piecewise constant plots, bar plots, area plots, mesh and surface plots, patch plots, contour plots, quiver plots, histogram plots, box plots, polar axes, ternary diagrams, and smith charts are supported. PGFPLOTS purpose is to simplify the generation of high-quality function and data plots, and solving the problems of
+\begin{compactitem}
+	• consistency of document font type and font size,
+	• direct use of math mode in axis descriptions.
+\end{compactitem}
+Since the functionality of PGFPLOTS can be overwhelming, there are software solutions to convert plots to PGFPLOTS, e.g., \href{https://github.com/nschloe/matplotlib2tikz}{matplotlib2tikz} for Python and \href{https://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz}{matlab2tikz} for \textsf{MATLAB}. This enables fast plotting in Python or \textsf{MATLAB} and nice looking plots with PGFPLOTS. Use the figurheight and figurewidth commands to save your plot, e.g. in \textsf{MATLAB} use {\footnotesize{\verb|matlab2tikz('Name.tex','height','\figureheight','width','\figurewidth');|}}. 
+
+\autoref{fig:P-splines} and \autoref{fig:CardinalBsplines} show some plots made with PGFPLOTS and matlab2tikz. Edit the resulting .tex or .tikz files in TeXworks to optimize the plot or if some changes are needed. For large (3D) data sets the document building time can be reduced, using the external library. In that case, plots are saved to PDFs and loaded afterwards. Just uncomment the corresponding lines in header.tex. It is useful to add a unique tikzfilename with the command \verb|\tikzsetnextfilename{}| for every plot. New plots are then created in the command line/terminal with the command \verb| lualatex -shell-escape Thesis.tex| (change the directory first).
+%\begin{figure}[t]
+%	\centering
+%	\setlength\figureheight{4.8cm} 
+%	\setlength\figurewidth{7.5cm}
+%	\input{Figures/Psplines_Mcycle.tikz}
+%	\caption{\textbf{P-spline Smoothing of Motorcycle Crash Helmet Impact Data with Outliers.} The smoothing parameter, that was obtained via cross-validation for the P-spline, is also used for the P1-spline. Concerning outliers, the P1-spline outperforms the P-spline.}
+%	\label{fig:P-splines}
+%\end{figure}
+%\begin{figure}[t]
+%	\centering
+%	\setlength\figureheight{3.9cm} 
+%	\setlength\figurewidth{5.8cm}
+%	\subfloat[][Cardinal linear B-splines ($k=1$).]{\input{Figures/Cardinal_linear_B-splines.tikz}}\quad
+%	\subfloat[][Cardinal cubic B-splines ($k=3$).]{\input{Figures/Cardinal_cubic_B-splines.tikz}}
+%	\caption{\textbf{Cardinal Linear and Cardinal Cubic B-splines.} In each interval $k+1$ B-splines are nonzero. The $k+1$ nontrivial polynomial pieces of a B-spline connect at $k$ inner knots.}
+%	\label{fig:CardinalBsplines}
+%\end{figure}
+
+\section{Final Remarks}
+This template was tested with TeX Live 2017 on Windows 10 and TeX Live 2018 on Windows 10 and Manjaro Linux. There is a bug with the German autoref names if English is the main language and German is activated with \verb|\setlanguage{ngerman}| locally. However, trying some command like \verb|\today| shows, that German is active.
+
+There may be problems with older BibLaTeX versions. In that case, adding the following lines of code in header.tex may help:
+\begin{verbatim}
+    \DeclareLanguageMapping{ngerman}{english-apa}
+    \DeclareLanguageMapping{english}{english-apa}
+\end{verbatim}
+If other errors occur, try to update TeX Live or the KOMA-Skript (\href{https://komascript.de/current}{update KOMA-Skript}). Since the package versions are fixed at a specific time for a new TeX Live release, updating KOMA-Skript can help.
+
+If you like my template or have some remarks, contact me please (\href{mailto:tim.scherr@kit.edu}{tim.scherr@kit.edu}). I am also happy about bug reports and wishes for future versions.
+
+\subsubsection{Blindtext}
+Use the package blindtext to see how your thesis layout will look with text and math inside. Do not read the following section ;)
+
+\Blindtext
+\blindmathpaper

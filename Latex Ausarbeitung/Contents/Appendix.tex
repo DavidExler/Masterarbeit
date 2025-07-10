@@ -1,0 +1,84 @@
+% !TeX root = ../Thesis.tex
+
+
+\appendix
+
+% Bibliography
+\lehead[]{\quad References}
+\rohead[]{References \quad}
+\printbibliography[heading=bibintoc,title={References}] % heading=bibnumbered
+\lehead[]{\quad \headmark}
+\rohead[]{\headmark \quad}
+
+% Nomenclature and Symbols
+\chapter{Nomenclature and Symbols}\label{App:Nomenclature}
+
+\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
+\vect{A},\vect{B}, \vect{C},…& Matrices\\
+\vect{A}^{\top}& Transpose of matrix $\vect{A}$\\
+\vect{A}^{-1}& Inverse of matrix $\vect{A}$\\
+\vect{A}^{+}& Moore–Penrose pseudoinverse of matrix $\vect{A}$\\
+\vect{a}_{·i}& Column vector containing the $i$-th column of matrix $\vect{A}$\\
+\vect{a}_{i·}& Column vector containing the $i$-th row of matrix $\vect{A}$\\
+a_{ij}& Entry in the $i$-th row and $j$-th column of a matrix $\vect{A}$\\
+\vect{a}, \vect{b}, \vect{c}, …& Column vectors / matrices\\
+\vect{a}^{\top}& Row vector / matrix, transpose of column vector $\vect{a}$\\
+a_{i}& $i$-th component of vector $\vect{a}$\\
+a, b, c, …& Scalars, constants, variables\\
+α, β, γ, …& Parameters\\
+α^{*}, x^{*}, … & Optimal parameter, variable, …\\
+\vect{B}& B-spline basis matrix\\
+\vect{g}_{ij}& $\begin{pmatrix} p_{ij} & q_{ij} \end{pmatrix}^{\top}$, given discrete gradient field at position $\left(i,j\right)$\\
+\vect{g}\left(x,y\right)& $\begin{pmatrix} p\left(x,y\right) & q\left(x,y\right) \end{pmatrix}^{\top}$, given gradient field in the continuous domain\\
+\vect{I}_n& $n$-by-$n$ identity matrix\\
+\text{LAD}, \text{LS}& Least absolute deviations, least squares\\
+%\text{LS}& Least squares\\
+\symup{MSE}, \symup{RMSE}& Mean-squared error, root-mean-squared error\\
+\vect{P}& $x$-components of a given discrete gradient field\\
+p_{ij}& $x$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
+p, p\left(x,y\right)& $x$-component of a given gradient field in the continuous domain\\
+\vect{Q}& $y$-components of a given discrete gradient field\\
+q_{ij}& $y$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
+q, q\left(x,y\right)& $y$-component of a given gradient field in the continuous domain\\
+\vect{R}\ /\ \vect{r}& Matrix / vector containing residuals or errors\\
+%\symup{RMSE}& Root-mean-squared error\\
+S& Cost functional\\
+σ& Standard deviation of Gaussian noise\\
+\vect{Z}& Surface / height matrix (discrete)\\
+z_{ij}& Entries of the surface / height matrix\\
+z\left(x,y\right)& Surface / height function (continuous) \\
+\vect{0}, \vect{1}, …& Column vector whose elements are all $0$, $1$, …\\
+\end{tabu}
+\vfill
+
+%\clearpage
+%\thispagestyle{plain}
+\subsubsection{Operators}
+\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
+\symcal{C}& Discrete cosine transform\\
+\symcal{C}^{-1}& Inverse discrete cosine transform\\
+\vect{D}₁& Matrix operator for first-order differences\\
+\vect{D}₂& Matrix operator for second-order differences\\
+\symbfsfup{D}_x& Matrix operator for discrete differentiation with respect to $x$\\
+\symcal{F}& Fourier transform\\
+\symcal{F}^{-1}& Inverse Fourier transform\\
+\symup{tr}& Trace of a square matrix\\
+\symup{vec}& Vectorization of a matrix, converts a matrix into a column vector\\
+\times& Cross product / vector product\\
+\otimes& Kronecker product\\
+\odot& Hadamard product / Schur product\\
+\partial_x& Partial derivative with respect to $x$\\
+\partial_{xy}& $\partial_x \partial_y$ \\
+f_{x}& $\partial_x f$\\
+f_{xy}& $\partial_{xy} f$\\
+\symbf{∇}& Nabla operator\\
+\symup{Δ}& Laplace operator\\
+\le, \ge& Less than or equal to, greater than or equal to (scalars)\\
+\preceq, \succeq& Vector or componentwise inequality\\
+\| · \|& Norm on a vector space\\
+\| · \|_1& $L¹$-norm\\
+\| · \|_2& $L²$-norm / Euclidean norm\\
+\| · \|_F& Frobenius norm / Hilbert-Schmidt norm\\
+\| · \|_∞& $L^∞$-norm / maximum norm / uniform norm\\
+
+\end{tabu}

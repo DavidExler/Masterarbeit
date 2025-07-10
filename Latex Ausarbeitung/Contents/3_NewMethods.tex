@@ -1,0 +1,88 @@
+% !TeX root = ../Thesis.tex
+
+\chapter{Neues Konzept} \label{ch:NewMethods}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.99\linewidth]{Figures/graphAbstract.png}
+    \caption{Graphical Abstract - Das Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird , das für die Anwendung der vorliegenden Arbeit eingesetzt wird. Ein peer-reviewed Benchmark Datensatz aus Bildern von diversen Zellkulturen mit dazugehörigen Ground Truths wird links eingegeben. Mehrere austauschbare Segmentierungsnetze führen eine Inferenz für den Benchmark aus, Zwischen den entstehenden Segmentierungsmasken und den Ground Truths werden dann Übereinstimmungen gesucht. Aus diesen Korrespondenzen, den Metadaten und den Masken wird die neu eingeführte IPQ (siehe \ref{sec:Kriterien}). Mithilfe der Ergebnisse kann dann das optimale Segmentierungsnetz für die Anwendung gewöhlt werden.}
+    \label{fig:graph_abstract}
+\end{figure}
+
+%Describe your new methods/procedure (mathematically, conceptually, comprehensibly). Change the title of this chapter if there is a term for your new methods.
+\section{Überblick}
+Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. Es behandelt vor allem die selbstentwickelten Beiträge zu den Methoden. Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
+
+\section{Bewertungskriterien}\label{sec:Kriterien}
+Zur Wahl des Segmentierungsnetzes wird ein neues Bewertungskriterien eingeführt. 
+Das Kriterium ist eine Abwandlung der \ac{pq} \cite{kirillov2019PQ}, die hier \ac{ipq} genannt wird. 
+Ziel dabei ist es, zum einen, durch standard \ac{pq} die \ac{iou} für individuelle Instanzen zu bewerten und \ac{fp} sowie \ac{fn} Detektionen zu bestrafen. 
+Zum anderen sollen Verletzungen der injektiven Abbildung von segmentierten Nuclei auf die Instanzen der \ac{gt} negativ bewertet werden. 
+Für die Berechnung wird im ersten Schritt der nachfolgende Brute Force Algorithmus angewandt, der die Zuordnung von Segmentierungsinstanzen zu \ac{gt}-Instanzen durchführt.
+
+\begin{algorithm}
+\caption{Beste \ac{gt}-Zuordnung für jede Segmentierungsinstanzen}
+\begin{algorithmic}
+\REQUIRE $mask_\text{prediction}$, $mask_\text{groundTruth}$
+\ENSURE $gt_\text{opt}$, $IoU_\text{opt}$
+
+%\STATE $gt\_ids \gets \{ mask_\text{groundTruth} \neq 0 \}$
+%\STATE $pred\_ids \gets \{ mask_\text{prediction} \neq 0 \}$
+%\STATE $IoU_\text{opt} \gets [0]$
+%‚\STATE $gt_\text{opt} \gets [0]$
+
+\FOR{$id_\text{blob}$ in $|mask_\text{prediction}|$}
+  \STATE $blob \gets mask_\text{prediction}[id_\text{blob}]$
+  %\STATE $IoU_\text{opt}[i] \gets 0$
+  %\STATE $gt_\text{opt}[i] \gets 0$
+
+  \FOR{$gt$ in $mask_\text{groundTruth}$}
+     \STATE $IoU \gets IoU(gt, blob)$
+%    \STATE $gt\_blob \gets mask_\text{groundTruth} == gt\_id$
+%    \STATE $intersection \gets \sum (pred\_blob \wedge gt\_blob)$
+%    \STATE $union \gets \sum (pred\_blob \vee gt\_blob)$
+%    \STATE $iou \gets intersection / union$ wenn $union > 0$ sonst $0$
+
+    \IF{$iou > IoU_\text{opt}[id_\text{blob}]$}
+      \STATE $IoU_\text{opt}[id_\text{blob}] \gets iou$
+      \STATE $gt_\text{opt}[id_\text{blob}] \gets gt\_id$
+    \ENDIF
+  \ENDFOR
+\ENDFOR
+
+\RETURN $gt_\text{opt}$, $IoU_\text{opt}$
+\end{algorithmic}
+\end{algorithm}
+
+Die nachfolgende Formel zeigt das \ac{ipq} Bewertungskriterium unterteilt in die 3 Aufgaben:
+\begin{equation}
+\text{IPQ} = 
+\underbrace{
+\frac{k_1 \times \displaystyle\sum_{(p, g) \in TP} 
+\text{IoU}\left(\displaystyle\bigcup_{p_i \in p} p_i,\, g\right)
+}{|TP|}
+}_{\text{Segmentatierungs-Qualität (SQ)}}
+\times
+\underbrace{
+\frac{k_2\times|TP|}{|TP| + \frac{1}{2}|FP| + \frac{1}{2}|FN|}
+}_{\text{Recognition Qualität (RQ)}}
+\times
+\underbrace{
+\frac{k_3\times\displaystyle |P|}{\displaystyle\sum_{p \in P} \left( \max(1, n_p - 1) \right)} }_{\text{Injektivitäts-Qualität (IQ)}},
+\end{equation}
+wobei:
+\begin{itemize}
+    \item $k_1, k_2, k_3$ Optionale Vorfaktoren zur Gewichtung der drei Teile der Metrik sind.
+    \item $TP$ die Menge aller \ac{tp}-Tupel $(p, g)$ ist, wobei $g$ eine \ac{gt}-Instanz und $p$ der Vektor aller zugehörigen Segmentierungsinstanzen ist.
+    \item $|TP| \in \mathbb{Z}$ die Anzahl an korrekt erkannten Instanzen bezeichnet, also \ac{gt}-Instanzen mit $\text{IoU} > 0{,}5$.
+    \item \ac{iou}$(\bigcup_{p_i \in p}p_i, g) \in [0,1] $ die \ac{iou} zwischen der allen Segmentierungsinstanzen $p_i$ in der \ac{tp}-Instanz \textit{p} und der zugehörigen \ac{gt}-Instanz \textit{g} beschreibt.   
+    \item $|FP| \in \mathbb{Z}$ die Anzahl an falsch-positiven Segmentierungen ist, d.\,h. vorhergesagte Instanzen ohne \ac{gt}-Entsprechung.
+    \item $|FP| \in \mathbb{Z}$ die Anzahl an nicht erkannten \ac{gt}-Instanzen ist, also \ac{gt}-Instanzen ohne zugehörige Vorhersage.
+    \item $P$ die Menge aller Segmentierungsinstanzen ist, ungeachtet der \ac{gt}-Zuordnung.
+    \item $p \subseteq P$ ein Vektor aller Segmentierungsinstanzen, die der gleichen \ac{gt}-Instanz zugeordnet sind, ist.
+    \item $n_p$ die Dimension des Vektors $p$ ist.
+    \item $\text{SQ} \in [0,1]$ ein Faktor ist, der die Qualität der Segmentierung anhand der \ac{iou} von der segmentierten und der erwarteten Instanz vergleicht.
+    \item $\text{RQ} \in [0,1]$ ein Faktor ist, der bewertet, wie vollständig und das Segmentierungsnetz die vorhandenen Nuclei gefunden hat und, ob es dabei zu Halluzinationen kam.
+    \item $\text{IQ} \in [0,1]$ ein Faktor ist, der das Unterteilen von Nuclei durch das Segmentierungsnetz zu bestrafen. Wird ein Nucleus durch mehrere Instanzen der Segmentierungsmaske dargestellt, wird $n_p$ größer als Eins und der Faktor sinkt.
+    \item $\text{IPQ} \in [0,1]$ ein Maß für die panoptische Segmentierungsqualität mit der Voraussetzung von injektiver Abbildung der Segmentierungsmasken-Instanzen auf die \ac{gt}-Instanzen darstellt, wobei höhere Werte bessere Übereinstimmung bedeuten.
+\end{itemize}

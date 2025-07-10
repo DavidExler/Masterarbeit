@@ -1,0 +1,55 @@
+% !TeX root = ../Thesis.tex
+\pagenumbering{Roman}
+
+\pagenumbering{Roman}
+\begin{titlepage}
+\ThisCenterWallPaper{1}{Logo/title-background.pdf}
+\begin{center}
+  \includegraphics[width=0.4\textwidth]{Logo/KITlogo_4c_englisch.eps}\\
+  \vspace{6pt}
+  \large{Department of Mechanical Engineering}\\
+  \vspace{6pt}
+  \large{Institute for Automation and Applied Informatics}\\
+  \vspace{18pt}
+  \Large{\textbf{Here is Place for the Title}\\ \textbf{of Your Thesis}}\\
+  \par\vfill
+  \begin{onehalfspacing}
+  \normalsize{Master's thesis in mechanical engineering\\
+  submitted by\\
+  Max Mustermann\\
+  \vspace{12pt}
+  \begin{tabular}{ll}
+  Reviewer:   & apl. Prof. Dr.-Ing. Ralf Mikut\\
+  Second Reviewer: & Prof. Dr. …\\
+\end{tabular}\\
+  \vspace{12pt}
+  2018\\}
+\end{onehalfspacing}
+\end{center}
+\end{titlepage}
+
+\cleardoublepage
+
+\thispagestyle{empty}
+\begin{quote}
+\small
+\textbf{Abstract}\quad Here stands the abstract of your thesis (in english). Usually, the abstract is written in the end. The following chapters provide some help and advice on writing a thesis. The chapter titles and the structure of your thesis may change depending on your topic. Some advice for getting started with \LaTeX\ can be found in \autoref{ch:LatexTips}. Please note that LuaLaTeX and biber must be used to set this template.
+\end{quote}
+
+
+{\selectlanguage{ngerman}
+\begin{quote}
+\small
+\textbf{Zusammenfassung}\quad Hier steht das Abstract deiner Abschlussarbeit (in deutsch). Normalerweise wird das Abstract am Ende der Arbeit geschrieben. In den folgenden Kapiteln werden einige Hilfen und Ratschläge zum Schreiben einer Abschlussarbeit gegeben. Die Kapitelüberschriften und die Struktur der Arbeit können sich je nach Themengebiet ändern. In Kapitel \ref{ch:LatexTips} können Hinweise für den Einstieg in \LaTeX\ gefunden werden. Zum Setzen dieser Vorlage müssen LuaLaTeX und biber benutzt werden.
+\end{quote}
+}
+
+\selectlanguage{english}
+
+\cleardoublepage
+{
+\hypersetup{linkcolor=black}
+\tableofcontents
+}
+\pagestyle{scrheadings}
+\cleardoublepage

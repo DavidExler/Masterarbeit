@@ -1,0 +1,176 @@
+% Thesis Template of Tim Scherr (AIDA, tim.scherr@kit.edu)
+% Version: October 15th, 2018
+
+\documentclass[12pt, table, twoside, headsepline, openright, english, fleqn,numbers=noenddot]{scrreprt}
+\usepackage{
+    acronym,
+	amsmath,
+	amssymb,
+	blindtext,
+	booktabs,
+	caption,
+	csquotes,
+	fontspec,
+	geometry,
+	graphicx,
+	hyperref,
+	mathtools,
+	microtype,
+	multirow,
+	paralist,
+	tikz,
+	pgfplots,
+	scrlayer-scrpage,
+	setspace,
+	siunitx,
+	subfig,
+	tabu,
+	threeparttablex,
+	unicode-math,
+	url,
+	wallpaper,
+	xparse
+}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage[main=english, ngerman]{babel}
+\usepackage[xspace]{ellipsis}
+\usepackage[nottoc, notlot, notlof, chapter]{tocbibind}
+
+% Fonts
+\usepackage{libertine}
+\setmathfont[math-style=ISO,bold-style=ISO]{ XITS math }
+
+\definecolor{slategray}{rgb}{0.41, 0.41, 0.41}
+
+\RedeclareSectionCommand[ afterskip=.7\baselineskip]{chapter}
+
+% New chapter format
+\renewcommand*{\chapterformat}{\chapternumber{\thechapter}}
+\renewcommand{\chapterlinesformat}[3]{\chaptertitle{#3}#2\\
+  \rule[.5\baselineskip]{16.4cm}{1pt}\\*
+  }
+
+% Chapter number
+\newcommand{\chapternumber}[1]{%
+    \usekomafont{chapter}%
+    \mdseries%
+    \begin{minipage}[b]{0.15\textwidth}%
+        \raggedright{%
+            \hspace{7mm}%
+            %{\color{gray}\fontsize{60}{60}\selectfont#1}%
+            {\color{slategray}\fontsize{50}{50}\selectfont#1}%
+        }%
+    \end{minipage}%
+}
+
+% Chapter title
+\newcommand{\chaptertitle}[1]{%
+    \usekomafont{chapter}%
+    \leavevmode\smash{\begin{minipage}[b]{0.95\textwidth}%
+        \raggedleft #1%
+    \end{minipage}}%
+}
+
+
+% pgfplots
+\pgfplotsset{compat=1.14} % or newer, just test it
+\pgfplotsset{every x tick label/.append style={font=\footnotesize, yshift=0.1ex}}
+\pgfplotsset{every y tick label/.append style={font=\footnotesize, xshift=0.1ex}}
+\pgfplotsset{every z tick label/.append style={font=\footnotesize, xshift=0.1ex}}
+\pgfplotsset{every axis label/.append style={font=\footnotesize}}
+\pgfplotsset{every axis legend/.append style={font=\scriptsize}}
+\pgfplotsset{every axis/.append style={tick style={thin,black}}}
+\newlength\figureheight
+\newlength\figurewidth
+%\usepgfplotslibrary{external}
+%\tikzexternalize[prefix=External/]
+
+
+% References
+\usepackage[backend=biber, style=ieee]{biblatex}
+%\usepackage[backend=biber, style=numeric]{biblatex}
+%\usepackage[backend=biber, style=apa]{biblatex}
+%\DeclareLanguageMapping{ngerman}{english-apa}
+%\DeclareLanguageMapping{english}{english-apa}
+\bibliography{mybib}
+\DefineBibliographyStrings{ngerman}{
+   andothers = {{et\,al\adddot}}, % et al statt u.a.
+} 
+
+% Type area
+\areaset[1.3cm]{15.3cm}{23.5cm}
+\KOMAoptions{toc=bibliographynumbered, toc=listof, headwidth=16.7cm:0cm, footwidth=16.7cm:0cm}
+
+
+% Head/foot
+\setkomafont{pagehead}{\normalsize \normalfont}
+\setkomafont{pagefoot}{\normalsize}
+\pagestyle{scrheadings}
+\chead[]{}
+\lehead[]{\quad \headmark}
+\rohead[]{\headmark \quad}
+\ihead[]{}
+\cfoot[]{}
+\lefoot[]{\quad \pagemark}
+\rofoot[]{\pagemark \quad}
+\automark[section]{chapter}
+\setlength{\footheight}{28.99998pt}
+
+
+% Captions
+\DeclareCaptionFormat{myFormat}{#1#2 \textbf{|} #3\par}
+\DeclareCaptionFormat{myFormat2}{#1#2 #3\par}
+\captionsetup{labelfont={bf,footnotesize},textfont={footnotesize},format=myFormat,labelsep=none}
+\addto\captionsngerman{
+	\renewcommand{\figurename}{Abb.}
+	\renewcommand{\tablename}{Tab.}
+}
+\captionsetup[subfigure]{textfont={scriptsize},labelfont={scriptsize},format=myFormat2,labelsep=none,labelformat=brace}
+%\captionsetup[subfloat]{labelfont={bf,footnotesize},textfont={footnotesize},labelformat=simple,format=plain}
+
+
+% Links and pdf description
+\hypersetup{
+	pdfencoding=auto,
+	linkcolor=blue!50!black!100,
+	colorlinks=true,
+	citecolor=blue!50!black!100,
+	urlcolor=blue!50!black!100,
+	pdftitle={3D-Segmentierung und Merkmalsextraktion in Mikroskopiedaten},
+	pdfauthor={David Exler},
+	pdfsubject={},
+	pdfkeywords={Master's thesis, Segmentierung, 3D-Segmentierung, Zellmikroskopie, Cellpose, Stardist},
+}
+
+
+% Autorefnames
+\addto\extrasenglish{% \extrasngerman for German language
+	\renewcommand{\equationautorefname}{Eq.}%
+	\renewcommand{\chapterautorefname}{Chapter}%
+}
+
+
+% siunitx
+\sisetup{
+	locale=UK, % locale=DE for German language
+	separate-uncertainty,
+	exponent-product=\cdot
+}
+
+
+% Definitions
+\catcode`√=\active
+\let√\sqrt
+\catcode`•=\active
+\let•\item
+\catcode`…=\active
+\let…\dots
+\newcommand{\vect}[1]{\symbf{#1}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\CC}{C\nolinebreak\hspace{-.04em}\raisebox{.1ex}{\small +}\nolinebreak\hspace{-.08em}\raisebox{.1ex}{\small +}}
+
+\pltopsep=5pt
+\plitemsep=5pt

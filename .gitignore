@@ -10,3 +10,14 @@ TestCode
 .DS_Store
 *.pkl
 *.pyc
+*.aux
+*.gz
+*.log
+*.pdf
+*.fls
+*.bbl
+*.fls
+*.bcf
+*.out
+*.xdv
+*.xml

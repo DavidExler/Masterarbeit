@@ -1,0 +1,27 @@
+Nächste Schritte:
+    Labeling zugänglich machen
+    Klassifikatoren recherchieren
+
+Theorie sei wie folgt gegliedert:
+Methoden:
+    Alle Methoden die notwendig sind für das Verständnis
+Literatur:
+    Wer wendet das wie and?
+Offene Probleme:
+    Was gibt es noch nicht?
+Ziel der Arbeit:
+    Wie will ich diese Lücke füllen?
+
+
+Segmentierung in 2 Teilen, Myo und Kerne. Kerne klassifizieren für die externe infoquelle der Kerne - eigene Architektur des segmentierungsnetzes für myos das die infos nutzt?
+Infos die es dann gäbe:
+    - Zellkern Klasse
+    - 3D Myo channel
+    - 3 Marker channel
+        - Dystrophin, alpha-Actinin, SIR-Actin
+
+
+App: Kanäkle dazu schalten und Übersicht vom gesamten Bild
+1. Einbinden Knöpfe + ansicht
+2. Modelle probieren
+3.  neue 

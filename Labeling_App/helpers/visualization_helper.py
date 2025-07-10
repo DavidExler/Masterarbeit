@@ -65,23 +65,16 @@ def extract_contours_from_mask(mask2D):
 
 
 def normalize_with_cutoffs(data, lower_pct=1, upper_pct=99):
-    """
-    Normalize data to [0, 1] range after applying percentile cutoffs.
-
-    Parameters:
-        data (array-like): Input data.
-        lower_pct (float): Lower percentile for clipping.
-        upper_pct (float): Upper percentile for clipping.
-
-    Returns:
-        np.ndarray: Normalized data clipped and scaled between 0 and 1.
-    """
     data = np.asarray(data)
-    lower = np.percentile(data, lower_pct)
-    upper = np.percentile(data, upper_pct)
-    clipped = np.clip(data, lower, upper)
-    normalized = (clipped - lower) / (upper - lower)
+    normalized = np.zeros_like(data, dtype=np.float32)
+    for c in range(data.shape[-1]):
+        if not np.max(data[..., c]) == 0:
+            lower = np.percentile(data[..., c], lower_pct)
+            upper = np.percentile(data[..., c], upper_pct)
+            clipped = np.clip(data[..., c], lower, upper)
+            normalized[..., c] = (clipped - lower) / (upper - lower)
     return normalized
+
 
 
 def plot_image_with_clustered_contours_RGB(image, contours_with_classes):

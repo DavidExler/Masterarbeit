@@ -199,8 +199,10 @@ def calculate_IPQ(mask3D, gt3D, mapping, k1, k2, k3):#, iou_threshold=0.2):
     gt_assignment_counts = Counter()
 
 #   ----- Recognition Quality -----
+    all_gt_labels = set(np.unique(gt3D))
     for pred_label_str, matched_gts in mapping.items():
         pred_label = int(pred_label_str)
+        matched_gts = [gt for gt in matched_gts if gt in all_gt_labels]
         if matched_gts:
             TP.append(pred_label)
             matched_gt.update(matched_gts)
@@ -208,7 +210,7 @@ def calculate_IPQ(mask3D, gt3D, mapping, k1, k2, k3):#, iou_threshold=0.2):
         else:
             FP.append(pred_label)
 
-    for gt_label in np.unique(gt3D):
+    for gt_label in all_gt_labels:
         if gt_label == 0:
             continue
         if gt_label not in matched_gt:

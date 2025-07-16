@@ -34,7 +34,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
-\usepackage[main=english, ngerman]{babel}
+\usepackage[main=ngerman, english]{babel}
 \usepackage[xspace]{ellipsis}
 \usepackage[nottoc, notlot, notlof, chapter]{tocbibind}
 
@@ -89,8 +89,8 @@
 
 
 % References
-\usepackage[backend=biber, style=ieee]{biblatex}
-%\usepackage[backend=biber, style=numeric]{biblatex}
+%\usepackage[backend=biber, style=ieee]{biblatex}
+\usepackage[backend=biber, style=numeric]{biblatex}
 %\usepackage[backend=biber, style=apa]{biblatex}
 %\DeclareLanguageMapping{ngerman}{english-apa}
 %\DeclareLanguageMapping{english}{english-apa}
@@ -146,7 +146,7 @@
 
 
 % Autorefnames
-\addto\extrasenglish{% \extrasngerman for German language
+\addto\extrasngerman{% \extrasenglish for German language
 	\renewcommand{\equationautorefname}{Eq.}%
 	\renewcommand{\chapterautorefname}{Chapter}%
 }
@@ -154,7 +154,7 @@
 
 % siunitx
 \sisetup{
-	locale=UK, % locale=DE for German language
+	locale=DE, % locale=DE for German language
 	separate-uncertainty,
 	exponent-product=\cdot
 }

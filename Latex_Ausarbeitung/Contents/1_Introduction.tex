@@ -3,15 +3,45 @@
 \pagenumbering{arabic}
 
 \chapter{Einleitung}\label{ch:Introduction}
-Your thesis should start with an introduction. The introduction is supposed to motivate your thesis. Discuss the relevance of your topic, why are you looking into it, why is it relevant in the research field? Cite important research related to your motivation. 
+%Your thesis should start with an introduction. The introduction is supposed to motivate your thesis. Discuss the relevance of your topic, why are you looking into it, why is it relevant in the research field? Cite important research related to your motivation. 
 
-\section*{Objectives and Structure of this Thesis}
-Give an outline of your thesis. Briefly repeat the problem and  your contribution, for example in the form of research questions. 
+%\section*{Objectives and Structure of this Thesis}
+%Give an outline of your thesis. Briefly repeat the problem and  your contribution, for example in the form of research questions. 
 
 \section{Überblick}
-Das nachfolgende Kapitel leitet in das Thema der vorliegenden Thesis ein. Es beschreibt zu diesem Zweck das Projekt allgemein und beleuchtet die offenen Probleme, an denen das Projekt ansetzt. Davon ausgehend erläutert das Kapitel die Zielsetzung der Arbeit. Zuletzt wird die Struktur der schriftlichen Ausarbeitung erklärt.
+Das nachfolgende Kapitel leitet in das Thema der vorliegenden Thesis ein. 
+Es beschreibt zu diesem Zweck das Projekt allgemein und beleuchtet die offenen Probleme, an denen das Projekt ansetzt. Davon ausgehend erläutert das Kapitel die Zielsetzung der Arbeit. Zuletzt wird die Struktur der schriftlichen Ausarbeitung erklärt.
 
 \section{Allgemeine Beschreibung}
+Myotuben sind mehrkernige Muskelzellfäden \cite{lewis1917behavior, Enwere2014}. 
+Sie repräsentieren ein intermediäres Stadium der Muskelentwicklung, in dem sich die grundlegende Organisation der Muskelfaser bildet \cite{Gilbert2014}. 
+Menschliche Myotube-Kulturen \cite{Pogogeff1946} können für diverse Forschungszwecke eingesetzt werden und dabei Experimente am Menschen ersetzen.
+Sie werden beispielsweise verwendet um Muskelkrankheiten zu modellieren \cite{Weisrock2024}, Antworten auf neue Medikamente vorherzusagen \cite{Lair2025} oder synthetische Muskeln \cite{Jeong2025} sowie Muskelregeneration\cite{Scharner2011} zu erforschen.
+In den meisten Fällen werden die Myotuben, ihrer Zellkerne und zugehörige umliegenden Strukturen eingefärbt und unter dem Mikroskop analysiert \cite{Velica2011, Nolan2024, Agley2012}.
+Die Bilddaten enstehen dabei mit unterschiedlichen Herstellungsbedingungen, Färbungen und Aufnahmegeräten \cite{Chua2019, Shahini2018, Brunetti2021, NogalesGadea2010}. \newline
+Im Zuge der vorliegenden Arbeit werden \textit{TODO Beschreibung der Daten und Afnahmebedingungen} Daten analysiert und die Ergebnisse automatisiert ausgewertet.
+Aus den Daten werden interpretierbare Merkmale extrahiert, die es ermöglichen die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
+Alle hierzu angewandten Methoden sind auf Basis quantitaiver Vergleiche des aktuellen Stand der Technik gewählt und bestmöglich auf die Anforderungen angepasst.   
 \section{Offene Probleme}
+Um die Analyse der Muotuben effizient und in großem Umfang durchführen zu können, sind Bildverarbeitungsprogramme notwendig \cite{Noe2022}, da die manuelle Auswertung sowohl anspruchsvoll als auch zeitintensiv ist \cite{Weisrock2024}.
+Myotuben in Forschungsumgebungen ordnen sich in chaotischen Netzen mit Verschränkungen und Überkreuzungen \cite{Abdelmoez2020}.
+Aktuell sind die angewandeten Methoden noch nicht in der Lage zuverlässig einzelne Myotuben in einem dreidimesionalen Bild zu erkennen und von ihrem Anfang bis zum Ende zu verfolgen \cite{Inoue2018}.
+Besonders die "Cluster" die in der Entwicklung der Myotuben häufig entstehen verhindern oft die Instanz-bewusste Segmentierung \cite{Jeong2025}.
 \section{Zielsetzung}
+Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Instanz-bewusste Segmentierung von Myotuben in dreidimesionalen Mikroskopiedaten zu ermöglichen.
+Aus den Segmentierungsmasken können daraufhin morphologische Eigenschaften der einzelnen Myotuben gewonnen werden.
+Außerdem können die Masken dann genutzt werden, um den Status einzelner Myotuben anhand der darin enthaltenen Zellkerne zu ermitteln.
+Um die Segmentierung der Myotuben zu ermöglichen, werden verschiedene Zwischenziele definiert, die zusätzliche unterstützende Informationen sammeln, welche den Segmentierungsalgorithmen zur Verfügung gestellt werden.
+Die Zwischenziele umfassen:
+\begin{itemize}
+    \item Die Instanz-bewusste Segmentierung von Zellkernen in den dreidimensionalen Daten mithilfe des bestmöglichen Segmentierungsalgorithmus.
+    \item Das Klassifizieren der Zellkerne unter Einbezug der verschiedenen zur Verfügung stehenden Marker-Kanälen.
+    \item Das Kodieren der gewonnenen Informationen auf eine Weise, die sie für bestehende Segmentierungsalgorithmen nutzbar macht. \textit{NOTIZ: SAM basierte Segmentierung z.B. nutzt sowieso einen Encoder für "Hints" -> klassifizierte "In-Myo" Zellen als "Click", vielleicht die Längsachse der "In-Myo" Zellen als Längsachse der Myos}
+\end{itemize}
 \section{Strukturierung der Arbeit}
+Die nachfolgende Ausarbeitung ist in die Kapitel \ref{ch:Theory} Theorie, \ref{ch:NewMethods} Methoden, \ref{ch:Implementation} Implementierung, \ref{ch:results} Ergebnisse, \ref{ch:Discussion} Diskussion und \ref{ch:Conclusion} Zusammenfassung.
+In der Theorie sind Grundlagen, relevante Literatur und der Stand der Technik beschrieben. 
+Außderdem sind dort offene Probleme, sowie die Ansätze, die die vorliegende Arbeit verfolgt um sie zu lösen, dargestellt. 
+Der Methoden Teil beschreibt das neue, praktische Konzept, das die Arbeit einführt und das Implementierungs-Kapitel, wie die Methoden umgesetzt werden.
+Im Kapitel Ergebnisse werden ungewertet die Ergebnisse der durchgeführten Experimente dargestellt und in der Diskussion werden dann diese Ergebnisse ausgewertet.
+Mit der Zusammenfassung schließt die Ausarbeitung ab, legt kurz die gesamte Arbeit dar und liefert einen Ausblick für zukünftige Ziele.

@@ -1,20 +1,21 @@
 % !TeX root = ../Thesis.tex
 
 \chapter{Neues Konzept} \label{ch:NewMethods}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.99\linewidth]{Figures/graphAbstract.png}
-    \caption{Graphical Abstract - Das Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird , das für die Anwendung der vorliegenden Arbeit eingesetzt wird. Ein peer-reviewed Benchmark Datensatz aus Bildern von diversen Zellkulturen mit dazugehörigen Ground Truths wird links eingegeben. Mehrere austauschbare Segmentierungsnetze führen eine Inferenz für den Benchmark aus, Zwischen den entstehenden Segmentierungsmasken und den Ground Truths werden dann Übereinstimmungen gesucht. Aus diesen Korrespondenzen, den Metadaten und den Masken wird die neu eingeführte IPQ (siehe \ref{sec:Kriterien}). Mithilfe der Ergebnisse kann dann das optimale Segmentierungsnetz für die Anwendung gewöhlt werden.}
-    \label{fig:graph_abstract}
-\end{figure}
-
 %Describe your new methods/procedure (mathematically, conceptually, comprehensibly). Change the title of this chapter if there is a term for your new methods.
 \section{Überblick}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.99\linewidth]{Figures/graphAbstract.png}
+  \caption{Graphical Abstract - Das Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird , das für die Anwendung der vorliegenden Arbeit eingesetzt wird. Ein peer-reviewed Benchmark Datensatz aus Bildern von diversen Zellkulturen mit dazugehörigen Ground Truths wird links eingegeben. Mehrere austauschbare Segmentierungsnetze führen eine Inferenz für den Benchmark aus, Zwischen den entstehenden Segmentierungsmasken und den Ground Truths werden dann Übereinstimmungen gesucht. Aus diesen Korrespondenzen, den Metadaten und den Masken wird die neu eingeführte IPQ (siehe \ref{sec:Kriterien}). Mithilfe der Ergebnisse kann dann das optimale Segmentierungsnetz für die Anwendung gewöhlt werden.}
+  \label{fig:graph_abstract}
+\end{figure}
 Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. Es behandelt vor allem die selbstentwickelten Beiträge zu den Methoden. Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
 
 \section{Bewertungskriterien}\label{sec:Kriterien}
-Zur Wahl des Segmentierungsnetzes wird ein neues Bewertungskriterien eingeführt. 
+Zur Wahl des Segmentierungsnetzes wird ein neues Bewertungskriterien eingeführt und auf einem annotierten Datensatz getestet.
+Als Datensatz wird der S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset} genutzt, da dieser nicht in den Trainingsdaten eines der Segmentierungsnetze vorkommt.
+Im Gegensatz zu selbstentwickelten synthetischen Daten weicht die Bilddomäne dieses Benchmarks zwar stärker von der Domäne der Zieldaten ab,
+aber dafür sind die Daten an eine Veröffentlichung mit standardisiertem Peer-Review-Prozess gebunden.
 Das Kriterium ist eine Abwandlung der \ac{pq} \cite{kirillov2019PQ}, die hier \ac{ipq} genannt wird. 
 Ziel dabei ist es, zum einen, durch standard \ac{pq} die \ac{iou} für individuelle Instanzen zu bewerten und \ac{fp} sowie \ac{fn} Detektionen zu bestrafen. 
 Zum anderen sollen Verletzungen der injektiven Abbildung von segmentierten Nuclei auf die Instanzen der \ac{gt} negativ bewertet werden. 
@@ -68,7 +69,7 @@ Die nachfolgende Formel zeigt das \ac{ipq} Bewertungskriterium unterteilt in die
 }_{\text{Recognition Qualität (RQ)}}
 \times
 \underbrace{
-\frac{k_3\times\displaystyle |P|}{\displaystyle\sum_{p \in P} \left( \max(1, n_p - 1) \right)} }_{\text{Injektivitäts-Qualität (IQ)}},
+\frac{k_3\times\displaystyle |GT|}{\displaystyle\sum_{p \in P} \left( \max(1, n_p - 1) \right)} }_{\text{Injektivitäts-Qualität (IQ)}},
 \end{equation}
 wobei:
 \begin{itemize}
@@ -78,6 +79,7 @@ wobei:
     \item \ac{iou}$(\bigcup_{p_i \in p}p_i, g) \in [0,1] $ die \ac{iou} zwischen der allen Segmentierungsinstanzen $p_i$ in der \ac{tp}-Instanz \textit{p} und der zugehörigen \ac{gt}-Instanz \textit{g} beschreibt.   
     \item $|FP| \in \mathbb{Z}$ die Anzahl an falsch-positiven Segmentierungen ist, d.\,h. vorhergesagte Instanzen ohne \ac{gt}-Entsprechung.
     \item $|FP| \in \mathbb{Z}$ die Anzahl an nicht erkannten \ac{gt}-Instanzen ist, also \ac{gt}-Instanzen ohne zugehörige Vorhersage.
+    \item $|GT| \in \mathbb{Z}$ die Anzahl der \ac{gt}-Instanzen ist.
     \item $P$ die Menge aller Segmentierungsinstanzen ist, ungeachtet der \ac{gt}-Zuordnung.
     \item $p \subseteq P$ ein Vektor aller Segmentierungsinstanzen, die der gleichen \ac{gt}-Instanz zugeordnet sind, ist.
     \item $n_p$ die Dimension des Vektors $p$ ist.

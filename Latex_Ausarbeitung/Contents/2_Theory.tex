@@ -45,15 +45,6 @@ Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenadaption d
     \item Welche KI-Lösungen gibt es?
     \item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
 \end{itemize}
-
-\subsection{Klassifikation}
-\begin{itemize}
-    \item Was ist Klassifikation generell?
-    \item Was ist Klassifikation durch panoptische Segmentierung?
-    \item Welche klassischen Ansätze gibt es?
-    \item Welche KI-Lösungen gibt es?
-\end{itemize}
-
 \textit{Foundation-models} sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
 Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
 In der aktuellen Forschung werden verschiedene \textit{foundation-models} für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
@@ -67,6 +58,29 @@ Außerdem werden Bildfaltungen als Encoder auf Masken-Nutzereingaben angewandt.
 Mithilfe dieser Encoder wird dem Modell eine Repräsentation von dem zu segmentierenden Bild und optionalen, manuellen Hinweisen auf das erwünschte Ergebnis gegeben,
 die bereits semantische Informationen und abstrakte Bildmerkmale beinhalten.
 Aus diesen Repräsentation generiert dann der trainierte Decoder mehrere mögliche Masken mit zugehörigen Score, anhand dessen ein finales Segmentierungsergebnis ausgewählt wird.
+
+\subsection{Klassifikation}
+\begin{itemize}
+    \item Was ist Klassifikation generell?
+    \item Was ist Klassifikation durch panoptische Segmentierung?
+    \item Welche klassischen Ansätze gibt es?
+    \item Welche KI-Lösungen gibt es?
+    %\item 
+\end{itemize}
+Optionen für klassifikatoren: \begin{verbatim}
+    https://monai.io/model-zoo.html#/model/pathology_nuclei_classification 
+    pre-trained model for classifying nuclei cells as the following types - Other - Inflammatory - Epithelial - Spindle-Shaped
+    This model is trained using DenseNet121 over ConSeP dataset.
+    
+    https://monai.io/model-zoo.html#/model/hf_exaonepath-crc-msi-predictor
+    MSI classification of CRC tumors using EXAONEPath 1.0.0 Patch-level Foundation Model for Pathology
+
+    https://monai.io/model-zoo.html#/model/hf_exaonepath
+    EXAONEPath 1.0 Patch-level Foundation Model for Pathology
+\end{verbatim} 
+    
+
+
 \section{Literaturrecherche}
 
 \subsection{Benchmark}

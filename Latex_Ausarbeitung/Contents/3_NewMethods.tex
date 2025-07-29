@@ -88,3 +88,37 @@ wobei:
     \item $\text{IQ} \in [0,1]$ ein Faktor ist, der das Unterteilen von Nuclei durch das Segmentierungsnetz zu bestrafen. Wird ein Nucleus durch mehrere Instanzen der Segmentierungsmaske dargestellt, wird $n_p$ größer als Eins und der Faktor sinkt.
     \item $\text{IPQ} \in [0,1]$ ein Maß für die panoptische Segmentierungsqualität mit der Voraussetzung von injektiver Abbildung der Segmentierungsmasken-Instanzen auf die \ac{gt}-Instanzen darstellt, wobei höhere Werte bessere Übereinstimmung bedeuten.
 \end{itemize}
+
+\section{Klassifikator}
+Jedem instanzsegmentierten Nuclei muss eine Klasse zugewiesen werden, um die Ausgabe zur panoptischen Segmentierungsmaske zu erweitern.
+Hierzu ist ein Klassifikator notwendig, der den Instanzen eine der TODO X Klassen zuweist.
+Um diesen Klassifikator optimal zu erstellen wird ein umfangreicher Benchmark aus den Zieldaten erstellt, da bei der Messung der Klassifikationsleistung eine vollkommene Übereinstimmung der Bilddomäne notwendig ist.
+Benchmarks aus der Literatur umfassen weder dieselben Klassen noch dieselben Objektmerkmale und eignen sich daher nicht.
+Aus den manuell annotierten Bilddaten werden ein Test- und ein Trainingsanteil im Verhältnis eins zu neun extrahiert.
+Alle betrachteten Klassifikatoren werden ausschließlich mit den Trainingsdaten trainiert und ihre Leistung ausschließlich mithilfe der Testdaten getestet.
+Beide Datensätze werden durch Augmentierung erweitert und in Batches zusammengefasst.
+Zur Datenaugmentierung werden die folgenden Methoden eingesetzt:
+\begin{itemize}
+  \item \textbf{Rotation:} Mit einer Wahrscheinlichkeit von 50\,\% werden die Eingabedaten um 90° in der XY-Ebene rotiert.
+  \item \textbf{Spiegelung:} Ebenfalls mit einer Wahrscheinlichkeit von 50\,\% erfolgt eine Spiegelung entlang der Z-Achse.
+  \item \textbf{Gaußsches Rauschen:} Mit einer Wahrscheinlichkeit von 20\,\% wird Rauschen mit einem Mittelwert von 0 und einer Standardabweichung von 0{,}01 hinzugefügt.
+\end{itemize}
+Es werden sowohl \ac{cnn} als auch Vision Transformer basierte Klassifikatioren in Betracht gezogen.
+Da die Klassifikatoren Eingaben konstanter Größe benötigen werden, werden für jeden Klassifikator zusätzlich drei verschiedene Eingangsdaten-Formate getestet.
+Diese Typen unterscheiden sich in der Art, wie die Segmentierungsmaske des zu klassifizierenden Nucleus dem Klassifikator zugänglich gemacht wird.
+Daten des ersten Typs werden lediglich um einen Kanal erweitert, der die Segmentierungsmaske enthält.
+Für den zweiten Typ wird der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
+Alle anderen Kanäle bleiben unverändert.
+Zuletzt werden Daten des Typ drei mit einer Entfernungsmaske skaliert.
+Hierzu wird pixelweise der originale Nucleus-Kanal mit einer Transformation des Abstand aller Pixel außerhalb der Segmentierungsmaske wie folgt multipliziert:
+\begin{equation}
+I'(x) = I(x) \cdot \exp\left( -\frac{1}{\sigma} \min_{y \in \lnot M} \|x - y\|_2 \right),
+\end{equation}
+wobei:
+\begin{itemize}
+  \item $\quad I(x) \in [0, 1]$ der Intensitätswert des Nucleus Kanal an der Position $x$ ist,
+  \item $\quad I'(x)  \in [0, 1]$ der Intensitätswert des neuen, transformierten Nucleus Kanal an der Position $x$ ist,
+  \item $\quad x \in \Omega \subset \mathbb{N}^3$ die Position eines Voxels im diskreten Bildraum ist,
+  \item $\quad M \subseteq \Omega$ die Segmentierungsmaske und $\lnot M = \Omega \setminus M$ deren Komplement im Bildraum sind,
+  \item und $\sigma \in \mathbb{R}^+$ ein Parameter zur Steuerung des exponentiellen Abfalls ist.
+\end{itemize}

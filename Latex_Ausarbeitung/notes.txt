@@ -25,3 +25,7 @@ App: Kanäkle dazu schalten und Übersicht vom gesamten Bild
 1. Einbinden Knöpfe + ansicht
 2. Modelle probieren
 3.  neue 
+
+
+IDEE:
+jedem klassifikator ein FF vorschalten, das lernen kann, welche Kanäle sinnvoller weise eingebunden sein sollten!

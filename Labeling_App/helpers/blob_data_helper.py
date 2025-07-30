@@ -9,13 +9,13 @@ with open('helpers/masks3D_CELLPOSE_RUN_1_Quadrants.pkl', 'rb') as f:
     masks3D_20xRenamed = pickle.load(f)
 blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
 
-images3D_20xRenamed_full = []
-with open('helpers/imgs_20xRenamed.pkl', 'rb') as f:
-    images3D_20xRenamed_full = pickle.load(f)
-
-images3D_20xRenamed = []
-for im in images3D_20xRenamed_full:
-    images3D_20xRenamed.append(im[:,0,:,:])
+#images3D_20xRenamed_full = []
+#with open('helpers/imgs_20xRenamed.pkl', 'rb') as f:
+#    images3D_20xRenamed_full = pickle.load(f)
+#
+#images3D_20xRenamed = []
+#for im in images3D_20xRenamed_full:
+#    images3D_20xRenamed.append(im[:,0,:,:])
 #li = len(images3D_20xRenamed)
 
 normalized_channels = []
@@ -29,15 +29,15 @@ def normalize_channel(data):
     data = np.clip(data, lower, upper)
     return ((data - lower) / (upper - lower) * 255).astype(np.uint8)
 
-with open('helpers/quadrant_cutoffs.pkl', 'rb') as f:
-    cutoffs = pickle.load(f)
+#with open('helpers/quadrant_cutoffs.pkl', 'rb') as f:
+#    cutoffs = pickle.load(f)
 
 class BlobDataHelper:
     def __init__(self):
         self.li = len(normalized_channels)
         self.last_image = 0
         self.last_blob = 1
-        self.image = np.stack([images3D_20xRenamed[self.last_image]] * 3, axis=-1)
+        self.image = np.stack([normalized_channels[self.last_image]] * 3, axis=-1)
         self.mask = masks3D_20xRenamed[self.last_image]
         self.lum = len(np.unique(self.mask))
         self.blob = self.mask == 1

@@ -63,10 +63,20 @@ Aus diesen Repräsentation generiert dann der trainierte Decoder mehrere möglic
 \begin{itemize}
     \item Was ist Klassifikation generell?
     \item Was ist Klassifikation durch panoptische Segmentierung?
-    \item Welche klassischen Ansätze gibt es?
+    \item Welche klassischen Ansätze gibt es? 
     \item Welche KI-Lösungen gibt es?
     %\item 
 \end{itemize}
+Klassifikation beschreibt das Zuordnen einer Kategorie oder Klasse zu der eine gegebene Stichprobe gehört \cite{Fukunaga1993}.
+Hierzu werden die Merkmale des Objekts, das in der Stichprobe präsentiert wird, durch Beobachtung oder Messung gewonnen \cite{Kulkarni1998}.
+Nach wiederholter Extraktion der Merkmale von Objekten verschiedener Klassen werden Muster in den Merkmalen gesucht, um Regeln für die Zuweisung von Objekten zu Klassen auf Basis der Muster festzulegen \cite{ShalevShwartz2014}.
+Sowohl die Algorithmen zur Merkmalsextraktion, als auch zum Ableiten der Muster und Regeln können mit unterschiedlich hohem Rechenaufwand, Abstraktionsgrad und Maß an Generalisierbarkeit implementiert werden \cite{Loog2018}. 
+Zur Mekrmalsextraktion werden klassisch Metriken zu einem Vektor kombiniert \cite{Guyon2006}.
+Diese Metriken können beispielsweise die Verteilung der Farbkanäle, eine Charakterisierung der Textur, Parameter der Fourier-Entwicklung einer Kontur, die Fläche des Objekts und vieles mehr sein \cite{Mutlag2020}.
+Die meist genutzten Methoden der Klassifikation sind Logik-basierte Ansätze wie Entscheidungsbäume, Perzeptron-basierte Ansätze wie Neuronale Netze, statistische Ansätze wie Bayes'sche Netzwerke oder Nächster-Nachbar Verfahren und Support Vector Maschinen \cite{Kotsiantis2007}.
+
+
+
 Optionen für klassifikatoren: \begin{verbatim}
     https://monai.io/model-zoo.html#/model/pathology_nuclei_classification 
     pre-trained model for classifying nuclei cells as the following types - Other - Inflammatory - Epithelial - Spindle-Shaped
@@ -77,6 +87,8 @@ Optionen für klassifikatoren: \begin{verbatim}
 
     https://monai.io/model-zoo.html#/model/hf_exaonepath
     EXAONEPath 1.0 Patch-level Foundation Model for Pathology
+
+    https://github.com/BMEII-AI/RadImageNet
 \end{verbatim} 
     
 

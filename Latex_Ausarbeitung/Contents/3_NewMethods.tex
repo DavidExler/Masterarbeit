@@ -18,7 +18,7 @@ Im Gegensatz zu selbstentwickelten synthetischen Daten weicht die Bilddomäne di
 aber dafür sind die Daten an eine Veröffentlichung mit standardisiertem Peer-Review-Prozess gebunden.
 Das Kriterium ist eine Abwandlung der \ac{pq} \cite{kirillov2019PQ}, die hier \ac{ipq} genannt wird. 
 Ziel dabei ist es, zum einen, durch standard \ac{pq} die \ac{iou} für individuelle Instanzen zu bewerten und \ac{fp} sowie \ac{fn} Detektionen zu bestrafen. 
-Zum anderen sollen Verletzungen der injektiven Abbildung von segmentierten Nuclei auf die Instanzen der \ac{gt} negativ bewertet werden. 
+Zum anderen sollen Verletzungen der injektiven Abbildung von segmentierten Nuclei auf die Instanzen der \ac{gt} negativ bewertet werden, da die Anzahl der Nuclei eine bedeutungsvoll Metrik für den Nutzer ist. 
 Für die Berechnung wird im ersten Schritt der nachfolgende Brute Force Algorithmus angewandt, der die Zuordnung von Segmentierungsinstanzen zu \ac{gt}-Instanzen durchführt.
 
 \begin{algorithm}
@@ -104,15 +104,16 @@ Zur Datenaugmentierung werden die folgenden Methoden eingesetzt:
   \item \textbf{Gaußsches Rauschen:} Mit einer Wahrscheinlichkeit von 20\,\% wird Rauschen mit einem Mittelwert von 0 und einer Standardabweichung von 0{,}01 hinzugefügt.
 \end{itemize}
 Es werden sowohl \ac{cnn} als auch Vision Transformer basierte Klassifikatioren in Betracht gezogen.
-Da die Klassifikatoren Eingaben konstanter Größe benötigen werden, werden für jeden Klassifikator zusätzlich drei verschiedene Eingangsdaten-Formate getestet.
+Da in vielen Bildausschnitten Nuclei sehr nah aneinander liegen und dem Klassifikator signalisiert werden muss, welcher der sichtbaren Nuclei klassifiziert werden soll, werden für jeden Klassifikator zusätzlich drei verschiedene Eingangsdaten-Formate getestet.
 Diese Typen unterscheiden sich in der Art, wie die Segmentierungsmaske des zu klassifizierenden Nucleus dem Klassifikator zugänglich gemacht wird.
-Daten des ersten Typs werden lediglich um einen Kanal erweitert, der die Segmentierungsmaske enthält.
-Für den zweiten Typ wird der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
-Alle anderen Kanäle bleiben unverändert.
+Für Daten des ersten Typs wird lediglich der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
+Daten des zweiten Typs werden um einen Kanal erweitert, der Segmentierungsmaske enthält.
+Alle anderen Kanäle, einschließlich des Nuclei Kanal bleiben unverändert.
 Zuletzt werden Daten des Typ drei mit einer Entfernungsmaske skaliert.
 Hierzu wird pixelweise der originale Nucleus-Kanal mit einer Transformation des Abstand aller Pixel außerhalb der Segmentierungsmaske wie folgt multipliziert:
 \begin{equation}
 I'(x) = I(x) \cdot \exp\left( -\frac{1}{\sigma} \min_{y \in \lnot M} \|x - y\|_2 \right),
+\label{eq:distance}
 \end{equation}
 wobei:
 \begin{itemize}
@@ -122,3 +123,43 @@ wobei:
   \item $\quad M \subseteq \Omega$ die Segmentierungsmaske und $\lnot M = \Omega \setminus M$ deren Komplement im Bildraum sind,
   \item und $\sigma \in \mathbb{R}^+$ ein Parameter zur Steuerung des exponentiellen Abfalls ist.
 \end{itemize}
+Im Folgenden sind die Nuclei Kanäle der verschiedenen Methoden dargestellt.
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{0.18\textwidth}
+      \includegraphics[width=\linewidth]{Figures/cutout.png}
+      \caption{Minimaler Begrenzungsrahmen des Nuclei-Kanals, wie Daten des ersten Typs ihn enthalten.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.18\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION2_CH_0_SLICE_4.png}
+      \caption{Ausgeschnittener Bereich des Nuclei-Kanals mit mehreren Nuclei. 
+      Daten des zweiten Typs beinhalten diese Darstellung.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.18\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION1_CH_2_SLICE_4.png}
+      \caption{Segmentierungsmaske des zu klassifizierenden Nucleus, wie Daten des zweiten Typs sie enthalten.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.18\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION2_CH_2_SLICE_4.png}
+      \caption{Entfernungsmaske des zu klassifizierenden Nucleus. 
+      Diese wird pixelweise mit dem Nuclei-Kanal multipliziert für Typ drei.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.18\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION1_CH_0_SLICE_4.png}
+      \caption{Darstellung des Typs drei, entstanden durch Multiplikation von Nuclei-Kanal und Entfernungsmaske.}
+  \end{subfigure}
+  \caption{Darstellungen der verschiedenen Typen von Eingangsdaten. Jeder Typ zielt auf eine andere Art darauf ab, dem Klassifikator zu signalisieren, welcher der sichtbaren Nuclei zu segmentieren ist.}
+  \label{fig:five_images}
+\end{figure}
+
+Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bervor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
+Hierzu werden drei Methoden eingeführt und in Experimenten verglichen.
+Die erste Methode ist konventionelles Zero-Padding, also das symetrische Hinzufügen von Nullen an die Ränder des Bilds.
+Eine weitere Methode ist einfache bilineare oder bikubische Interpolation.
+Zuletzt wird eine lernbare Methode betrachtet.
+Ein kleines neuronales Netzwerk, vergrößert das Bilder schrittweise. 
+Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.

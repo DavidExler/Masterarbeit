@@ -5,3 +5,54 @@ In this chapter, the results are shown and discussed. Use an appropriate present
 
 
 \section{Überblick}
+
+\section{Segmentierung}
+Für die Wahl eines Segmentierungsnetzes wurde in Kapitel \ref{ch:NewMethods} das Bewertungskriterien \ac{ipq} eingeführt.
+Außerdem wurde in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518 Datensatz vorgestellt.
+Die \ac{ipq} wird auf dem Datensatz mit den Masken von drei vortainierten Segmentierungsnetzen und, zur Validierung, mit der \ac{gt} ausgeführt.
+Die Masken unterscheiden sich optisch stark (siehe Fig. \ref{fig:example_masks}), was sich auch in starken Unterschieden in der \ac{ipq} äußert.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/Deepcell_Mask_Example.png}
+        \caption{Deepcell Maske}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/nnUNet_Mask_Example.png}
+        \caption{nnUNet Maske}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/CellposeSam_Mask_Example.png}
+        \caption{CellposeSam Maske}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/gt_Mask_Example.png}
+        \caption{\ac{gt} Maske}
+    \end{subfigure}
+    \caption{Darstellung der Segmentierungsmasken der verschiedenen Segmentierungsnetze als Konturen auf dem Originalbild.}
+    \label{fig:example_masks}
+\end{figure}
+\newline
+Die Ergebnisse jedes Segmentierungsnetzes sind einzeln für jedes Bild im Appendix \ref{supp:ipq}. 
+Eine Zusammenfassung der Ergebnisse ist in den Boxplots in Fig. \ref{fig:boxplots_ipq} gegeben.
+Das zentrale Ergebnis ist, dassCellposeSAM die mit Abstand besten \ac{ipq}-Werte erzielt. 
+Mit einem Mittelwert von \num{0.64} ist der Wert signifikant höher als der Mittelwert von \ac{ipq} bei nnUNet (\num{0.04}) und Deepcell (\num{0.02}), mit entsprechenden p-Werten von \num{1.80e-80} bzw. \num{1.59e-81}. 
+Dennoch zeigt sich, dass CellposeSAM lediglich in der Kategorie Segmentatierungs-Qualität (SQ) sowohl den höchsten Median als auch den höchsten Mittelwert erreicht. 
+Die Recognition Qualität (RQ) der nnUNet-Masken ist signifikant höher als die der CellposeSAM-Masken (p-Wert: \num{3.4764e-06}), und ebenso die Injektive Qualität (IQ) der Deepcell-Masken (p-Wert: \num{6.7763e-08}).
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/Segmentation_Boxplots}
+    \caption{Boxplots der Ergebnisse der \ac{ipq} Berechnungen mit Faktoren \textit{$k_1$}, \textit{$k_2$} und \textit{$k_3$} jeweils gleich eins. 
+    Die X-Achse unterteilt die Daten in die Kriterien Segmentatierungs-Qualität (SQ), Recognition Qualität (RQ), Injektivitäts-Qualität (IQ) und \acf{ipq}, wie in der Formel \ref{eq:ipq} beschrieben. 
+    Für jede Metrik sind drei farbige Boxplots zu sehen, einer für jedes Segmentierungsnetz.
+    Die Boxplots visualisieren hierbei die Verteilung der Metriken.
+    Die Box repräsentiert das Interquartilsintervall (25.–75. Perzentil), wobei der Median als Linie innerhalb der Box dargestellt ist. 
+    Die sogenannten Whisker reichen bis zum 1.5-fachen des Interquartilsabstands über die Box hinaus. 
+    Darüber hinausgehende Punkte gelten als Ausreißer und werden einzeln dargestellt.}
+    \label{fig:boxplots_ipq}
+\end{figure}

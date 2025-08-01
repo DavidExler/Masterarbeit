@@ -25,3 +25,4 @@ TestCode
 *.fdb_latexmk
 *.json
 *.eps
+*.blg

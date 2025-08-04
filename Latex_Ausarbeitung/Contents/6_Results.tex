@@ -16,34 +16,48 @@ Die Masken unterscheiden sich optisch stark (siehe Fig. \ref{fig:example_masks})
     \begin{subfigure}[t]{0.24\textwidth}
         \includegraphics[width=\linewidth]{Figures/Deepcell_Mask_Example.png}
         \caption{Deepcell Maske}
+        \label{fig:DeepcellMaske}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.24\textwidth}
         \includegraphics[width=\linewidth]{Figures/nnUNet_Mask_Example.png}
         \caption{nnUNet Maske}
+        \label{fig:nnUNetMaske}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.24\textwidth}
         \includegraphics[width=\linewidth]{Figures/CellposeSam_Mask_Example.png}
         \caption{CellposeSam Maske}
+        \label{fig:CellposeSamMaske}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.24\textwidth}
         \includegraphics[width=\linewidth]{Figures/gt_Mask_Example.png}
         \caption{\ac{gt} Maske}
+        \label{fig:gtMaske}
     \end{subfigure}
-    \caption{Darstellung der Segmentierungsmasken der verschiedenen Segmentierungsnetze als Konturen auf dem Originalbild.}
+    \caption{Darstellung der Segmentierungsmasken der verschiedenen Segmentierungsnetze als Konturen auf einem zweidimensionalen Durchschnitt einer Stichprobe des S\_BIAD1518 Datensatz.}
     \label{fig:example_masks}
 \end{figure}
 \newline
 Die Ergebnisse jedes Segmentierungsnetzes sind einzeln für jedes Bild im Appendix \ref{supp:ipq}. 
 Eine Zusammenfassung der Ergebnisse ist in den Boxplots in Fig. \ref{fig:boxplots_ipq} gegeben.
 Das zentrale Ergebnis ist, dassCellposeSAM die mit Abstand besten \ac{ipq}-Werte erzielt. 
-Mit einem Mittelwert von \num{0.64} ist der Wert signifikant höher als der Mittelwert von \ac{ipq} bei nnUNet (\num{0.04}) und Deepcell (\num{0.02}), mit entsprechenden p-Werten von \num{1.80e-80} bzw. \num{1.59e-81}. 
+Mit einem Mittelwert von \num{0.64} ist der Wert signifikant höher als der Mittelwert von \ac{ipq} bei nnUNet (\num{0.04}) und Deepcell (\num{0.02}), mit entsprechenden p-Werten von \num{1.80e-80} bzw. \num{1.59e-81} bei einseitigen T-Tests. 
 Dennoch zeigt sich, dass CellposeSAM lediglich in der Kategorie Segmentatierungs-Qualität (SQ) sowohl den höchsten Median als auch den höchsten Mittelwert erreicht. 
 Die Recognition Qualität (RQ) der nnUNet-Masken ist signifikant höher als die der CellposeSAM-Masken (p-Wert: \num{3.4764e-06}), und ebenso die Injektive Qualität (IQ) der Deepcell-Masken (p-Wert: \num{6.7763e-08}).
-
-
+Obwohl nnUNet und Deepcell jeweils eine Metrik dominieren wird ihr \ac{ipq}-Wert durch die beiden schlechten Faktoren stark heruntergezogen, während CellposeSAM in jeder Metrik gut, wenn auch nicht am bestern, abschneidet.
+Außerdem zeigen die Boxplots viele Ausreißer in den Daten, was den Unterschieden der Bildkategorien, die der Datensatz enthält, geschuldet sein könnte.
+\newline
+\textbf{KOMMENTAR:} Ich weiß nicht, ob der folgende Teil schon als Interpretation/Diskussion zählt, oder generell schon zu viel ist:
+\newline
+Durch einen Vergleich der Masken mit der \ac{gt} sind die Schwächen und Stärken der einzelnen Netze ersichtlich.
+Die nnUNet sind sichtbar kleiner als die Instanzen, was eine schlechte Segmentierungsqualität bedingt.
+Oft zerteilen mehrere nnuNet-Masken eine Nuclei-Instanz, was von der Injektiven Qualität gestraft wird.
+Wie auch die Recognition Qualität zeigt findet hierbei nnUNet sehr zuverlässig die anwesenden Nuclei mit mindestens einer Maske.
+Deepcell (siehe Fig. \ref{fig:DeepcellMaske}) übersegmentiert die Nuclei, wodurch die Segmentierungsqualität stark abnimmt.
+Das Ergebnis sind Masken, die zu groß sind und oft mehr als einen Nucleus enthalten.
+Durch diese Übersegmentierung wird vermieden, dass Instanzen der \ac{gt} durch die Deepcell-Masken geteilt werden, was zu der guten Injektiven Qualität führt.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{Figures/Segmentation_Boxplots}

@@ -26,18 +26,14 @@ Ein Beispiel für Domänenunterschiede sind verschiedene Darstellungen gleicher 
     \includegraphics[width=0.24\textwidth]{Figures/Katze_3.jpg}\hfill
     \includegraphics[width=0.24\textwidth]{Figures/Katze_2.jpg}
     \caption{Vier Bilder \cite{jrfarm_katze, Egan_Katzen} der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad.}
-    \label{fig:enter-label}
+    \label{fig:domains}
 \end{figure}
 Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Katze}, aber die Merkmale wie Detailgrad, Abstraktion und Stil unterscheiden sich stark - Sie unterscheiden sich in ihrer Domäne.
 In der Bildverarbeitung ist es essenziell die Domäne der Quelldaten im Hinblick auf die Aufgabe der Applikation zu beachten \cite{wang2018domain,peng2017domain}. 
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{Figures/SAM_Architecture.png}
-\end{figure}
 Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenadaption durchgeführt werden \cite{han2022binsimilarity_domain,pinheiro2018domain,ganin2016domain}.
 
 
-\subsection{Segmentierung}
+\subsection{Segmentierung}\label{sec:Segmentierung}
 \textbf{KOMMENTAR} ist das notwendig?
 \begin{itemize}
     \item Was ist Segmentierung?
@@ -45,21 +41,37 @@ Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenadaption d
     \item Welche KI-Lösungen gibt es?
     \item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
 \end{itemize}
-\textit{Foundation-models} sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
-Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
-In der aktuellen Forschung werden verschiedene \textit{foundation-models} für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
-Ein besonders prominentes Exemplar ist das \ac{sam} \cite{kirillov2023sam} von Meta AI. 
-Es besteht aus einem Bild Encoder, einem Prompt Encoder und einem Masken Decoder. 
-Als Bild Encoder dient ein Vision Transformer \cite{dosovitskiy2020ViT}, mit Vortraining als Masked Auto Encoder \cite{he2022mae} und zusätzlichem Training für höhere Bildauflösung.
-Der Prompt Encoder ist mehrstufig.
-Ein angelernter Positional Encoder generiert Repräsentationen aus Positions-Nutzereingaben wie Punkten und Boxen.
-Für textuelle Prompts wird der Encoder des CLIP \cite{Radford2021} Model genutzt.
-Außerdem werden Bildfaltungen als Encoder auf Masken-Nutzereingaben angewandt.
-Mithilfe dieser Encoder wird dem Modell eine Repräsentation von dem zu segmentierenden Bild und optionalen, manuellen Hinweisen auf das erwünschte Ergebnis gegeben,
-die bereits semantische Informationen und abstrakte Bildmerkmale beinhalten.
-Aus diesen Repräsentation generiert dann der trainierte Decoder mehrere mögliche Masken mit zugehörigen Score, anhand dessen ein finales Segmentierungsergebnis ausgewählt wird.
-
-\subsection{Klassifikation}
+Bildsegmentierung lässt sich formulieren als die Aufgabe, Pixel mit semantischen Labels zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
+In Fig. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} der verschiedenen Arten von Segmentierung zu sehen.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/SegmentationOriginal.png}
+        \caption{Original}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/Semantic.png}
+        \caption{Semantisch}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/Instance.png}
+        \caption{Instanz}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/Panoptic.png}
+        \caption{Panoptisch}
+    \end{subfigure}
+    \caption{\cite{kirillov2019PQ}. Verschiedene Arten von Segmentierung. Links ist das Originalbild zu sehen, rechts folgend sind die zugeordneten pixelweise Labels farblich eingezeichnet. Gleiche Farben bedeuten gleiche Labels.}
+    \label{fig:Segmentation}
+\end{figure}
+Für die verschiedenen Segmentierungsarten werden an die Aufgabe angepasste Architekturen verwendet \cite{Arnab2017, Chen2018}, dabei sind die Modelle in der Regel nach dem Vorbild des \textit{U-Net} \cite{Ronneberger2015} aus einem Merkmalsextraktor (Encoder) und einem Vorhersagenetz (Decoder) aufgebaut \cite{Girshick2014}.
+Der Encoder nutzt dabei beispielsweise Bildfaltungen mit Kernen, deren optimale Gewichte anhand von annotierten Daten gelernt werden \cite{Long2015}.
+%Long2015 - semantische Segmentierung - FCN
+%Ronneberger2015 - U-Net
+%Arnab2017 - Pixelwise instance segmentation with a dynamically instantiated network
+%Chen2018 - Masklab: {Instance} segmentation by refining object detection with semantic and direction features
+%%   Hariharan2014 - Simultaneous detection and segmentation
+\subsection{Klassifikation}\label{sec:Klassifikation}
 \begin{itemize}
     \item Was ist Klassifikation generell?
     \item Was ist Klassifikation durch panoptische Segmentierung?
@@ -71,35 +83,37 @@ Klassifikation beschreibt das Zuordnen einer Kategorie oder Klasse zu der eine g
 Hierzu werden die Merkmale des Objekts, das in der Stichprobe präsentiert wird, durch Beobachtung oder Messung gewonnen \cite{Kulkarni1998}.
 Nach wiederholter Extraktion der Merkmale von Objekten verschiedener Klassen werden Muster in den Merkmalen gesucht, um Regeln für die Zuweisung von Objekten zu Klassen auf Basis der Muster festzulegen \cite{ShalevShwartz2014}.
 Sowohl die Algorithmen zur Merkmalsextraktion, als auch zum Ableiten der Muster und Regeln können mit unterschiedlich hohem Rechenaufwand, Abstraktionsgrad und Maß an Generalisierbarkeit implementiert werden \cite{Loog2018}. 
-Zur Mekrmalsextraktion werden klassisch Metriken zu einem Vektor kombiniert \cite{Guyon2006}.
+Zur Merkmalsextraktion werden klassisch Metriken zu einem Vektor kombiniert \cite{Guyon2006}.
 Diese Metriken können beispielsweise die Verteilung der Farbkanäle, eine Charakterisierung der Textur, Parameter der Fourier-Entwicklung einer Kontur, die Fläche des Objekts und vieles mehr sein \cite{Kunaver2005, Mutlag2020}.
 Moderne Anwendungen nutzen zur Merkmalsextraktion verschiedene Deep Learning basierte Methoden \cite{Khan2023}.
 Recurrent Neural Networks \cite{Lecun1998} und vor allem \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} sind in der Lage aus Bildern aussagekräftige, abstrakte Merkmale zu generieren \cite{Plested2022}.
 Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als Encoder bezeichnet.
 Die meist genutzten Methoden der Klassifikation sind Logik-basierte Ansätze wie Entscheidungsbäume, Perzeptron-basierte Ansätze wie Neuronale Netze, statistische Ansätze wie Bayes'sche Netzwerke oder Nächster-Nachbar Verfahren und Support Vector Maschinen \cite{Kotsiantis2007}.
 Der State-of-the-Art ist ein Neuronales Netz, das auf Basis der abstraken Merkmale des Encoder eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}
-Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger \ac{gt} überwacht den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse in Gewichtungen von der Ausgabe des Encoders und nicht-linearen Aktivierungsfunktionen auszudrücken \cite{Schmidhuber2015}.
+Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger \ac{gt} überwacht den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse in Gewichtungen von der Ausgabe des Encoders und nicht-linearen Aktivierungsfunktionen auszudrücken \cite{Schmidhuber2015}. \newline
+Ein Spezialfall der Klassifikation ist die pixelweise Klassifikation oder \textbf{panoptische Segmentierung} \cite{kirillov2019PQ}.
+Hierbei wird jedem Pixel eine zugehörige Klasse und individuelle Instanz zugewiesen.
+Auch die panoptische Segmentierung wird in der Regel mit einem Encoder-Decoder Netz durchgeführt, wobei der Decoder meist aus parallelen Strukturen zur semantischen- und Instanzsegmentierung besteht \cite{Kirillov2019a}. 
 
 
-
-Yuan2022 - Reinforcement Learning
-Bain2021 - ViT Encoder
-Krizhevsky2012- ImageNet CNN
-Lecun1998 - BASE RNN
-Elngar2021 - CNN Survey - unsupervised/supervised
-Optionen für klassifikatoren: \begin{verbatim}
-    https://monai.io/model-zoo.html#/model/pathology_nuclei_classification 
-    pre-trained model for classifying nuclei cells as the following types - Other - Inflammatory - Epithelial - Spindle-Shaped
-    This model is trained using DenseNet121 over ConSeP dataset.
-    
-    https://monai.io/model-zoo.html#/model/hf_exaonepath-crc-msi-predictor
-    MSI classification of CRC tumors using EXAONEPath 1.0.0 Patch-level Foundation Model for Pathology
-
-    https://monai.io/model-zoo.html#/model/hf_exaonepath
-    EXAONEPath 1.0 Patch-level Foundation Model for Pathology
-
-    https://github.com/BMEII-AI/RadImageNet
-\end{verbatim} 
+%Yuan2022 - Reinforcement Learning
+%Bain2021 - ViT Encoder
+%Krizhevsky2012- ImageNet CNN
+%Lecun1998 - BASE RNN
+%Elngar2021 - CNN Survey - unsupervised/supervised
+%Optionen für klassifikatoren: \begin{verbatim}
+%    https://monai.io/model-zoo.html#/model/pathology_nuclei_classification 
+%    pre-trained model for classifying nuclei cells as the following types - Other - Inflammatory - Epithelial - Spindle-Shaped
+%    This model is trained using DenseNet121 over ConSeP dataset.
+%    
+%    https://monai.io/model-zoo.html#/model/hf_exaonepath-crc-msi-predictor
+%    MSI classification of CRC tumors using EXAONEPath 1.0.0 Patch-level Foundation Model for Pathology
+%
+%    https://monai.io/model-zoo.html#/model/hf_exaonepath
+%    EXAONEPath 1.0 Patch-level Foundation Model for Pathology
+%
+%    https://github.com/BMEII-AI/RadImageNet
+%\end{verbatim} 
     
 
 
@@ -138,34 +152,70 @@ Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generie
 %\end{itemize}
 
 \subsection{Segmentierungsnetz}
+\textit{Foundation-models} sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
+Sie werden zunächst auf allgemeinen Aufgaben vortrainiert und anschließend auf spezifische Anwendungen angepasst (\textit{fine-tuning}), meist unter Einfrieren von Teilen der Gewichte \cite{Yosinski2014}.
+Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
+In der aktuellen Forschung werden verschiedene \textit{foundation-models} für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
+Ein prominentes Exemplar ist das \ac{sam} \cite{kirillov2023sam} von Meta AI. 
+Es besteht aus einem Bild Encoder, einem Prompt Encoder und einem Masken Decoder (siehe Fig. \ref{fig:SAM_Architektur}). 
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Figures/SAM_Architecture.png}
+    \caption{\cite{kirillov2023sam}. Architektur des \ac{sam}. Eingabebilder werden durch einen Bild Encoder zu Repräsentationen umgeformt. Zusätzliche optionale Hinweise auf das zu segmentierende Objekt werden durch Bildfaltungen oder einen Prompt Encoder repräsentiert. Anschließend prädiziert der Decoder mehrere mögliche Masken und zugehörige Zuversichtlichkeiten.}
+    \label{fig:SAM_Architektur}
+\end{figure}
+Als Bild Encoder dient ein Vision Transformer \cite{dosovitskiy2020ViT}, mit Vortraining als Masked Auto Encoder \cite{he2022mae} und zusätzlichem Training für höhere Bildauflösung.
+Der Prompt Encoder ist mehrstufig.
+Ein angelernter Positional Encoder generiert Repräsentationen aus Positions-Nutzereingaben wie Punkten und Boxen.
+Für textuelle Prompts wird der Encoder des CLIP \cite{Radford2021} Model genutzt.
+Außerdem werden Bildfaltungen als Encoder auf Masken-Nutzereingaben angewandt.
+Mithilfe dieser Encoder wird dem Modell eine Repräsentation von dem zu segmentierenden Bild und optionalen, manuellen Hinweisen auf das erwünschte Ergebnis gegeben,
+die bereits semantische Informationen und abstrakte Bildmerkmale beinhalten.
+Aus diesen Repräsentation generiert dann der Decoder mehrere mögliche Masken mit zugehörigen Zuversichtlichkeiten, aus denen ein finales Segmentierungsergebnis ausgewählt wird.\newline
 \ac{sam} wurde bereits für viele Mikroskopie-Zelldaten downstream Anwendungen \textit{fine-tuned} \cite{archit2025samfine, israel2023samfine, vandeloo2025samfine}. 
-Auch das Cellpose-Team, das schon zuvor leistungsstarke Segmentierungsmodelle für Zellen hervorgebracht hat \cite{stringer2021cellpose} hat einen \textit{fine-tune} von \ac{sam} veröffentlicht \cite{pachitariu2025samcellpose}.
-
-
-
-Notizen:
-Architekturen:
-CellposeSam:
-Foundation Model + Finetune
-We wanted to replace those weak points with the advantages provided by the Cellpose framework. Briefly in Cellpose, a U-net type neural network is used to predict a set of vector flows, which form an intermediate representation of the segmentation [3] (Figure 1a). These vector flows can be iterated in parallel at every pixel by gradient tracking to produce a set of masks. Conversely, the flow fields can be constructed from the masks as training data for the neural network. By contrast, SAM predicts masks in an image sequentially one-by-one, based on prompts given to the algorithm either in the form of point(s), a box, or text and which get further processed by specialized modules [6] (Figure 1b). To densely predict all the cells in an image, biologically-adapted versions of SAM add another set of modules and neural networks [7–9] (not shown in Figure 1b). This strategy for generating dense segmentations is cumbersome and requires careful tuning of many different parts
-We decided to instead eliminate entirely the decoder modules of SAM and use the image encoder exclusively, which contains a majority of the parameters (305M out of 312M, Figure 1c). From the encoder output, we directly predicted the vector flow fields of Cellpose, without any intermediate modules (Figure 1c). In addition, we made a few modifications to the encoder itself. The default 1024×1024 image inputs and 16×16 patch sizes of SAM were designed for high-resolution photographs [6, 15]. We reduced this to 256×256 and 8×8, which required us to adapt the position embeddings and patch embedding filters via appropriate subsampling. These modifications improved runtime performance and ensured that more computation is dedicated to each region of the image. We also reverted the local attention layers of the custom ViT transformer from SAM back to the default global attention of ViT-L, with almost no runtime penalty [16].
-
-Despite making these modifications, we were still able to initialize Cellpose-SAM with the SAM weights pretrained on the SA-1B dataset [6] (Figure 1de). The model was then trained on an updated dataset of cells and nuclei containing 22,826 train images with a combined 3,341,254 training ROIs. This dataset combines major currently available datasets: Cellpose, Cellpose Nuclei, Omnipose, TissueNet, LiveCell, YeaZ, DeepBacs, Neurips 2022, MoNuSeg, MoNuSAC, CryoNuSeg, NuInsSeg, BCCD, CPM 15+17, TNBC, LynSec, IHC TMA, CoNIC, PanNuke [1–3, 17–36] (Figure 1df, Figure S1). We continued to use the Cellpose3 mixing probabilities for down-weighting homogeneous datasets with many images [5].
-
-Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell}  Caliban: \cite{moen2019DeepcellCaliban} Ohne Foundation Model - Backbone und pyramid \newline
-The deep learning model for nuclear segmentation was based on the design of feature pyramid networks. The network was constructed from an EfficientNetV2L backbone68 connected to a feature pyramid. Input images were concatenated with a coordinate map before entering the backbone. We used backbone layers C1–C5 and pyramid layers P1–P7. The final pyramid layers were connected to three semantic segmentation heads that predict transforms of the labeled image.
-
-nnU-Net \cite{isensee2021nnu} am meisten zitiert, dynamische Architektur:
-We present nnU-Net, a deep learning-based segmentation method
-that automatically configures itself including preprocessing, net-
-work architecture, training and post-processing for any new task
-in the biomedical domain. nnU-Net sets a new state of the art for
-the majority of tasks on which it was evaluated, outperforming all
-respective specialized processing pipelines. The strong performance
-of nnU-Net is not achieved by a new network architecture, loss func-
-tion or training scheme (hence the name nnU-Net, ‘no new net’), but
-by systematizing the complex process of manual method configura-
-tion, 
+Auch für bestehende biologische Segmentierungsanwendungen, wie etwa Cellpose\cite{stringer2021cellpose}, wurde \ac{sam} auf Zelldaten angepasst \cite{pachitariu2025samcellpose}.
+Dieser \textit{fine-tune} nennt sich CellposeSAM.
+Er kombiniert den Bild-Encoder von \ac{sam} mit dem „Flow“-Segmentierungsansatz von Cellpose.
+Dabei generiert der Bild-Encoder direkt Vekotoren, die Zwischenrepräsentationen, die sogenannten "Flows", darstellen.
+Diese "Flows" werden pixelweise zu einem Gradientenfeld überführt.
+Mithilfe der Gradienten werden dann Objektinstanzen vorhergesagt.
+Fig. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Figures/CellposeSAM_Diagramm.png}
+    \caption{\cite{pachitariu2025samcellpose}. Ablauf des CellposeSAM Modell. Eingabebilder werden durch einen Bild Encoder direkt zu "Flows" umgeformt. Die Gradienten der Flows werden verfolgt und aus dem entstehenden Gradientenfeld werden Segmentierungsinstanzen vorhergesagt.}
+    \label{fig:CellposeSAM}
+\end{figure}
+Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell} bietet weitere Zellsegmentierungsnetze.
+Das Deepcell-Caliban \cite{moen2019DeepcellCaliban}-Netz nutzt als Encoder eine EfficientNetV2L-Architektur \cite{Tan2021}, an deren Ausgabeschichten (C1\–C5) eine Pyramiden-Struktur zur Merkmalsfusion (P1\–P7) angeschlossen ist. 
+Eine Besonderheit des Netzes ist, dass Eingabebildern zusätzlich Koordinatenkarten hinzugefügt werden.
+Als Decoder dienen drei Segmentierungsköpfe, die verschiedene Transformationen der gelabelten Trainingsmasken vorhersagen.\newline
+In der Literatur sehr verbreitet ist außerdem das nnU-Net \cite{isensee2021nnu}, ein Segmentierungsframework das sich automatisch an neue biomedizinische Aufgaben anpasst.
+Es konfiguriert Vorverarbeitung, Netzwerkarchitektur, Training und Nachbearbeitung dynamisch auf Basis der Eigenschaften des jeweiligen Datensatzes. 
+Die Leistungsfähigkeit des Ansatzes ergibt sich nicht aus einer neuen Architektur oder Lernmethode, sondern aus der konsequenten Automatisierung und Systematisierung von Entwurfsentscheidungen.
+%Notizen:
+%Architekturen:
+%CellposeSam:
+%Foundation Model + Finetune
+%We wanted to replace those weak points with the advantages provided by the Cellpose framework. Briefly in Cellpose, a U-net type neural network is used to predict a set of vector flows, which form an intermediate representation of the segmentation [3] (Figure 1a). These vector flows can be iterated in parallel at every pixel by gradient tracking to produce a set of masks. Conversely, the flow fields can be constructed from the masks as training data for the neural network. By contrast, SAM predicts masks in an image sequentially one-by-one, based on prompts given to the algorithm either in the form of point(s), a box, or text and which get further processed by specialized modules [6] (Figure 1b). To densely predict all the cells in an image, biologically-adapted versions of SAM add another set of modules and neural networks [7–9] (not shown in Figure 1b). This strategy for generating dense segmentations is cumbersome and requires careful tuning of many different parts
+%We decided to instead eliminate entirely the decoder modules of SAM and use the image encoder exclusively, which contains a majority of the parameters (305M out of 312M, Figure 1c). From the encoder output, we directly predicted the vector flow fields of Cellpose, without any intermediate modules (Figure 1c). In addition, we made a few modifications to the encoder itself. The default 1024×1024 image inputs and 16×16 patch sizes of SAM were designed for high-resolution photographs [6, 15]. We reduced this to 256×256 and 8×8, which required us to adapt the position embeddings and patch embedding filters via appropriate subsampling. These modifications improved runtime performance and ensured that more computation is dedicated to each region of the image. We also reverted the local attention layers of the custom ViT transformer from SAM back to the default global attention of ViT-L, with almost no runtime penalty [16].
+%
+%Despite making these modifications, we were still able to initialize Cellpose-SAM with the SAM weights pretrained on the SA-1B dataset [6] (Figure 1de). The model was then trained on an updated dataset of cells and nuclei containing 22,826 train images with a combined 3,341,254 training ROIs. This dataset combines major currently available datasets: Cellpose, Cellpose Nuclei, Omnipose, TissueNet, LiveCell, YeaZ, DeepBacs, Neurips 2022, MoNuSeg, MoNuSAC, CryoNuSeg, NuInsSeg, BCCD, CPM 15+17, TNBC, LynSec, IHC TMA, CoNIC, PanNuke [1–3, 17–36] (Figure 1df, Figure S1). We continued to use the Cellpose3 mixing probabilities for down-weighting homogeneous datasets with many images [5].
+%
+%Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell}  Caliban: \cite{moen2019DeepcellCaliban} Ohne Foundation Model - Backbone und pyramid \newline
+%The deep learning model for nuclear segmentation was based on the design of feature pyramid networks. The network was constructed from an EfficientNetV2L backbone68 connected to a feature pyramid. Input images were concatenated with a coordinate map before entering the backbone. We used backbone layers C1–C5 and pyramid layers P1–P7. The final pyramid layers were connected to three semantic segmentation heads that predict transforms of the labeled image.
+%
+%nnU-Net \cite{isensee2021nnu} am meisten zitiert, dynamische Architektur:
+%We present nnU-Net, a deep learning-based segmentation method
+%that automatically configures itself including preprocessing, net-
+%work architecture, training and post-processing for any new task
+%in the biomedical domain. nnU-Net sets a new state of the art for
+%the majority of tasks on which it was evaluated, outperforming all
+%respective specialized processing pipelines. The strong performance
+%of nnU-Net is not achieved by a new network architecture, loss func-
+%tion or training scheme (hence the name nnU-Net, ‘no new net’), but
+%by systematizing the complex process of manual method configura-
+%tion, 
 
 
 %Mask R-CNN, or CondInst

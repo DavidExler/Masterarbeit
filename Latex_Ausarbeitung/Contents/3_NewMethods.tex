@@ -6,10 +6,16 @@
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.99\linewidth]{Figures/graphAbstract.png}
-  \caption{Graphical Abstract - Das Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird , das für die Anwendung der vorliegenden Arbeit eingesetzt wird. Ein peer-reviewed Benchmark Datensatz aus Bildern von diversen Zellkulturen mit dazugehörigen Ground Truths wird links eingegeben. Mehrere austauschbare Segmentierungsnetze führen eine Inferenz für den Benchmark aus, Zwischen den entstehenden Segmentierungsmasken und den Ground Truths werden dann Übereinstimmungen gesucht. Aus diesen Korrespondenzen, den Metadaten und den Masken wird die neu eingeführte IPQ (siehe \ref{sec:Kriterien}). Mithilfe der Ergebnisse kann dann das optimale Segmentierungsnetz für die Anwendung gewöhlt werden.}
+  \caption{Graphical Abstract - Das Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird, das für die Anwendung der vorliegenden Arbeit eingesetzt wird. 
+  Ein peer-reviewed Benchmark Datensatz aus Bildern von diversen Zellkulturen mit dazugehörigen Ground Truths wird links eingegeben. 
+  Mehrere austauschbare Segmentierungsnetze führen eine Inferenz für den Benchmark aus, zwischen den entstehenden Segmentierungsmasken und den Ground Truths werden dann Übereinstimmungen gesucht. 
+  Aus diesen Korrespondenzen, den Metadaten und den Masken wird die neu eingeführte IPQ (siehe \ref{sec:Kriterien}) berechnet. 
+  Mithilfe der Ergebnisse kann dann das optimale Segmentierungsnetz für die Anwendung gewählt werden.}
   \label{fig:graph_abstract}
 \end{figure}
-Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. Es behandelt vor allem die selbstentwickelten Beiträge zu den Methoden. Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
+Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. 
+Es behandelt vor allem die selbstentwickelten Beiträge zu den Methoden. 
+Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
 
 \section{Bewertungskriterien}\label{sec:Kriterien}
 Zur Wahl des Segmentierungsnetzes wird ein neues Bewertungskriterien eingeführt und auf einem annotierten Datensatz getestet.
@@ -163,3 +169,13 @@ Eine weitere Methode ist einfache bilineare oder bikubische Interpolation.
 Zuletzt wird eine lernbare Methode betrachtet.
 Ein kleines neuronales Netzwerk, vergrößert das Bilder schrittweise. 
 Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.
+
+
+Backbones:
+\cite{He2016} ResNet
+\cite{Tan2021} EfficientNetV2L
+\cite{Liu2022} convnextxl
+\cite{Liu2022a} SwinV2
+\begin{figure}
+  \includegraphics[width=\linewidth]{Figures/SWINV2_Architecture.png}
+\end{figure}

@@ -219,6 +219,37 @@ Die Leistungsfähigkeit des Ansatzes ergibt sich nicht aus einer neuen Architekt
 
 
 %Mask R-CNN, or CondInst
+
+
+\section{Klassifikator}
+\textbf{QUELLEN NOCH!}\newline
+Für Klassifikatoren werden in der Regel nur Encoder vortrainiert.
+Der Decoder muss den Klassen der downstream Anwendung angepasst werden.
+Viele etablierte Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet Datensatz vortrainiert werden.
+ResNet ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
+Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Fig. \ref{fig:ResCon}).
+Es wurde gezeigt, dass residual connections dem Degradierungsproblem von Netzen mit steigender Tiefe entgegenwirken.
+\begin{figure}
+    \includegraphics[width=\linewidth]{Figures/ResidualConns.png}
+    \caption{Residual connection. Der Eingang des modularen Blocks ist mit dem Eingang direkt verbunden \cite{He2016}.}
+    \label{fig:ResCon}
+\end{figure}
+In ihrem paper stellen die Autoren fünf unterschiedlich tiefe Varianten der ResNet Architektur vor.
+Jedes Variante enthält fünf Blöcke mit residual connections.
+Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, und der ReLU Aktivierungsfunktion.\newline
+EfficientNetV2 ist der Nachfolger von effnet 1 Tan2019
+
+
+
+Backbones:
+\cite{He2016} ResNet
+\cite{Tan2021} EfficientNetV2L
+\cite{Liu2022} convnextxl
+\cite{Liu2022a} SwinV2
+\begin{figure}
+  \includegraphics[width=\linewidth]{Figures/SWINV2_Architecture.png}
+\end{figure}
+
 \section{Offene Probleme}
 
 \section{Zielsetzung}

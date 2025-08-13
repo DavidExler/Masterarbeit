@@ -5,7 +5,7 @@ import numpy as np
 masks3D_20xRenamed = []
 #with open('helpers/masks3D_CELLPOSE_RUN_1.pkl', 'rb') as f:
 #    masks3D_20xRenamed = pickle.load(f)
-with open('helpers/masks3D_CELLPOSE_RUN_1_Quadrants.pkl', 'rb') as f:
+with open('/Users/davidexler/Documents/Masterarbeit/repo/Masterarbeit/Labeling_App/helpers/Aufteilung_Labeling_App/rüdiger/masks3D_CELLPOSE_RUN_1_Quadrants.pkl', 'rb') as f:
     masks3D_20xRenamed = pickle.load(f)
 blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
 
@@ -19,7 +19,7 @@ blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
 #li = len(images3D_20xRenamed)
 
 normalized_channels = []
-with open('helpers/normalized_channels.pkl', 'rb') as f:
+with open('/Users/davidexler/Documents/Masterarbeit/repo/Masterarbeit/Labeling_App/helpers/Aufteilung_Labeling_App/rüdiger/normalized_channels.pkl', 'rb') as f:
     normalized_channels = pickle.load(f)
 
 

@@ -15,12 +15,12 @@ import pickle
 import json
 from monai.networks.nets import DenseNet121, resnet18
 import torch.nn as nn
-from helpers.classifier_helper import ClassificatorBlobHelper
+from Classification.classifier_helper import ClassificatorBlobHelper
 from monai.transforms import (
     Compose, RandRotate90, RandFlip, RandGaussianNoise,
     EnsureType, EnsureChannelFirst
 )
-from helpers.classifier_helper import ObjectPatchDataset, calculate_test_loss
+from Classification.classifier_helper import ObjectPatchDataset, calculate_test_loss
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 

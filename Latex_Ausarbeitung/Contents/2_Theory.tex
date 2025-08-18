@@ -222,32 +222,47 @@ Die Leistungsfähigkeit des Ansatzes ergibt sich nicht aus einer neuen Architekt
 
 
 \section{Klassifikator}
-\textbf{QUELLEN NOCH!}\newline
+%\textbf{QUELLEN NOCH!}\newline
 Für Klassifikatoren werden in der Regel nur Encoder vortrainiert.
 Der Decoder muss den Klassen der downstream Anwendung angepasst werden.
-Viele etablierte Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet Datensatz vortrainiert werden.
+State-of-the-Art für Bild Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet \cite{Russakovsky2015} Datensatz vortrainiert werden \cite{You2018, Kornblith2019}.
+Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.
 ResNet ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
 Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Fig. \ref{fig:ResCon}).
-Es wurde gezeigt, dass residual connections dem Degradierungsproblem von Netzen mit steigender Tiefe entgegenwirken.
+Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He2015, srivastava2015highway} von Netzen mit steigender Tiefe entgegenwirken \cite{He2016}.
 \begin{figure}
-    \includegraphics[width=\linewidth]{Figures/ResidualConns.png}
+    \centering
+    \includegraphics[width=0.4\textwidth]{Figures/ResidualConns.png}
     \caption{Residual connection. Der Eingang des modularen Blocks ist mit dem Eingang direkt verbunden \cite{He2016}.}
     \label{fig:ResCon}
 \end{figure}
 In ihrem paper stellen die Autoren fünf unterschiedlich tiefe Varianten der ResNet Architektur vor.
-Jedes Variante enthält fünf Blöcke mit residual connections.
-Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, und der ReLU Aktivierungsfunktion.\newline
-EfficientNetV2 ist der Nachfolger von effnet 1 Tan2019
-
-
-
-Backbones:
-\cite{He2016} ResNet
-\cite{Tan2021} EfficientNetV2L
-\cite{Liu2022} convnextxl
-\cite{Liu2022a} SwinV2
+Jede Variante enthält fünf Blöcke mit residual connections.
+Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, Batch normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\newline
+EfficientNetV2 ist ein Nachfolger der EfficientNet Modellfamilie \cite{Tan2019, Tan2021}.
+Die Architektur basiert auf einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}.
+Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1 Faltungsschichten.
+Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Fig. \ref{fig:MBConv}). \newline
 \begin{figure}
-  \includegraphics[width=\linewidth]{Figures/SWINV2_Architecture.png}
+    \centering
+    \includegraphics[width=0.4\textwidth]{Figures/MBConv.png}
+    \caption{MBConv- und Fused-MBConv-Blöcke. Die Blöcke nutzt neben einer residual connection auch Faltungsschichten und Squeeze-and-Excitation um die Datendimension zu erhöhen \cite{Tan2021}.}
+    \label{fig:MBConv}
+\end{figure}
+ConvNeXt \cite{Liu2022} ist eine \ac{cnn}-Modellfamilie mit besonders großen Faltungskernen. 
+Die ConvNeXt Architektur umfasst fünf modulare Blöcke mit Faltungen und residual connections, wie die ResNet Architektur \cite{He2016}.
+Allerdings verändert dabei ConvNeXt einige Details der ResNet Architektur, wie beispielsweise die GeLU Aktivierungsfunktion \cite{Hendrycks2016} und Layer normalization \cite{Ba2016}. 
+
+%Backbones:
+%\cite{He2016} ResNet
+%\cite{Tan2021} EfficientNetV2L
+%\cite{Liu2022} convnextxl
+%\cite{Liu2022a} SwinV2
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{Figures/SWINV2_Architecture.png}
+    \caption{}
+    \label{fig:SwinArchitecture}
 \end{figure}
 
 \section{Offene Probleme}

@@ -6,7 +6,8 @@
 %https://www.ebi.ac.uk/biostudies/BioImages/studies/S-BIAD1518?query=3D%20nuclei%20segmentation
 
 \section{Überblick}
-Im nachfolgenden Kapitel wird der theoretische Hintergrund der vorliegenden Thesis behandelt. Hierzu werden sowohl die Methoden verwandter Projekte und Studien, als auch die Literatur zum aktuellen "Stand der Technik" beleuchtet. Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
+Im nachfolgenden Kapitel wird der theoretische Hintergrund der vorliegenden Thesis behandelt. 
+Hierzu werden sowohl die Methoden verwandter Projekte und Studien, als auch die Literatur zum aktuellen \"Stand der Technik\" beleuchtet. Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
 
 \section{Methoden}
 \subsection{Benchmark}
@@ -25,7 +26,7 @@ Ein Beispiel für Domänenunterschiede sind verschiedene Darstellungen gleicher 
     \includegraphics[width=0.24\textwidth]{Figures/Katze_1.jpg}\hfill
     \includegraphics[width=0.24\textwidth]{Figures/Katze_3.jpg}\hfill
     \includegraphics[width=0.24\textwidth]{Figures/Katze_2.jpg}
-    \caption{Vier Bilder \cite{jrfarm_katze, Egan_Katzen} der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad.}
+    \caption{Vier Bilder der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad \cite{jrfarm_katze, Egan_Katzen}.}
     \label{fig:domains}
 \end{figure}
 Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Katze}, aber die Merkmale wie Detailgrad, Abstraktion und Stil unterscheiden sich stark - Sie unterscheiden sich in ihrer Domäne.
@@ -179,8 +180,8 @@ Auch für bestehende biologische Segmentierungsanwendungen, wie etwa Cellpose\ci
 Dieser \textit{fine-tune} nennt sich CellposeSAM.
 Er kombiniert den Bild-Encoder von \ac{sam} mit dem „Flow“-Segmentierungsansatz von Cellpose.
 Dabei generiert der Bild-Encoder direkt Vekotoren, die Zwischenrepräsentationen, die sogenannten "Flows", darstellen.
-Diese "Flows" werden pixelweise zu einem Gradientenfeld überführt.
-Mithilfe der Gradienten werden dann Objektinstanzen vorhergesagt.
+Diese \"Flows\" werden pixelweise zu einem Gradientenfeld überführt.
+Mithilfe der Gradienten werden Objektinstanzen vorhergesagt.
 Fig. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
 \begin{figure}
     \centering
@@ -232,12 +233,12 @@ Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Rech
 ResNet ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
 Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Fig. \ref{fig:ResCon}).
 Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He2015, srivastava2015highway} von Netzen mit steigender Tiefe entgegenwirken \cite{He2016}.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.4\textwidth]{Figures/ResidualConns.png}
-    \caption{Residual connection. Der Eingang des modularen Blocks ist mit dem Eingang direkt verbunden \cite{He2016}.}
-    \label{fig:ResCon}
-\end{figure}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.4\textwidth]{Figures/ResidualConns.png}
+%    \caption{Residual connection. Der Eingang des modularen Blocks ist mit dem Eingang direkt verbunden \cite{He2016}.}
+%    \label{fig:ResCon}
+%\end{figure}
 In ihrem paper stellen die Autoren fünf unterschiedlich tiefe Varianten der ResNet Architektur vor.
 Jede Variante enthält fünf Blöcke mit residual connections.
 Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, Batch normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\newline
@@ -245,15 +246,38 @@ EfficientNetV2 ist ein Nachfolger der EfficientNet Modellfamilie \cite{Tan2019, 
 Die Architektur basiert auf einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}.
 Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1 Faltungsschichten.
 Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Fig. \ref{fig:MBConv}). \newline
-\begin{figure}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.4\textwidth]{Figures/MBConv.png}
+%    \caption{MBConv- und Fused-MBConv-Blöcke. Die Blöcke nutzt neben einer residual connection auch Faltungsschichten und Squeeze-and-Excitation um die Datendimension zu erhöhen \cite{Tan2021}.}
+%    \label{fig:MBConv}
+%\end{figure}
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.4\textwidth]{Figures/MBConv.png}
-    \caption{MBConv- und Fused-MBConv-Blöcke. Die Blöcke nutzt neben einer residual connection auch Faltungsschichten und Squeeze-and-Excitation um die Datendimension zu erhöhen \cite{Tan2021}.}
-    \label{fig:MBConv}
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=1\textwidth]{Figures/ResidualConns.png}
+        \caption{Residual connection. Der Eingang des modularen Blocks ist mit dem Eingang direkt verbunden \cite{He2016}.}
+        \label{fig:ResCon}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=1\textwidth]{Figures/MBConv.png}
+        \caption{MBConv- und Fused-MBConv-Blöcke. Die Blöcke nutzt neben einer residual connection auch Faltungsschichten und Squeeze-and-Excitation um die Datendimension zu erhöhen \cite{Tan2021}.}
+        \label{fig:MBConv}
+    \end{subfigure}
+    \caption{Diagramme der Residual Connections, MBConv-Blöcke und Fused-MBConv-Blöcke.}
+    \label{fig:ResDiagramms}
 \end{figure}
 ConvNeXt \cite{Liu2022} ist eine \ac{cnn}-Modellfamilie mit besonders großen Faltungskernen. 
 Die ConvNeXt Architektur umfasst fünf modulare Blöcke mit Faltungen und residual connections, wie die ResNet Architektur \cite{He2016}.
 Allerdings verändert dabei ConvNeXt einige Details der ResNet Architektur, wie beispielsweise die GeLU Aktivierungsfunktion \cite{Hendrycks2016} und Layer normalization \cite{Ba2016}. 
+Swin Transformer \cite{liu2021} sind eine beliebte Modellfamilie von \acp{vit}.
+Ihr Nachfolger, die Swin Transformer V2 \cite{Liu2022a} vergrößert die Modelle noch.
+Die Architektur \acp{vit} kombiniert Bildausschnitte mit einem Positions-Bias.
+Hierzu wird ein Bildfenster $z$ und dessen relativen Koordinaten im Bild $\Delta x$ und $\Delta y$ in einem Attention Mechanismus zusammengeführt.
+Die Positionen werden in einem MLP-Netz verarbeitet, währen das Bildfenster mit drei verschiedenen Gewichtsmatrizen multipliziert wird.
+Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
+Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen Swin Transformer V2 Block.
+Dieser Aufbau ist in Fig. \ref{fig:SwinArchitecture} dargestellt. 
 
 %Backbones:
 %\cite{He2016} ResNet
@@ -262,8 +286,11 @@ Allerdings verändert dabei ConvNeXt einige Details der ResNet Architektur, wie 
 %\cite{Liu2022a} SwinV2
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\textwidth]{Figures/SWINV2_Architecture.png}
-    \caption{}
+    \includegraphics[width=0.75\textwidth]{Figures/SWINV2_Architecture.png}
+    \caption{Swin Transformer V2 Architektur \cite{Liu2022a}. 
+    Ein Bildfenster $z$ und dessen relative Koordinaten im Bild $\Delta x$ und $\Delta y$ werden in einem Attention Mechanismus zusammengeführt.
+    Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
+    Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen Swin Transformer V2 Block.}
     \label{fig:SwinArchitecture}
 \end{figure}
 

@@ -34,5 +34,6 @@
     "/\\\\end\\{[^}]*\\}/"
   ],
   "ltex.language": "de",
-  "ltex.enabled": ["latex"]
+  "ltex.enabled": ["latex"],
+  "cSpell.words": ["panoptisch", "panoptische", "Generalisierbarkeit", "Merkmalsextraktion", "Instanzsegmentierung, Myotube, Myotuben"]
 }

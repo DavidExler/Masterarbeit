@@ -23,6 +23,5 @@ TestCode
 *.xml
 *.pickle
 *.fdb_latexmk
-*.json
 *.eps
 *.blg

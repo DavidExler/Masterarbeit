@@ -79,10 +79,10 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
 
         # Class selection buttons
         html.Div([
-            html.Button("Class 1", id='class-1', n_clicks=0, style={'width': '90px'}),
-            html.Button("Class 2", id='class-2', n_clicks=0, style={'width': '90px'}),
-            html.Button("Class 3", id='class-3', n_clicks=0, style={'width': '90px'}),
-            html.Button("Class 4", id='class-4', n_clicks=0, style={'width': '90px'}),
+            html.Button("Myo", id='class-1', n_clicks=0, style={'width': '90px'}),
+            html.Button("Deb", id='class-2', n_clicks=0, style={'width': '90px'}),
+            html.Button("Others", id='class-3', n_clicks=0, style={'width': '90px'}),
+            html.Button("Schwann", id='class-4', n_clicks=0, style={'width': '90px'}),
         ], style={'display': 'flex', 'flexWrap': 'wrap', 'gap': '10px'}),
 
         # Save

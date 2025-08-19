@@ -1,7 +1,7 @@
 % !TeX root = ../Thesis.tex
 
 \chapter{Theory} \label{ch:Theory}
-This chapter should introduce to the theoretical background of your thesis. Any (already existing) method you use to obtain the results later should be introduced and explained. The mathematics needed to understand the possibly new methods in the next chapter is also part of this chapter. 
+%This chapter should introduce to the theoretical background of your thesis. Any (already existing) method you use to obtain the results later should be introduced and explained. The mathematics needed to understand the possibly new methods in the next chapter is also part of this chapter. 
 
 %https://www.ebi.ac.uk/biostudies/BioImages/studies/S-BIAD1518?query=3D%20nuclei%20segmentation
 
@@ -64,8 +64,10 @@ In Fig. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} 
     \caption{\cite{kirillov2019PQ}. Verschiedene Arten von Segmentierung. Links ist das Originalbild zu sehen, rechts folgend sind die zugeordneten pixelweise Labels farblich eingezeichnet. Gleiche Farben bedeuten gleiche Labels.}
     \label{fig:Segmentation}
 \end{figure}
-Für die verschiedenen Segmentierungsarten werden an die Aufgabe angepasste Architekturen verwendet \cite{Arnab2017, Chen2018}, dabei sind die Modelle in der Regel nach dem Vorbild des \textit{U-Net} \cite{Ronneberger2015} aus einem Merkmalsextraktor (Encoder) und einem Vorhersagenetz (Decoder) aufgebaut \cite{Girshick2014}.
-Der Encoder nutzt dabei beispielsweise Bildfaltungen mit Kernen, deren optimale Gewichte anhand von annotierten Daten gelernt werden \cite{Long2015}.
+Für die verschiedenen Segmentierungsarten werden Architekturen an die Aufgabe angepasst \cite{Arnab2017, Chen2018}. 
+Dabei sind die Modelle in der Regel nach dem Vorbild des \textit{U-Net} \cite{Ronneberger2015} aus einem Merkmalsextraktor (Encoder) und einem Vorhersagenetz (Decoder) aufgebaut \cite{Girshick2014}.
+Der Encoder nutzt beispielsweise Bildfaltungen mit Kernen, deren optimale Gewichte anhand von annotierten Daten gelernt werden, zur Merkmalsextraktion \cite{Long2015}.
+Als Decoder werden 
 %Long2015 - semantische Segmentierung - FCN
 %Ronneberger2015 - U-Net
 %Arnab2017 - Pixelwise instance segmentation with a dynamically instantiated network

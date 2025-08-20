@@ -1,7 +1,7 @@
 % !TeX root = ../Thesis.tex
 
 \chapter{Implementation} \label{ch:Implementation}
-If appropriate and not done in the previous chapter, describe the implementation of your method.
+%If appropriate and not done in the previous chapter, describe the implementation of your method.
 
 
 \section{Überblick}
@@ -49,3 +49,9 @@ Hierzu werden alle Bilder und Masken bei der Initialisierung der App in den cach
 Des Weiteren ist eine Klasse angelegt, die separat noch das aktuell ausgewählte Bild und die ausgewählte Zelle speichert. 
 Erst wenn eine Änderung der Auswahl ausgeführt wird, wird eine neue Zelle oder ein neues gesamtes Bild geladen und selbst dann lediglich aus dem cache. 
 
+\section{Training}
+Für das Training der Klassifikatoren wurde eine NVIDIA GeForce RTX 3090 Ti mit 24GB VRAM verwendet.
+\textbf{CPU und RAM noch }
+Die vortrainierten Modelle werden vom Open-Source Framework Pytorch bereitgestellt, genauso wie die Methoden zum Erstellen der Decoder-Köpfe, der Optimizer und die Backpropagation Funktionalitäten.
+Der Trainingsablauf ist modular aufgebaut, um die Kombinationen der Methoden aus Kapitel \ref{ch:NewMethods} nahtlos zu implementieren.
+In Fig. \ref{} ist der Ablauf kurz systematisch dargestellt.

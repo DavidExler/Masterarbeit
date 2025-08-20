@@ -97,9 +97,11 @@ wobei:
 
 \section{Klassifikator}
 Jedem instanzsegmentierten Nuclei muss eine Klasse zugewiesen werden, um die Ausgabe zur panoptischen Segmentierungsmaske zu erweitern.
-Hierzu ist ein Klassifikator notwendig, der den Instanzen eine der TODO X Klassen zuweist.
+Hierzu ist ein Klassifikator notwendig, der einen Bildausschnitt mit der Instanz als Eingabe annimmt und eine der vier Klassen als Ausgabe zuweist.
 Um diesen Klassifikator optimal zu erstellen wird ein umfangreicher Benchmark aus den Zieldaten erstellt, da bei der Messung der Klassifikationsleistung eine vollkommene Übereinstimmung der Bilddomäne notwendig ist.
 Benchmarks aus der Literatur umfassen weder dieselben Klassen noch dieselben Objektmerkmale und eignen sich daher nicht.
+Für das Training wird der Adam Algorithmus \cite{Kinga2015} mit einer Lernrate von 0.0001 eingesetzt.
+Außerdem wird der Cross-Entropy-Loss \cite{Sukhbaatar2014} verwendet.  \textbf{ *  muss ich das erklären? (in der theorie dann) *} \newline
 Aus den manuell annotierten Bilddaten werden ein Test- und ein Trainingsanteil im Verhältnis eins zu neun extrahiert.
 Alle betrachteten Klassifikatoren werden ausschließlich mit den Trainingsdaten trainiert und ihre Leistung ausschließlich mithilfe der Testdaten getestet.
 Beide Datensätze werden durch Augmentierung erweitert und in Batches zusammengefasst.
@@ -163,10 +165,59 @@ Im Folgenden sind die Nuclei Kanäle der verschiedenen Methoden dargestellt.
 \end{figure}
 
 Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bervor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
-Hierzu werden drei Methoden eingeführt und in Experimenten verglichen.
+Hierzu werden zwei Methoden eingeführt und in Experimenten verglichen.
 Die erste Methode ist konventionelles Zero-Padding, also das symetrische Hinzufügen von Nullen an die Ränder des Bilds.
-Eine weitere Methode ist einfache bilineare oder bikubische Interpolation.
-Zuletzt wird eine lernbare Methode betrachtet.
-Ein kleines neuronales Netzwerk, vergrößert das Bilder schrittweise. 
-Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.
-
+Eine weitere Methode ist einfache bilineare Interpolation. \textbf{ *  muss ich das erklären? *} \newline
+%Zuletzt wird eine lernbare Methode betrachtet.
+%Ein kleines neuronales Netzwerk, vergrößert das Bilder schrittweise. 
+%Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.
+Die Encoder der nachfolgenden vortrainierten Netze werden vergleichend eingesetzt.
+In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die Genauigkeit auf dem ImageNet Datensatz \cite{Russakovsky2015} angegeben.
+\begin{table}[ht]
+  \centering
+  \caption{Vergleich der sechs vortrrainierten Netze hinsichtlich Genauigkeit auf dem ImageNet Datensatz \cite{Russakovsky2015} und der Anzahl an Parametern.
+  Angegeben sind sowohl die Top-1-Genauigkeit (Acc@1) als auch die Top-5-Genauigkeit (Acc@5), also  ob die korrekte Klasse unter den besten 1 bzw. 5 Vorhersagen enthalten ist.}
+  \label{tab:network_comparison}
+  \begin{tabular}{lccc}
+    \hline
+    \textbf{Name} & \textbf{Acc@1 (ImageNet)} & \textbf{Acc@5 (ImageNet)} & \textbf{Params (M)} \\
+    \hline
+    ResNet18	      & 69.76\%	& 89.08\% &	11.7 \\
+    ResNet101	      & 77.37\%	& 93.55\% &	44.5 \\
+    Swin V2	        & 84.11\%	& 96.87\% &	87.9 \\
+    ConvNeXt	      & 84.41\%	& 96.98\% &	197.8 \\
+    EfficientNet V2 &	85.81\%	& 97.79\% &	118.5 \\
+    CellposeSAM	    & -       &	-       &	305 \\
+    \hline
+  \end{tabular}
+\end{table}
+  
+An die Encoder werden jeweils zwei verschiedene Decoder angehängt.
+Fig. \ref{fig:classifiers} zeigt die beiden Architekturen systematisch.
+Der erste Klassifikator wird hier \textit{Volumen-Klassifikator} genannt.
+Er interpretiert die Merkmale, die der Encoder generiert, als Volumen und generiert mithilfe von 3D Faltungen und Pooling eine Repräsentation daraus.
+Diese Repräsentation wird dann durch Linear Layers zu vier Ausgabe-Klassen umgeformt.
+Die Idee des \textit{Volumen-Klassifikators} ist es, die Merkmale die der Encoder generiert möglichst vollständig zu erfassen und alle räumlichen Beziehungen, auch in Z-Richtung festzustellen.
+Hierbei ist das Ziel, dass durch die 3D-Faltungen eine domänenspezifische Interpretation der Merkmale gelernt wird, sodass die neuen Merkmale nach dem anschließenden Pooling aussagekräftig und niederdimensionale sind.
+Daneben wird hier der \textit{Schichten-Klassifikator} eingeführt.
+Der \textit{Schichten-Klassifikator} betrachtet die einzelnen Schichten des Bilds anhand der individuellen Schichten, die der Encoder ausgibt. 
+Dazu werden die räumlichen X und Y Dimensionen durch einen spatial-average zusammengefasst.
+Durch eine multihead attention mit vier attention-Köpfen und embedding dimension 256 wird dann eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
+Lineare Layers formen anschließend die Repräsentation zu den vier Klassen um.
+Für den textit{Schichten-Klassifikator} ist das Ziel, dass durch die Vereinfachung der Daten aussagekräftige, schichtenweise Merkmale entstehen und, dass diese räumlich invariant sind, da der betrachtete Nucleus in den Bildfenstern zentriert sind.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\linewidth]{Figures/Klassifikatoren.png}
+  \caption{Architektur der beiden Klassifikatoren. Der Encoder wird bei beiden modular ausgetauscht. 
+  Links zu sehen ist die Architektur des \textit{Volumen-Klassifikator}, der die Merkmale, die der Encoder generiert, als Volumen interpretiert und mithilfe von 3D Faltungen und Pooling daraus eine Repräsentation generiert.
+  Diese Repräsentation wird dann durch Linear Layers zu vier Ausgabe-Klassen umgeformt.
+  Rechts zu sehen ist der \textit{Schichten-Klassifikator}.
+  Die räumlichen X und Y Dimensionen werden im \textit{Schichten-Klassifikator} durch einen spatial-average zusammengefasst.
+  Durch eine multihead attention mit vier attention-Köpfen und embedding dimension 256 wird dann eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
+  Lineare Layers formen anschließend die Repräsentation zu den vier Klassen um.}
+  \label{fig:classifiers}
+\end{figure}
+\newline
+Auf einem geringfügigen Datensatz werden alle angeführten Methoden in den möglichen Kombinationen umgesetzt, um Vergleiche zu ermöglichen.
+Dieser geringfügige Datensatz besteht aus Bildern der Zieldomäne und halb automatisch generierten \acp{gt}. 
+Anschließend werden die besten Methoden ausgewählt und auf den finalen Datensatz trainiert.

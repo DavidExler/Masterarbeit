@@ -24,4 +24,5 @@ TestCode
 *.pickle
 *.fdb_latexmk
 *.eps
-*.blg
+*.blg*
+*.synctex*

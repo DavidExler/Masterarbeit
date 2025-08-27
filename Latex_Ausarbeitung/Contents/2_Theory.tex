@@ -7,18 +7,19 @@
 
 \section{Überblick}
 Im nachfolgenden Kapitel wird der theoretische Hintergrund der vorliegenden Thesis behandelt. 
-Hierzu werden sowohl die Methoden verwandter Projekte und Studien, als auch die Literatur zum aktuellen \"Stand der Technik\" beleuchtet. Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
+Hierzu werden sowohl die Methoden verwandter Projekte und Studien, als auch die Literatur zum aktuellen Stand der Technik beleuchtet. 
+Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
 
 \section{Methoden}
 \subsection{Benchmark}
 Um die Leistungsfähigkeit der Applikation, die im Rahmen der vorliegenden Thesis erstellt wird, zu validieren und verifizieren sind umfangreiche Datensätze notwendig. 
 Für jede isolierbare Aufgabe muss ein Datensatz gewählt werden, der eine \ac{gt} entsprechend dieser Aufgabe mitbringt.
-Die in diesem Datensatz enthaltenen Daten (Quelldaten) müssen dabei den Daten, mit denen die Anwendung genutzt wird (Zieldaten) \textit{ähnlich} sein.
+Die in diesem Datensatz enthaltenen Daten (Quelldaten) müssen dabei den Daten, für die die Anwendung entworfen wird (Zieldaten) \textit{ähnlich} sein.
 So wird sichergestellt, dass sich die auf den Quelldaten gemessene Qualität der Anwendung auf die Zieldaten übertragen lässt \cite{ganin2015domain_big}.
-Die Ambiguität des \textit{Ähnlichkeit}-Begriffs geht mit der eigentlichen Herausforderung einher, sinnvolle Merkmale in Daten zu finden, die einen Vergleich von Daten verschiedenen Ursprungs ermöglichen.
+Der Begriff \textit{Ähnlichkeit} ist mehrdeutig und es ist eine Herrausforderung, sinnvolle Merkmale in Daten zu finden, die das Messen von \textit{Ähnlichkeit} ermöglichen.
 Metriken die als Maß für \textit{Ähnlichkeit} genutzt werden müssen maßgeschneidert zur Anwendung passen und sind bereits breit erforscht \cite{zhu2020domain_similarity, koohi2018similarity, cai2009similarity}.
 Daten können mithilfe passender Metriken \textit{Ähnlichkeits-}gruppen, sogenannten \textit{Domänen}, zugeordnet werden \cite{yuan2005domainsimilarity}.
-Ein Beispiel für Domänenunterschiede sind verschiedene Darstellungen gleicher Objekte in Bildern. 
+Ein Beispiel für Domänenunterschiede sind verschiedene Darstellungen gleicher Objekte in Bildern wie in Fig. \ref{fig:domains} dargestellt. 
 %\newline BILD AUSKOMMENTIERT \newline
 \begin{figure}[htbp]
     \centering
@@ -29,20 +30,19 @@ Ein Beispiel für Domänenunterschiede sind verschiedene Darstellungen gleicher 
     \caption{Vier Bilder der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad \cite{jrfarm_katze, Egan_Katzen}.}
     \label{fig:domains}
 \end{figure}
-Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Katze}, aber die Merkmale wie Detailgrad, Abstraktion und Stil unterscheiden sich stark - Sie unterscheiden sich in ihrer Domäne.
-In der Bildverarbeitung ist es essenziell die Domäne der Quelldaten im Hinblick auf die Aufgabe der Applikation zu beachten \cite{wang2018domain,peng2017domain}. 
-Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenadaption durchgeführt werden \cite{han2022binsimilarity_domain,pinheiro2018domain,ganin2016domain}.
-
-
+Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Katze}, aber die Merkmale wie Detailgrad, Abstraktion und Stil unterscheiden sich stark. 
+Sie unterscheiden sich also in ihrer Domäne.
+In der Bildverarbeitung ist es essenziell die Domäne der Quelldaten im Hinblick auf die Aufgabe der Applikation zu beachten \cite{wang2018domain, peng2017domain}. 
+Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenanpassung durchgeführt werden \cite{han2022binsimilarity_domain, pinheiro2018domain, ganin2016domain}. \textit{NOTIZ: Muss ich Domänenanpassung erklären?}
 \subsection{Segmentierung}\label{sec:Segmentierung}
-\textbf{KOMMENTAR} ist das notwendig?
+%\textbf{KOMMENTAR} ist das notwendig?
 \begin{itemize}
     \item Was ist Segmentierung?
     \item Welche klassischen Ansätze gibt es?
     \item Welche KI-Lösungen gibt es?
-    \item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
+    %\item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
 \end{itemize}
-Bildsegmentierung lässt sich formulieren als die Aufgabe, Pixel mit semantischen Labels zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
+Segmentierung ist die Aufgabe, Pixel mit semantischen Labels zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
 In Fig. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} der verschiedenen Arten von Segmentierung zu sehen.
 \begin{figure}[htbp]
     \centering
@@ -62,13 +62,19 @@ In Fig. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} 
         \includegraphics[width=\textwidth]{Figures/Panoptic.png}
         \caption{Panoptisch}
     \end{subfigure}
-    \caption{\cite{kirillov2019PQ}. Verschiedene Arten von Segmentierung. Links ist das Originalbild zu sehen, rechts folgend sind die zugeordneten pixelweise Labels farblich eingezeichnet. Gleiche Farben bedeuten gleiche Labels.}
+    \caption{Die verschiedene Arten der Segmentierung. Links ist das Originalbild zu sehen, rechts folgend sind die zugeordneten pixelweise Labels farblich eingezeichnet. 
+    Gleiche Farben bedeuten gleiche Labels. 
+    In der semantischen Maske sind gleiche Labels mehrerer Objekte von semantisch gleichen Klassen zu finden. 
+    In der Instanz Maske ist jedem Objekt ein individuelles Label zugeordnet, ungeachtet der Klasse des Objekts. 
+    In der panoptischen Maske sind auch einzelne Objekte getrennt, den Labels verschiedener Klassen werden allerdings noch semantische Klassen zugeordnet \cite{kirillov2019PQ}.}
     \label{fig:Segmentation}
 \end{figure}
 Für die verschiedenen Segmentierungsarten werden Architekturen an die Aufgabe angepasst \cite{Arnab2017, Chen2018}. 
 Dabei sind die Modelle in der Regel nach dem Vorbild des \textit{U-Net} \cite{Ronneberger2015} aus einem Merkmalsextraktor (Encoder) und einem Vorhersagenetz (Decoder) aufgebaut \cite{Girshick2014}.
 Der Encoder nutzt beispielsweise Bildfaltungen mit Kernen, deren optimale Gewichte anhand von annotierten Daten gelernt werden, zur Merkmalsextraktion \cite{Long2015}.
-Als Decoder werden 
+Dabei verringert der Encoder iterativ die Größe der Eingabe jeder Schicht des Netzes in X und Y Richtung, erhöht dabei aber die Informationstiefe pro verbleibendem Pixel, bis ein hochdimensionaler Merkmalsvektor übrig bleibt. 
+Der Decoder hebt, meist durch transponierte Bildfaltungen \cite{Zeiler2010, Zeiler2014}, die räumliche Auflösung schrittweise wieder an, indem er die Bilddimensionen vergrößert und die Merkmalskanäle gleichzeitig reduziert \cite{Noh2015}. 
+Über sogenannte Skip-Connections \cite{Ronneberger2015} werden dabei Merkmale aus den entsprechenden Encoder-Schichten mit den Decoder-Stufen verknüpft, sodass sowohl globale Kontextinformationen als auch feine Strukturen für die Segmentierung erhalten bleiben \cite{Mostajabi2015, Gu2018}. 
 %Long2015 - semantische Segmentierung - FCN
 %Ronneberger2015 - U-Net
 %Arnab2017 - Pixelwise instance segmentation with a dynamically instantiated network
@@ -122,8 +128,7 @@ Diesen Zus in Gewichtungen von der Ausgabe des Encoders und nicht-linearen Aktiv
 \section{Literaturrecherche}
 
 \subsection{Benchmark}
-Da das manuelle Erstellen der \ac{gt} für die Segmentierung von Zelldaten mit erheblichem manuellem Aufwand verbunden ist und zusätzlich Expertenwissen voraussetzt, 
-sind Datensätze hierfür selten. 
+Da das manuelle Erstellen der \ac{gt} für die Segmentierung von Zelldaten mit erheblichem manuellem Aufwand verbunden ist und zusätzlich Expertenwissen voraussetzt, sind Datensätze hierfür selten. 
 Einige prominente Datensätze, deren Domänen zu den Zieldaten der Anwendung dieser Arbeit \textit{ähnlich} sind, sind:  
 \begin{itemize}
     \item LiveCell \cite{edlund2021livecell}, ein manuell annotierter und Experten-validierter Datensatz aus 5,239 2D-Bildern. 
@@ -137,8 +142,9 @@ Einige prominente Datensätze, deren Domänen zu den Zieldaten der Anwendung die
 \end{itemize}
 Aufgrund des geringen Volumen frei zugänglicher Daten sind diese Sammlungen auch für das Training von Segmentierungsnetzen begehrt. 
 Jeder Datensatz, der bereits im Trainingssatz eines gewählten Segmentierungsnetzes enthalten war eignet sich nicht mehr zur unabhängigen Bewertung der Netze. 
-Neben annotierten Datensätzen existiert auch Literatur die das eigenständige Erzeugen domänenspezifischer Datensätze erforscht und Methoden bereitstellt.
-Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generieren von 3D-Trainingsdaten mit realistischer Zellform und -ausrichtung und kohärenten Membran- und Nuklearsignalen. Zudem umfasst das Framework eine Trainingsroutine, um ein \ac{gan} zu trainieren, das Bilddaten und passende Annotationen automatisch erzeugt. 
+Neben annotierten Datensätzen bietet die Literatur auch Methoden zum eigenständigen Erzeugen domänenspezifischer Datensätze \cite{Abay2019, Raghunathan2021, Nikolenko2021, Choi2017, Lu2023}.
+Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generieren von 3D-Trainingsdaten mit realistischer Zellform und -ausrichtung und umgebenden Markern. 
+Zudem umfasst das Framework eine Trainingsroutine, um ein \ac{gan} zu trainieren, das Bilddaten und passende Annotationen automatisch erzeugt und an eine gewünschte Bilddomäne anpasst. 
 %
 %\begin{itemize}
 %    \item \cite{zhu2020domain_similarity} Speech recognition - Herrausforderung der Anpassung an Audio domänen
@@ -155,7 +161,7 @@ Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generie
 
 \subsection{Segmentierungsnetz}
 \textit{Foundation-models} sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
-Sie werden zunächst auf allgemeinen Aufgaben vortrainiert und anschließend auf spezifische Anwendungen angepasst (\textit{fine-tuning}), meist unter Einfrieren von Teilen der Gewichte \cite{Yosinski2014}.
+Sie werden zunächst für allgemeine Aufgaben vortrainiert und anschließend auf spezifische Anwendungen angepasst (\textit{fine-tuning}), meist unter Einfrieren von Teilen der Gewichte \cite{Yosinski2014}.
 Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
 In der aktuellen Forschung werden verschiedene \textit{foundation-models} für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
 Ein prominentes Exemplar ist das \ac{sam} \cite{kirillov2023sam} von Meta AI. 
@@ -163,7 +169,10 @@ Es besteht aus einem Bild Encoder, einem Prompt Encoder und einem Masken Decoder
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{Figures/SAM_Architecture.png}
-    \caption{\cite{kirillov2023sam}. Architektur des \ac{sam}. Eingabebilder werden durch einen Bild Encoder zu Repräsentationen umgeformt. Zusätzliche optionale Hinweise auf das zu segmentierende Objekt werden durch Bildfaltungen oder einen Prompt Encoder repräsentiert. Anschließend prädiziert der Decoder mehrere mögliche Masken und zugehörige Zuversichtlichkeiten.}
+    \caption{\cite{kirillov2023sam}. Architektur des \ac{sam}. 
+    Eingabebilder werden durch einen Bild Encoder zu Repräsentationen umgeformt. 
+    Zusätzliche optionale Hinweise auf das zu segmentierende Objekt werden durch Bildfaltungen oder einen Prompt Encoder repräsentiert. 
+    Anschließend prädiziert der Decoder mehrere mögliche Masken und zugehörige Zuversichtlichkeiten.}
     \label{fig:SAM_Architektur}
 \end{figure}
 Als Bild Encoder dient ein Vision Transformer \cite{dosovitskiy2020ViT}, mit Vortraining als Masked Auto Encoder \cite{he2022mae} und zusätzlichem Training für höhere Bildauflösung.
@@ -171,21 +180,20 @@ Der Prompt Encoder ist mehrstufig.
 Ein angelernter Positional Encoder generiert Repräsentationen aus Positions-Nutzereingaben wie Punkten und Boxen.
 Für textuelle Prompts wird der Encoder des CLIP \cite{Radford2021} Model genutzt.
 Außerdem werden Bildfaltungen als Encoder auf Masken-Nutzereingaben angewandt.
-Mithilfe dieser Encoder wird dem Modell eine Repräsentation von dem zu segmentierenden Bild und optionalen, manuellen Hinweisen auf das erwünschte Ergebnis gegeben,
-die bereits semantische Informationen und abstrakte Bildmerkmale beinhalten.
+Mithilfe dieser Encoder wird dem Modell eine Repräsentation von dem zu segmentierenden Bild und optionalen, manuellen Hinweisen auf das erwünschte Ergebnis gegeben, die bereits semantische Informationen und abstrakte Bildmerkmale beinhalten.
 Aus diesen Repräsentation generiert dann der Decoder mehrere mögliche Masken mit zugehörigen Zuversichtlichkeiten, aus denen ein finales Segmentierungsergebnis ausgewählt wird.\newline
 \ac{sam} wurde bereits für viele Mikroskopie-Zelldaten downstream Anwendungen \textit{fine-tuned} \cite{archit2025samfine, israel2023samfine, vandeloo2025samfine}. 
 Auch für bestehende biologische Segmentierungsanwendungen, wie etwa Cellpose\cite{stringer2021cellpose}, wurde \ac{sam} auf Zelldaten angepasst \cite{pachitariu2025samcellpose}.
 Dieser \textit{fine-tune} nennt sich CellposeSAM.
-Er kombiniert den Bild-Encoder von \ac{sam} mit dem „Flow“-Segmentierungsansatz von Cellpose.
-Dabei generiert der Bild-Encoder direkt Vekotoren, die Zwischenrepräsentationen, die sogenannten "Flows", darstellen.
-Diese \"Flows\" werden pixelweise zu einem Gradientenfeld überführt.
+Er kombiniert den Bild-Encoder von \ac{sam} mit dem \textit{Flow}-Segmentierungsansatz von Cellpose.
+Dabei generiert der Bild-Encoder direkt Vekotoren, die Zwischenrepräsentationen, die sogenannten \textit{Flows}, darstellen.
+Diese \textit{Flows} werden pixelweise zu einem Gradientenfeld überführt.
 Mithilfe der Gradienten werden Objektinstanzen vorhergesagt.
 Fig. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{Figures/CellposeSAM_Diagramm.png}
-    \caption{\cite{pachitariu2025samcellpose}. Ablauf des CellposeSAM Modell. Eingabebilder werden durch einen Bild Encoder direkt zu "Flows" umgeformt. Die Gradienten der Flows werden verfolgt und aus dem entstehenden Gradientenfeld werden Segmentierungsinstanzen vorhergesagt.}
+    \caption{\cite{pachitariu2025samcellpose}. Ablauf des CellposeSAM Modell. Eingabebilder werden durch einen Bild Encoder direkt zu \textit{Flows} umgeformt. Die Gradienten der Flows werden verfolgt und aus dem entstehenden Gradientenfeld werden Segmentierungsinstanzen vorhergesagt.}
     \label{fig:CellposeSAM}
 \end{figure}
 Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell} bietet weitere Zellsegmentierungsnetze.
@@ -229,7 +237,7 @@ Für Klassifikatoren werden in der Regel nur Encoder vortrainiert.
 Der Decoder muss den Klassen der downstream Anwendung angepasst werden.
 State-of-the-Art für Bild Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet \cite{Russakovsky2015} Datensatz vortrainiert werden \cite{You2018, Kornblith2019}.
 Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.
-ResNet ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
+\textbf{ResNet} ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
 Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Fig. \ref{fig:ResCon}).
 Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He2015, srivastava2015highway} von Netzen mit steigender Tiefe entgegenwirken \cite{He2016}.
 %\begin{figure}
@@ -238,10 +246,10 @@ Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He201
 %    \caption{Residual connection. Der Eingang des modularen Blocks ist mit dem Eingang direkt verbunden \cite{He2016}.}
 %    \label{fig:ResCon}
 %\end{figure}
-In ihrem paper stellen die Autoren fünf unterschiedlich tiefe Varianten der ResNet Architektur vor.
+In ihrem paper stellen die Autoren fünf unterschiedlich tiefe Varianten der \textbf{ResNet} Architektur vor.
 Jede Variante enthält fünf Blöcke mit residual connections.
 Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, Batch normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\newline
-EfficientNetV2 ist ein Nachfolger der EfficientNet Modellfamilie \cite{Tan2019, Tan2021}.
+\textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet Modellfamilie \cite{Tan2019, Tan2021}.
 Die Architektur basiert auf einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}.
 Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1 Faltungsschichten.
 Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Fig. \ref{fig:MBConv}). \newline
@@ -266,16 +274,16 @@ Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung
     \caption{Diagramme der Residual Connections, MBConv-Blöcke und Fused-MBConv-Blöcke.}
     \label{fig:ResDiagramms}
 \end{figure}
-ConvNeXt \cite{Liu2022} ist eine \ac{cnn}-Modellfamilie mit besonders großen Faltungskernen. 
-Die ConvNeXt Architektur umfasst fünf modulare Blöcke mit Faltungen und residual connections, wie die ResNet Architektur \cite{He2016}.
-Allerdings verändert dabei ConvNeXt einige Details der ResNet Architektur, wie beispielsweise die GeLU Aktivierungsfunktion \cite{Hendrycks2016} und Layer normalization \cite{Ba2016}. 
+\textbf{ConvNeXt} \cite{Liu2022} ist eine \ac{cnn}-Modellfamilie mit besonders großen Faltungskernen. 
+Die \textbf{ConvNeXt} Architektur umfasst fünf modulare Blöcke mit Faltungen und residual connections, wie die ResNet Architektur \cite{He2016}.
+Allerdings verändert dabei \textbf{ConvNeXt} einige Details der ResNet Architektur, wie beispielsweise die GeLU Aktivierungsfunktion \cite{Hendrycks2016} und Layer normalization \cite{Ba2016}. 
 Swin Transformer \cite{liu2021} sind eine beliebte Modellfamilie von \acp{vit}.
-Ihr Nachfolger, die Swin Transformer V2 \cite{Liu2022a} vergrößert die Modelle noch.
+Ihr Nachfolger, die \textbf{Swin Transformer V2} \cite{Liu2022a} vergrößert die Modelle noch.
 Die Architektur \acp{vit} kombiniert Bildausschnitte mit einem Positions-Bias.
 Hierzu wird ein Bildfenster $z$ und dessen relativen Koordinaten im Bild $\Delta x$ und $\Delta y$ in einem Attention Mechanismus zusammengeführt.
 Die Positionen werden in einem MLP-Netz verarbeitet, währen das Bildfenster mit drei verschiedenen Gewichtsmatrizen multipliziert wird.
 Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
-Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen Swin Transformer V2 Block.
+Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2} Block.
 Dieser Aufbau ist in Fig. \ref{fig:SwinArchitecture} dargestellt. 
 
 %Backbones:
@@ -286,10 +294,10 @@ Dieser Aufbau ist in Fig. \ref{fig:SwinArchitecture} dargestellt.
 \begin{figure}
     \centering
     \includegraphics[width=0.75\textwidth]{Figures/SWINV2_Architecture.png}
-    \caption{Swin Transformer V2 Architektur \cite{Liu2022a}. 
+    \caption{\textbf{Swin Transformer V2} Architektur \cite{Liu2022a}. 
     Ein Bildfenster $z$ und dessen relative Koordinaten im Bild $\Delta x$ und $\Delta y$ werden in einem Attention Mechanismus zusammengeführt.
     Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
-    Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen Swin Transformer V2 Block.}
+    Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2} Block.}
     \label{fig:SwinArchitecture}
 \end{figure}
 

@@ -100,79 +100,27 @@ Jedem instanzsegmentierten Nuclei muss eine Klasse zugewiesen werden, um die Aus
 Hierzu ist ein Klassifikator notwendig, der einen Bildausschnitt mit der Instanz als Eingabe annimmt und eine der vier Klassen als Ausgabe zuweist.
 Um diesen Klassifikator optimal zu erstellen wird ein umfangreicher Benchmark aus den Zieldaten erstellt, da bei der Messung der Klassifikationsleistung eine vollkommene Übereinstimmung der Bilddomäne notwendig ist.
 Benchmarks aus der Literatur umfassen weder dieselben Klassen noch dieselben Objektmerkmale und eignen sich daher nicht.
-Für das Training wird der Adam Algorithmus \cite{Kinga2015} mit einer Lernrate von 0.0001 eingesetzt.
-Außerdem wird der Cross-Entropy-Loss \cite{Sukhbaatar2014} verwendet.  \textbf{ *  muss ich das erklären? (in der theorie dann) *} \newline
-Aus den manuell annotierten Bilddaten werden ein Test- und ein Trainingsanteil im Verhältnis eins zu neun extrahiert.
-Alle betrachteten Klassifikatoren werden ausschließlich mit den Trainingsdaten trainiert und ihre Leistung ausschließlich mithilfe der Testdaten getestet.
-Beide Datensätze werden durch Augmentierung erweitert und in Batches zusammengefasst.
+Für das Training wird einheitlich der Adam Algorithmus \cite{Kinga2015} mit einer Lernrate von 0.0001 eingesetzt.
+Außerdem wird der Cross-Entropy-Loss \cite{Sukhbaatar2014} verwendet. \textbf{ * Notiz: muss ich das erklären? (in der Theorie dann) *} \newline
+Aus den annotierten Bilddaten werden für jede Anwendung ein Test- und ein Trainingsanteil im Verhältnis eins zu neun extrahiert.
+Alle betrachteten Variationen des Klassifikators werden ausschließlich mit den Trainingsdaten trainiert und ihre Leistung ausschließlich mithilfe der Testdaten getestet.
+Beide Anteile des Datensatzes werden durch Augmentierung erweitert und in Batches zusammengefasst.
 Zur Datenaugmentierung werden die folgenden Methoden eingesetzt:
 \begin{itemize}
   \item \textbf{Rotation:} Mit einer Wahrscheinlichkeit von 50\,\% werden die Eingabedaten um 90° in der XY-Ebene rotiert.
   \item \textbf{Spiegelung:} Ebenfalls mit einer Wahrscheinlichkeit von 50\,\% erfolgt eine Spiegelung entlang der Z-Achse.
   \item \textbf{Gaußsches Rauschen:} Mit einer Wahrscheinlichkeit von 20\,\% wird Rauschen mit einem Mittelwert von 0 und einer Standardabweichung von 0{,}01 hinzugefügt.
 \end{itemize}
-Es werden sowohl \ac{cnn} als auch Vision Transformer basierte Klassifikatioren in Betracht gezogen.
-Da in vielen Bildausschnitten Nuclei sehr nah aneinander liegen und dem Klassifikator signalisiert werden muss, welcher der sichtbaren Nuclei klassifiziert werden soll, werden für jeden Klassifikator zusätzlich drei verschiedene Eingangsdaten-Formate getestet.
-Diese Typen unterscheiden sich in der Art, wie die Segmentierungsmaske des zu klassifizierenden Nucleus dem Klassifikator zugänglich gemacht wird.
-Für Daten des ersten Typs wird lediglich der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
-Daten des zweiten Typs werden um einen Kanal erweitert, der Segmentierungsmaske enthält.
-Alle anderen Kanäle, einschließlich des Nuclei Kanal bleiben unverändert.
-Zuletzt werden Daten des Typ drei mit einer Entfernungsmaske skaliert.
-Hierzu wird pixelweise der originale Nucleus-Kanal mit einer Transformation des Abstand aller Pixel außerhalb der Segmentierungsmaske wie folgt multipliziert:
-\begin{equation}
-I'(x) = I(x) \cdot \exp\left( -\frac{1}{\sigma} \min_{y \in \lnot M} \|x - y\|_2 \right),
-\label{eq:distance}
-\end{equation}
-wobei:
-\begin{itemize}
-  \item $\quad I(x) \in [0, 1]$ der Intensitätswert des Nucleus Kanal an der Position $x$ ist,
-  \item $\quad I'(x)  \in [0, 1]$ der Intensitätswert des neuen, transformierten Nucleus Kanal an der Position $x$ ist,
-  \item $\quad x \in \Omega \subset \mathbb{N}^3$ die Position eines Voxels im diskreten Bildraum ist,
-  \item $\quad M \subseteq \Omega$ die Segmentierungsmaske und $\lnot M = \Omega \setminus M$ deren Komplement im Bildraum sind,
-  \item und $\sigma \in \mathbb{R}^+$ ein Parameter zur Steuerung des exponentiellen Abfalls ist.
-\end{itemize}
-Im Folgenden sind die Nuclei Kanäle der verschiedenen Methoden dargestellt.
-\begin{figure}[htbp]
-  \centering
-  \begin{subfigure}[t]{0.18\textwidth}
-      \includegraphics[width=\linewidth]{Figures/cutout.png}
-      \caption{Minimaler Begrenzungsrahmen des Nuclei-Kanals, wie Daten des ersten Typs ihn enthalten.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.18\textwidth}
-      \includegraphics[width=\linewidth]{Figures/VERSION2_CH_0_SLICE_4.png}
-      \caption{Ausgeschnittener Bereich des Nuclei-Kanals mit mehreren Nuclei. 
-      Daten des zweiten Typs beinhalten diese Darstellung.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.18\textwidth}
-      \includegraphics[width=\linewidth]{Figures/VERSION1_CH_2_SLICE_4.png}
-      \caption{Segmentierungsmaske des zu klassifizierenden Nucleus, wie Daten des zweiten Typs sie enthalten.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.18\textwidth}
-      \includegraphics[width=\linewidth]{Figures/VERSION2_CH_2_SLICE_4.png}
-      \caption{Entfernungsmaske des zu klassifizierenden Nucleus. 
-      Diese wird pixelweise mit dem Nuclei-Kanal multipliziert für Typ drei.}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.18\textwidth}
-      \includegraphics[width=\linewidth]{Figures/VERSION1_CH_0_SLICE_4.png}
-      \caption{Darstellung des Typs drei, entstanden durch Multiplikation von Nuclei-Kanal und Entfernungsmaske.}
-  \end{subfigure}
-  \caption{Darstellungen der verschiedenen Typen von Eingangsdaten. Jeder Typ zielt auf eine andere Art darauf ab, dem Klassifikator zu signalisieren, welcher der sichtbaren Nuclei zu segmentieren ist.}
-  \label{fig:five_images}
-\end{figure}
+Prominente Encoder aus der Literatur werden vergleichen eingesetzt. 
+Darüber hinaus werden hier verschiedene Methoden der Vorverarbeitung, des Vortraining und der Decoder-architektur eingeführt und verglichen.
+Im Folgenden sind diese Methoden einzeln beschrieben.
+Da jede mögliche Kombination mit jedem Netz zu trainieren einen zu hohen Rechenaufwand bedeuten würde, wird eine Vorauswahl von Kombinationen getroffen. \newline 
 
-Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bervor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
-Hierzu werden zwei Methoden eingeführt und in Experimenten verglichen.
-Die erste Methode ist konventionelles Zero-Padding, also das symetrische Hinzufügen von Nullen an die Ränder des Bilds.
-Eine weitere Methode ist einfache bilineare Interpolation. \textbf{ *  muss ich das erklären? *} \newline
-%Zuletzt wird eine lernbare Methode betrachtet.
-%Ein kleines neuronales Netzwerk, vergrößert das Bilder schrittweise. 
-%Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.
-Die Encoder der nachfolgenden vortrainierten Netze werden vergleichend eingesetzt.
-In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die Genauigkeit auf dem ImageNet Datensatz \cite{Russakovsky2015} angegeben.
+%Es werden sowohl \ac{cnn} als auch Vision Transformer basierte Klassifikatioren in Betracht gezogen.
+\subsection{Encoder}
+Tab. \ref{tab:network_comparison} zeigt die verschiedenen Encoder, die hier eingesetzt werden.
+Bis auf das Segmentierungsmodell CellposeSAM handelt es sich dabei um Encodern, die aus Klassifikator Applikationen, die auf dem ImageNet Datensatz \cite{Russakovsky2015} vortrainiert wurden, stammen.  
+In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die Top-1-Genauigkeit (Acc@1) und die Top-5-Genauigkeit (Acc@5) auf dem ImageNet Datensatz angegeben.
 \begin{table}[ht]
   \centering
   \caption{Vergleich der sechs vortrrainierten Netze hinsichtlich Genauigkeit auf dem ImageNet Datensatz \cite{Russakovsky2015} und der Anzahl an Parametern.
@@ -191,7 +139,108 @@ In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die Ge
     \hline
   \end{tabular}
 \end{table}
-  
+
+\subsection{Vorverarbeitung}
+Da in vielen Bildausschnitten Nuclei sehr nah aneinander liegen und dem Klassifikator signalisiert werden muss, welcher der sichtbaren Nuclei klassifiziert werden soll, werden für jeden Klassifikator zwei verschiedene Eingangsdaten-Formate getestet.
+Diese Typen unterscheiden sich in der Art, wie die Segmentierungsmaske des zu klassifizierenden Nucleus dem Klassifikator zugänglich gemacht wird.
+%Für Daten des ersten Typs wird lediglich der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
+Daten des ersten Typs ersetzenden Nucleus-Kanal, mit der Segmentierungsmaske des gesuchten Nucleus.
+Das Ziel ist dabei das Risiko zu minimieren, dass umliegende Nuclei das Klassifikationsergebnis verfälschen.
+Mit dieser Risikominimierung geht allerdings der Verlsut der Oberflächenmerkmale einher.
+Außerdem ist das Klassifikationsergebnis bei dieser Vorverarbeitungsart von der Qualität der Segmentierung abhängig.
+%Alle anderen Kanäle, einschließlich des Nuclei Kanal bleiben unverändert.
+Für Daten des Typ zwei wird der Nucleus-Kanal mit einer Entfernungsmaske skaliert.
+Hierzu wird pixelweise der originale Nucleus-Kanal mit einer Transformation des Abstand aller Pixel außerhalb der Segmentierungsmaske wie folgt multipliziert:
+\begin{equation}
+I'(x) = I(x) \cdot \exp\left( -\frac{1}{\sigma} \min_{y \in \lnot M} \|x - y\|_2 \right),
+\label{eq:distance}
+\end{equation}
+wobei:
+\begin{itemize}
+  \item $\quad I(x) \in [0, 1]$ der Intensitätswert des Nucleus Kanal an der Position $x$ ist,
+  \item $\quad I'(x)  \in [0, 1]$ der Intensitätswert des neuen, transformierten Nucleus Kanal an der Position $x$ ist,
+  \item $\quad x \in \Omega \subset \mathbb{N}^3$ die Position eines Voxels im diskreten Bildraum ist,
+  \item $\quad M \subseteq \Omega$ die Segmentierungsmaske und $\lnot M = \Omega \setminus M$ deren Komplement im Bildraum sind,
+  \item und $\sigma \in \mathbb{R}^+$ ein Parameter zur Steuerung des exponentiellen Abfalls ist.
+\end{itemize}
+Die Verwendung des Typ zwei hat zum Ziel, dass die Oberflächenmerkmale des Nucleus erhalten bleiben.
+Außerdem wird mit der Vorverarbeitung des zweiten Typs der Einfluss den eventuelle fehlerhafte Segmentierungsmasken haben durch die kontinuierliche Abstandstransformation minimiert.
+Allerdings ist hierdurch auch das Risiko von Einflussnahme auf das Klassifikationsergebnis durch umliegende Nuclei nicht vollständig eliminiert, sondern nur vermindert.
+Im Folgenden sind die Nuclei Kanäle der verschiedenen Methoden dargestellt.
+\begin{figure}[htbp]
+  \centering
+  % \begin{subfigure}[t]{0.18\textwidth}
+  %     \includegraphics[width=\linewidth]{Figures/cutout.png}
+  %     \caption{Minimaler Begrenzungsrahmen des Nuclei-Kanals, wie Daten des ersten Typs ihn enthalten.}
+  % \end{subfigure}
+  % \hfill
+  \begin{subfigure}[t]{0.24\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION2_CH_0_SLICE_4.png}
+      \caption{Ausgeschnittener Bereich des originalen Nucleus-Kanals mit mehreren Nuclei.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.24\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION1_CH_2_SLICE_4.png}
+      \caption{Segmentierungsmaske des zu klassifizierenden Nucleus, wie Daten des ersten Typs sie enthalten.
+      Die binäre Maske zeigt keine Oberflächenmerkmale des Nucleus, lediglich die geometrischen Merkmale.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.24\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION2_CH_2_SLICE_4.png}
+      \caption{Entfernungsmaske des zu klassifizierenden Nucleus. 
+      Diese wird pixelweise mit dem Nucleus-Kanal multipliziert für Typ zwei.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.24\textwidth}
+      \includegraphics[width=\linewidth]{Figures/VERSION1_CH_0_SLICE_4.png}
+      \caption{Darstellung des Typs zwei, entstanden durch Multiplikation von Nuclei-Kanal und Entfernungsmaske.
+      Zu sehen ist, dass der nahegelegene ungewünschte Nucleus noch stellenweise mit hoher Intensität vertreten ist.}
+  \end{subfigure}
+  \caption{Darstellungen der verschiedenen Typen von Eingangsdaten. Jeder Typ zielt auf eine andere Art darauf ab, dem Klassifikator zu signalisieren, welcher der sichtbaren Nuclei zu segmentieren ist.}
+  \label{fig:five_images}
+\end{figure}
+
+Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bervor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
+Hierzu werden zwei Methoden eingeführt und in Experimenten verglichen.
+Die erste Methode ist konventionelles Zero-Padding, also das symetrische Hinzufügen von Nullen an die Ränder des Bilds.
+Eine weitere Methode ist einfache bilineare Interpolation. \textbf{ *  muss ich das erklären? *} \newline
+%Zuletzt wird eine lernbare Methode betrachtet.
+%Ein kleines neuronales Netzwerk, vergrößert das Bilder schrittweise. 
+%Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.
+
+\subsection{Vortraining}
+Aus der Literatur sind verschiedene Methoden des Vortraining bekannt.
+Hier werden:
+\begin{itemize}
+  \item Kein Vortraining,
+  \item semi-supervised, und
+  \item fully-supervised Vortraining 
+\end{itemize}
+betrachtet.%, sowohl in Kombination, als auch in standalone Umsetzung.
+
+
+\paragraph{Kein Vortraining}
+\textit{NOTIZ:} Das wird sehr kurz, kann ich das irgendwie anders machen, fällt dir etwas ein?
+ 
+\paragraph{Semi-Supervised}
+\textit{NOTIZ:} Hier soll stehen:
+\begin{itemize}
+  \item Wie werden "pseudo-labels" mit semi-supervision erstellt?
+  \item Wie wird vortrainiert?
+  \item Welche Gewichte werden eingefroren?
+  \item Wie wird dann Transfertraining durchgeführt?
+\end{itemize}
+
+\paragraph{Fully-supervised} %\newline
+\textit{NOTIZ:} Hier soll stehen:
+\begin{itemize}
+  \item Welche Gewichte werden eingefroren?
+  \item Wie wird dann Transfertraining durchgeführt?
+\end{itemize}
+%Das fully-supervised Vortraining der meisten Encoder wird auf dem ImageNet Datensatz \cite{Russakovsky2015} durchgeführt.
+%Außerdem wird der vortrainierte Bildencoder von CellposeSAM herangezogen.
+%Für das Tra
+\subsection{Decoder}
 An die Encoder werden jeweils zwei verschiedene Decoder angehängt.
 Fig. \ref{fig:classifiers} zeigt die beiden Architekturen systematisch.
 Der erste Klassifikator wird hier \textit{Volumen-Klassifikator} genannt.

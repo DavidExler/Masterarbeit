@@ -90,18 +90,41 @@ Der Decoder hebt, meist durch transponierte Bildfaltungen \cite{Zeiler2010, Zeil
 \end{itemize}
 Klassifikation beschreibt das Zuordnen einer Kategorie oder Klasse zu der eine gegebene Stichprobe gehört \cite{Fukunaga1993}.
 Hierzu werden die Merkmale des Objekts, das in der Stichprobe präsentiert wird, durch Beobachtung oder Messung gewonnen \cite{Kulkarni1998}.
-Nach wiederholter Extraktion der Merkmale von Objekten verschiedener Klassen werden Muster in den Merkmalen gesucht, um Regeln für die Zuweisung von Objekten zu Klassen auf Basis der Muster festzulegen \cite{ShalevShwartz2014}.
+Nach wiederholter Extraktion der Merkmale von Objekten verschiedener Klassen werden Muster in den Merkmalen gesucht, um Regeln für die Zuweisung von Objekten zu Klassen auf Basis der Muster festzulegen \cite{Jain1999, ShalevShwartz2014}.
 Sowohl die Algorithmen zur Merkmalsextraktion, als auch zum Ableiten der Muster und Regeln können mit unterschiedlich hohem Rechenaufwand, Abstraktionsgrad und Maß an Generalisierbarkeit implementiert werden \cite{Loog2018}. 
 Zur Merkmalsextraktion werden klassisch Metriken zu einem Vektor kombiniert \cite{Guyon2006}.
-Diese Metriken können beispielsweise die Verteilung der Farbkanäle, eine Charakterisierung der Textur, Parameter der Fourier-Entwicklung einer Kontur, die Fläche des Objekts und vieles mehr sein \cite{Kunaver2005, Mutlag2020}.
+Diese Metriken können beispielsweise die Verteilung der Farbkanäle, eine Charakterisierung der Textur, die Fläche des Objekts und vieles mehr sein \cite{Kunaver2005, Mutlag2020}.
+Eine weitere verbreitete Metrik ist eine Kombination von Parametern der Fourier-Entwicklung einer Kontur, die aus der diskreten komplexen Zahlenfolge
+\begin{equation}
+  c[n] = x[n] + i \cdot y[n]
+\end{equation}
+mithilfe der diskreten Fourier-Transformation 
+\begin{equation}
+  F[k] = \sum_{n=0}^{N-1} c[n] \cdot e^{-2 \pi i \frac{kn}{N}}
+\end{equation} gebildet werden \cite{Zahn1972, Kuhl1982}.
+Merkmalsvektoren werden häufig abstrahiert und in ihrer Dimension reduziert, beispielsweise durch eine Principal Component Analysis \cite{Pearson1901, Hotelling1933}
+Sind keine Beispiele von Stichproben der verfügbaren Klassen verfügbar, werden diese Metriken zum Clustering verwendet \cite{Jain1999, Xu2005}. 
+Sind nur wenige \acp{gt} vorhanden können semi supervised Verfahren angewandt werden, die besonders die Ähnlichkeit der Stichproben ohne Labels herausarbeiten \cite{Boser1992, Yarowsky1995}.
+Eine pominente Methode des semi supervised Lernens ist das label spreading, die mithilfe einer Kernfunktion \cite{Schoelkopf1997, Smola1998} die Dimension von Merkmalsvektoren ändert und in einen alternativen Merkmalsraum transformiert \cite{Zhou2003}.
+Verschiedene Kernfunktionen wie Radiale Basis Funktionen \cite{Lowe1988}
+\begin{equation}
+    \phi(x, y) = \exp\!\left(-\gamma \|x - y\|^2\right), \quad \gamma > 0
+    %\phi(\mathbf{x}) = \exp\Big(-\frac{\|\mathbf{x}-\mathbf{c}\|^2}{2\sigma^2}\Big)
+\end{equation}
+werden für das label spreading eingesetzt \cite{Delalleau2005}.
+Die meist genutzten Methoden der Klassifikation sind Logik-basierte Ansätze wie Entscheidungsbäume, Perzeptron-basierte Ansätze wie Neuronale Netze, statistische Ansätze wie Bayes'sche Netzwerke oder Nächster-Nachbar Verfahren und Support Vector Maschinen \cite{Kotsiantis2007}.
+Sie basieren auf Ähnlichkeiten zwischen den Metriken von unbekannten Stichproben und Stichproben mit bekannter Klasse.
+
+
+
 Moderne Anwendungen nutzen zur Merkmalsextraktion verschiedene Deep Learning basierte Methoden \cite{Khan2023}.
 %Recurrent Neural Networks \cite{Lecun1998} und vor allem \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} sind in der Lage aus Bildern aussagekräftige, abstrakte Merkmale zu generieren \cite{Plested2022}.
 Vor allem \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} sind in der Lage aus Bildern aussagekräftige, abstrakte Merkmale zu generieren \cite{Plested2022}.
 Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als Encoder bezeichnet.
-Die meist genutzten Methoden der Klassifikation sind Logik-basierte Ansätze wie Entscheidungsbäume, Perzeptron-basierte Ansätze wie Neuronale Netze, statistische Ansätze wie Bayes'sche Netzwerke oder Nächster-Nachbar Verfahren und Support Vector Maschinen \cite{Kotsiantis2007}.
-Der State-of-the-Art ist ein Neuronales Netz, das auf Basis der abstrakten Merkmale des Encoder eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
-Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger \ac{gt} den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse.
-Diesen Zus in Gewichtungen von der Ausgabe des Encoders und nicht-linearen Aktivierungsfunktionen auszudrücken \cite{Schmidhuber2015}. \newline
+Als Decoder wird der klassifizierende Teil des Klassifikators bezeichnet.
+Der State-of-the-Art für den Decoder ist ein Neuronales Netz, das auf Basis der abstrakten Merkmale des Encoder eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
+Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger \ac{gt} den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}. \newline.
+%Diesen Zus in Gewichtungen von der Ausgabe des Encoders und nicht-linearen Aktivierungsfunktionen auszudrücken 
 
 
 %Yuan2022 - Reinforcement Learning
@@ -236,7 +259,7 @@ Die Leistungsfähigkeit des Ansatzes ergibt sich nicht aus einer neuen Architekt
 Für Klassifikatoren werden in der Regel nur Encoder vortrainiert.
 Der Decoder muss den Klassen der downstream Anwendung angepasst werden.
 State-of-the-Art für Bild Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet \cite{Russakovsky2015} Datensatz vortrainiert werden \cite{You2018, Kornblith2019}.
-Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.
+Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}. \newline
 \textbf{ResNet} ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
 Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Fig. \ref{fig:ResCon}).
 Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He2015, srivastava2015highway} von Netzen mit steigender Tiefe entgegenwirken \cite{He2016}.
@@ -252,13 +275,7 @@ Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides,
 \textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet Modellfamilie \cite{Tan2019, Tan2021}.
 Die Architektur basiert auf einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}.
 Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1 Faltungsschichten.
-Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Fig. \ref{fig:MBConv}). \newline
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.4\textwidth]{Figures/MBConv.png}
-%    \caption{MBConv- und Fused-MBConv-Blöcke. Die Blöcke nutzt neben einer residual connection auch Faltungsschichten und Squeeze-and-Excitation um die Datendimension zu erhöhen \cite{Tan2021}.}
-%    \label{fig:MBConv}
-%\end{figure}
+Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Fig. \ref{fig:MBConv}).\newline
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
@@ -276,7 +293,7 @@ Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung
 \end{figure}
 \textbf{ConvNeXt} \cite{Liu2022} ist eine \ac{cnn}-Modellfamilie mit besonders großen Faltungskernen. 
 Die \textbf{ConvNeXt} Architektur umfasst fünf modulare Blöcke mit Faltungen und residual connections, wie die ResNet Architektur \cite{He2016}.
-Allerdings verändert dabei \textbf{ConvNeXt} einige Details der ResNet Architektur, wie beispielsweise die GeLU Aktivierungsfunktion \cite{Hendrycks2016} und Layer normalization \cite{Ba2016}. 
+Allerdings verändert dabei \textbf{ConvNeXt} einige Details der ResNet Architektur, wie beispielsweise die GeLU Aktivierungsfunktion \cite{Hendrycks2016} und Layer normalization \cite{Ba2016}.\newline
 Swin Transformer \cite{liu2021} sind eine beliebte Modellfamilie von \acp{vit}.
 Ihr Nachfolger, die \textbf{Swin Transformer V2} \cite{Liu2022a} vergrößert die Modelle noch.
 Die Architektur \acp{vit} kombiniert Bildausschnitte mit einem Positions-Bias.

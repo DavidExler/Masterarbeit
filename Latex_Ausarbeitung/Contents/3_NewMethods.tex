@@ -217,6 +217,19 @@ Hier werden:
   \item fully-supervised Vortraining 
 \end{itemize}
 betrachtet.%, sowohl in Kombination, als auch in standalone Umsetzung.
+Die Fig. \ref{fig:pretrain} zeigt die hier umgesetzten Methoden.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/PretrainingMethods.png}
+  \caption{Übersicht über die Vortrainingsmethoden. 
+  Links zu sehen sind die beiden verfügbaren Bildermengen, ImageNet und die Zeildaten.
+  Rechts von diesen Bildermengen werden diesen Bildern \ac{gt} Klassen hinzugefügt, entweder durch die ImageNet Datenbank, Experten oder einen Algorithmus.
+  Vier verschiedene Versionen jedes Klassifikators werden hier trainiert.
+  Das erste Netzwerk wird auf den ImageNet Daten vortrainiert. 
+  Anschließend wird mit Experten-Labels der Decoder neu trainiert.
+  TODO}
+  \label{fig:pretrain}
+\end{figure}
 \paragraph{Kein Vortraining}
 Ohne Vortraining startet der Encoder, der den Großteil der Gewichte umfasst, mit zuffällig initialisierten Werten.
 Da diese zufälligen Werte keine sinnvollen Merkmale extrahieren wird ein besonders langes Training mit den Zeildaten durchgeführt.

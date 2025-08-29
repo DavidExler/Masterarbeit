@@ -13,7 +13,6 @@ TestCode
 *.aux
 *.gz
 *.log
-*.pdf
 *.fls
 *.bbl
 *.fls

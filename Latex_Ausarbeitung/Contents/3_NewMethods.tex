@@ -107,14 +107,14 @@ Alle betrachteten Variationen des Klassifikators werden ausschließlich mit den 
 Beide Anteile des Datensatzes werden durch Augmentierung erweitert und in Batches zusammengefasst.
 Zur Datenaugmentierung werden die folgenden Methoden eingesetzt:
 \begin{itemize}
-  \item \textbf{Rotation:} Mit einer Wahrscheinlichkeit von 50\,\% werden die Eingabedaten um 90° in der XY-Ebene rotiert.
-  \item \textbf{Spiegelung:} Ebenfalls mit einer Wahrscheinlichkeit von 50\,\% erfolgt eine Spiegelung entlang der Z-Achse.
-  \item \textbf{Gaußsches Rauschen:} Mit einer Wahrscheinlichkeit von 20\,\% wird Rauschen mit einem Mittelwert von 0 und einer Standardabweichung von 0{,}01 hinzugefügt.
+  \item \textbf{Rotation:} Mit einer Wahrscheinlichkeit von 50\% werden die Eingabedaten um 90° in der XY-Ebene rotiert.
+  \item \textbf{Spiegelung:} Ebenfalls mit einer Wahrscheinlichkeit von 50\% erfolgt eine Spiegelung entlang der Z-Achse.
+  \item \textbf{Gaußsches Rauschen:} Mit einer Wahrscheinlichkeit von 20\% wird Rauschen mit einem Mittelwert von 0 und einer Standardabweichung von 0{,}01 hinzugefügt.
 \end{itemize}
-Prominente Encoder aus der Literatur werden vergleichen eingesetzt. 
+Prominente Encoder aus der Literatur werden vergleichend eingesetzt. 
 Darüber hinaus werden hier verschiedene Methoden der Vorverarbeitung, des Vortraining und der Decoder-architektur eingeführt und verglichen.
 Im Folgenden sind diese Methoden einzeln beschrieben.
-Da jede mögliche Kombination mit jedem Netz zu trainieren einen zu hohen Rechenaufwand bedeuten würde, wird eine Vorauswahl von Kombinationen getroffen. \newline 
+Da jede mögliche Kombination mit jedem Netz zu trainieren einen zu hohen Rechenaufwand bedeutet, wird eine Vorauswahl von Kombinationen getroffen. \newline 
 
 %Es werden sowohl \ac{cnn} als auch Vision Transformer basierte Klassifikatioren in Betracht gezogen.
 \subsection{Encoder}
@@ -224,10 +224,15 @@ Die Fig. \ref{fig:pretrain} zeigt die hier umgesetzten Methoden.
   \caption{Übersicht über die Vortrainingsmethoden. 
   Links zu sehen sind die beiden verfügbaren Bildermengen, ImageNet und die Zeildaten.
   Rechts von diesen Bildermengen werden diesen Bildern \ac{gt} Klassen hinzugefügt, entweder durch die ImageNet Datenbank, Experten oder einen Algorithmus.
+  Jeder Encoder (linke Seite eines Netzwerks) und jeder Decoder (rechte Seite eines Netzwerks) wird mit einer dieser drei Label-Mengen trainiert.
+  Die Farbe der Label und des Netzwerks zeigt dabei die Zuordnung.
+  Mit offenen oder geschlossenen Schlössern über den En- und Decodern ist dargestellt, ob die Gewichte eingefroren werden.
   Vier verschiedene Versionen jedes Klassifikators werden hier trainiert.
   Das erste Netzwerk wird auf den ImageNet Daten vortrainiert. 
   Anschließend wird mit Experten-Labels der Decoder neu trainiert.
-  TODO}
+  Das Zweite erhält kein Vortraining, es ist komplett mit den Zieldaten trainiert.
+  Für das dritte Netzwerk werdem lediglich die Label des semi-supervised Algorithmus eingesetzt.
+  Die letzte Variante wird semi supervised vortrainiert und anschließend mit den Zieldaten finetuned. }
   \label{fig:pretrain}
 \end{figure}
 \paragraph{Kein Vortraining}
@@ -240,28 +245,28 @@ Jedes Modell wird jeweils für 75 Epochen trainiert.
 Die semi supervised \acp{gt} werden mithilfe eines few-shot gestützen Cluster Algorithmus erstellt.
 Ein Experte erstellt hierzu \acp{gt} von wenigen Nuclei.
 Danach werden aus den restlichen Segmentierungsmasken einige Merkmale generiert und zu einem Vektor zusammengefasst.
-Das Volumen und die Oberfläche und Achsenlängen werden direkt bestimmt. 
-Die Exzentrizität wird aus dem Verhältnis der längsten und der kürzesten Achse berechnet.
+Zuerst werden das Volumen, die Oberfläche und die Achsenlängen jedes Nucleus direkt bestimmt. 
+Außerdem wird die Exzentrizität aus dem Verhältnis der längsten und der kürzesten Achse berechnet.
 Für die Kompaktheit wird das Volumen der Maske durch die kleinste mmögliche Begrenzungsbox geteilt.
 Darüber hinaus wird aus der Z-Schicht, in der die Segmentierungsmaske am größten ist wird die 2D-Kontur erfasst.
-Aus dieser Kontur wird eine komplexe Zahlenfolge berechnet ‚und der Absolutwert der ersten zehn Koeffizienten als einzelne, weitere Merkmale dem Merkmalsvektor hinzugefügt. \newline
+Aus dieser Kontur wird eine komplexe Zahlenfolge berechnet und der Absolutwert der ersten zehn Koeffizienten als einzelne, weitere Merkmale dem Merkmalsvektor hinzugefügt. \newline
 Die entstehenden Merkmalsvektoren werden durch eine Standardisierung der Werte, zu einem Mittelwert von Null und Varianz von Eins überführt.
-Daraufhin wird eine Hauptkomponentenanalyse (PCA) angewandt, um die Dimensionalität der Merkmalsvektoren auf zehn zu reduzieren und redundante Informationen zu entfernen.
+Daraufhin wird eine Principal Component Analysis \cite{Pearson1901} angewandt, um die Dimensionalität der Merkmalsvektoren auf zehn zu reduzieren und redundante Informationen zu entfernen.
 Das Ziel dabei ist es, einen Mittelweg zwischen Informationserhalt und Overfitting-Gefahr sowie Rechenaufwand zu erzielen.
-Mithilfe des Label Spreading-Algorithmus mit einer Radial Basis Funktion Kernelfunktion werden die Experten-\acp{gt} über die Struktur der Daten auf die unbeschrifteten Beispiele ausgebreitet.
+Mithilfe des Label Spreading-Algorithmus \cite{Zhou2003}, mit einer Radial Basis Funktion \cite{Lowe1988} als Kernelfunktion, werden die Experten-\acp{gt} über die Struktur der Daten auf alle Stichproben ausgebreitet.
 Durch den Algorithmus entstehen \acp{gt} für die Daten ohne Experten-Labels.
-Diese neuen \acp{gt} werden dann eingesetzt, um in 25 Epochen sowohl die Encoder, als auch die Decoder verfügbaren Klassifikatoren zu trainieren.
-Optional werden die Gewichte des Encoder hiernach, bis auf die letzten beiden Schichten eingefroren und nur der Encoder wird in weiteren 25 Epochen mit dem Trainingsdatensatz trainiert.
+Diese neuen \acp{gt} werden dann eingesetzt, um in 25 Epochen sowohl die Encoder, als auch die Decoder zu trainieren, mit dem Ziel unter geringem Aufwand für die Experten umfangreiche Klassifikatoren zu trainieren.
+Optional werden die Gewichte des Encoder hiernach, bis auf die letzten beiden Schichten eingefroren und nur der Encoder wird in weiteren 35 Epochen mit dem Trainingsdatensatz der Zieldaten trainiert.
 Das Ziel dieses Vorgehens ist es, eine stärkere Generalisierung zu erreichen, indem Overfitting bei der Merkmalsextraktion vermieden wird.
 Da der Encoder mit anderen Daten vortrainiert wird, ist zu erwarten, dass er eine sinnvolle Merkmalsextraktion lernt, ohne auf die expliziten Merkmale der individuellen Stichproben im Trainingsdatensatz angewiesen zu sein.
 Dadurch sind die Beziehungen zwischen Merkmalen und Klassen, die der Decoder lernt, nicht nur auf die Merkmale des Trainingsdatensatz beschränkt.
-\textit{NOTIZ:} Hier soll stehen:
-\begin{itemize}
-  \item Wie werden "pseudo-labels" mit semi-supervision erstellt?
-  \item Wie wird vortrainiert?
-  \item Welche Gewichte werden eingefroren?
-  \item Wie wird dann Transfertraining durchgeführt?
-\end{itemize}
+%\textit{NOTIZ:} Hier soll stehen:
+%\begin{itemize}
+%  \item Wie werden "pseudo-labels" mit semi-supervision erstellt?
+%  \item Wie wird vortrainiert?
+%  \item Welche Gewichte werden eingefroren?
+%  \item Wie wird dann Transfertraining durchgeführt?
+%\end{itemize}
 
 \paragraph{Fully-supervised} %\newline
 \textit{NOTIZ:} Hier soll stehen:

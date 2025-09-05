@@ -1,15 +1,22 @@
 [0] Config.pm:308> INFO - This is Biber 2.20
 [0] Config.pm:311> INFO - Logfile is 'Thesis.blg'
-[41] biber-darwin:340> INFO - === Thu Jul 10, 2025, 17:20:26
+[41] biber-darwin:340> INFO - === Fri Sep  5, 2025, 14:26:34
 [52] Biber.pm:420> INFO - Reading 'Thesis.bcf'
-[100] Biber.pm:994> INFO - Found 44 citekeys in bib section 0
-[108] Biber.pm:4463> INFO - Processing section 0
-[116] Biber.pm:4654> INFO - Looking for bibtex file 'mybib.bib' for section 0
-[118] bibtex.pm:1713> INFO - LaTeX decoding ...
-[146] bibtex.pm:1519> INFO - Found BibTeX data source 'mybib.bib'
-[421] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[421] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[421] Biber.pm:4283> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'en-US'
-[421] Biber.pm:4289> INFO - No sort tailoring available for locale 'en-US'
-[442] bbl.pm:676> INFO - Writing 'Thesis.bbl' with encoding 'UTF-8'
-[461] bbl.pm:779> INFO - Output to Thesis.bbl
+[115] Biber.pm:994> INFO - Found 150 citekeys in bib section 0
+[123] Biber.pm:4463> INFO - Processing section 0
+[130] Biber.pm:4654> INFO - Looking for bibtex file 'mybib.bib' for section 0
+[141] bibtex.pm:1713> INFO - LaTeX decoding ...
+[256] bibtex.pm:1519> INFO - Found BibTeX data source 'mybib.bib'
+[1035] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'variable = shifted' with 'variable = non-ignorable'
+[1035] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[1035] Biber.pm:4283> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'de-DE'
+[1035] Biber.pm:4289> INFO - No sort tailoring available for locale 'de-DE'
+[1095] bbl.pm:676> INFO - Writing 'Thesis.bbl' with encoding 'UTF-8'
+[1156] bbl.pm:779> INFO - Output to Thesis.bbl
+[1156] Biber.pm:131> WARN - Possible typo (case mismatch) between datasource keys: 'Liu2021' and 'liu2021' in file 'mybib.bib'
+[1156] Biber.pm:131> WARN - ISBN '9783319105833 9783319105840' in entry 'Hariharan2014' is invalid - run biber with '--validate_datamodel' for details.
+[1157] Biber.pm:131> WARN - ISBN '9783319245737 9783319245744' in entry 'Ronneberger2015' is invalid - run biber with '--validate_datamodel' for details.
+[1157] Biber.pm:131> WARN - ISBN '9783030109240 9783030109257' in entry 'Abay2019' is invalid - run biber with '--validate_datamodel' for details.
+[1157] Biber.pm:131> WARN - I didn't find a database entry for 'yosinski_how_2014' (section 0)
+[1157] Biber.pm:131> WARN - I didn't find a database entry for 'plested_deep_2022' (section 0)
+[1157] Biber.pm:133> INFO - WARNINGS: 6

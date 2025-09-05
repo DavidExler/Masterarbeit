@@ -10,7 +10,7 @@
 Für die Wahl eines Segmentierungsnetzes wird in Kapitel \ref{ch:NewMethods} das Bewertungskriterien \ac{ipq} eingeführt.
 Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518 Datensatz vorgestellt.
 Die \ac{ipq} wird auf dem Datensatz mit den Masken von drei vortainierten Segmentierungsnetzen und, zur Validierung, mit der \ac{gt} ausgeführt.
-Die Masken unterscheiden sich optisch stark (siehe Fig. \ref{fig:example_masks}), was sich auch in starken Unterschieden in der \ac{ipq} äußert.
+Die Masken unterscheiden sich optisch stark (siehe Abb. \ref{fig:example_masks}), was sich auch in starken Unterschieden in der \ac{ipq} äußert.
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[t]{0.24\textwidth}
@@ -41,7 +41,7 @@ Die Masken unterscheiden sich optisch stark (siehe Fig. \ref{fig:example_masks})
 \end{figure}
 \newline
 Die Ergebnisse jedes Segmentierungsnetzes sind einzeln und für jedes Bild im Appendix \ref{supp:ipq} angehängt. 
-Eine Zusammenfassung der Ergebnisse ist in den Boxplots in Fig. \ref{fig:boxplots_ipq} gegeben.
+Eine Zusammenfassung der Ergebnisse ist in den Boxplots in Abb. \ref{fig:boxplots_ipq} gegeben.
 Das zentrale Ergebnis ist, dass CellposeSAM die besten \ac{ipq}-Werte erzielt. 
 Mit einem Mittelwert von \num{0.64} ist die \ac{ipq} von CellposeSAM signifikant höher, als der Mittelwert bei nnUNet (\num{0.04}) und Deepcell (\num{0.02}), mit entsprechenden p-Werten von \num{1.80e-80} bzw. \num{1.59e-81} bei einseitigen T-Tests. 
 Dennoch zeigt sich, dass CellposeSAM lediglich in der Kategorie Segmentatierungs-Qualität (SQ) sowohl den höchsten Median als auch den höchsten Mittelwert erreicht. 

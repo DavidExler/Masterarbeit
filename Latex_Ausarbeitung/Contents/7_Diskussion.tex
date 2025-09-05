@@ -6,11 +6,11 @@
 \section{Überblick}
 
 \section{Segmentierung}
-Durch einen Vergleich der Masken mit der \ac{gt} in Fig. \ref{fig:boxplots_ipq} und ihren zugehörigen Ergebnisse der einzelnen Bewertungskriterien sind die Schwächen und Stärken der individuellen Netze ersichtlich.
+Durch einen Vergleich der Masken mit der \ac{gt} in Abb. \ref{fig:boxplots_ipq} und ihren zugehörigen Ergebnisse der einzelnen Bewertungskriterien sind die Schwächen und Stärken der individuellen Netze ersichtlich.
 Die nnUNe-Masken sind sichtbar kleiner als die Nucleus-Instanzen, was eine schlechte Segmentierungsqualität bedingt.
 Oft zerteilen mehrere nnuNet-Masken eine Nucleus-Instanz, was von der Injektiven Qualität bestraft wird.
 Wie auch die gute Recognition Qualität zeigt findet dafür nnUNet sehr zuverlässig die anwesenden Nuclei mit mindestens einer Maske.
-Deepcell (siehe Fig. \ref{fig:DeepcellMaske}) übersegmentiert die Nuclei, wodurch die Segmentierungsqualität stark abnimmt.
+Deepcell (siehe Abb. \ref{fig:DeepcellMaske}) übersegmentiert die Nuclei, wodurch die Segmentierungsqualität stark abnimmt.
 Das Ergebnis sind Masken, die zu groß sind und oft mehr als einen Nucleus enthalten.
 Das bedeutet auch, dass einige Nuclei nicht von einer eigenen Maske gefunden werden, was sie als \ac{fn}-Instanzen kategorisiert und eine schlechte Recognition Qualität bedingt.
 Durch diese Übersegmentierung wird vermieden, dass Instanzen der \ac{gt} durch die Deepcell-Masken geteilt werden, was zu einer guten Injektiven Qualität führt.

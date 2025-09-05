@@ -12,18 +12,29 @@ Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestell
 
 \section{Methoden}
 \subsection{Unfertiger Zwischendurch-Text!}
+\textbf{Bilineare Interpolation} ist ein Verfahren zur Bildnachbearbeitung, das die Dimension eines Bilds erhöht, indem Werte für neue Pixel zwischen bestehenden geschätzt werden \cite{Smith1981}.
+Zur Schätzung des neuen Wert wird dabei ein gewichtetes Mittel aus den Vier benachbarten Pixeln genommen:
+\begin{equation}
+\hat{f}(x,y) = (1-p)(1-q)f_{i,j} + p(1-q)f_{i+1,j} + (1-p)q f_{i,j+1} + pq f_{i+1,j+1},
+\end{equation}
+wobei $\hat{f}(x,y)$ der neue Wert, $p, q \in [0, 1]$ die relativen Abstände zu den Nachbarpixeln und $i, j$ die Indizes der Nachbarpixel, und $f$ die Intensität der Nachbarpixel sind. \newline
+\textbf{Normierungsmethoden}:\newline
+Batch Normalization normalisiert die Eingaben einer Schicht über eine Mini-Batch, indem für jeden abstrakte Merkmal der Schicht, das bei der Dimensionsreduktion des Bilds entsteht, eine Transformation durchgeführt wird \cite{Ioffe2015}.
+Für die Transformation werden der Mittelwert des Mini-Batch vom Wert abgezogen und durch die Standardabweichung geteilt.
+Layer Normalization verfolgt einen ähnlichen Ansatz, berechnet Mittelwert und Varianz aber pro Schicht von allen Neuronen \cite{Ba2016}.
+Beide stabilisieren das Training tiefer neuronaler Netze und lassen die Normalisierung als Bestandteil der Modellarchitektur lernen, statt sie nur als Preprocessing-Schritt durchzuführen \cite{Santurkar2018, Xu2019}.
 
 \subsection{Benchmark}
-Um die Leistungsfähigkeit der Applikation, die im Rahmen der vorliegenden Thesis erstellt wird, zu validieren und verifizieren sind umfangreiche Datensätze notwendig. 
+Um die Leistungsfähigkeit der Applikation, die im Rahmen der vorliegenden Thesis erstellt wird, zu prüfen sind umfangreiche Datensätze notwendig. 
 Für jede isolierbare Aufgabe muss ein Datensatz gewählt werden, der eine \ac{gt} entsprechend dieser Aufgabe mitbringt.
-Die in diesem Datensatz enthaltenen Daten (Quelldaten) müssen dabei den Daten, für die die Anwendung entworfen wird (Zieldaten) \textit{ähnlich} sein.
-So wird sichergestellt, dass sich die auf den Quelldaten gemessene Qualität der Anwendung auf die Zieldaten übertragen lässt \cite{ganin2015domain_big}.
-Der Begriff \textit{Ähnlichkeit} ist mehrdeutig und es ist eine Herrausforderung, sinnvolle Merkmale in Daten zu finden, die das Messen von \textit{Ähnlichkeit} ermöglichen.
+Die Herausforderung bei der Auswahl eines Datensatzes ist, dass die darin enthaltenen Daten (Quelldaten) den Daten, für die die Anwendung entworfen wird (Zieldaten) \textit{ähnlich} sein müssen.
+So wird sichergestellt, dass sich die auf den Quelldaten gemessene Qualität der Anwendung sinnvoll auf die Zieldaten übertragen lässt \cite{ganin2015domain_big}.
+Der Begriff \textit{Ähnlichkeit} ist mehrdeutig und das Definieren von Merkmalen in Daten, die das Messen von \textit{Ähnlichkeit} ermöglichen ist anspruchsvoll.
 Metriken die als Maß für \textit{Ähnlichkeit} genutzt werden müssen maßgeschneidert zur Anwendung passen und sind bereits breit erforscht \cite{zhu2020domain_similarity, koohi2018similarity, cai2009similarity}.
 Daten können mithilfe passender Metriken \textit{Ähnlichkeits-}gruppen, sogenannten \textit{Domänen}, zugeordnet werden \cite{yuan2005domainsimilarity}.
-Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind verschiedene Marker, Aufnahmegeräte oder Zoom-Stufen (siehe Abb. \ref{fig:domains}). 
-%sind verschiedene Darstellungen gleicher Objekte in Bildern wie in Fig. \ref{fig:domains} dargestellt. 
-\newline Altes Bild (Katzen) ersetzt \newline
+Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind verschiedene Farb-Marker, Aufnahmegeräte oder Zoom-Stufen (siehe Abb. \ref{fig:domains}). 
+%sind verschiedene Darstellungen gleicher Objekte in Bildern wie in Abb. \ref{fig:domains} dargestellt. 
+%\newline Altes Bild (Katzen) ersetzt \newline
 %\begin{figure}[htbp]
 %    \centering
 %    \includegraphics[width=0.18\textwidth]{Figures/Katze_0.jpg} \hfill
@@ -33,30 +44,42 @@ Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind versc
 %    \caption{Vier Bilder der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad \cite{jrfarm_katze, Egan_Katzen}.}
 %    \label{fig:domains}
 %\end{figure}
-%\begin{figure}[htbp]
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.24\textwidth]{Figures/Cell_domain0.jpg} \hfill
-    \includegraphics[width=0.24\textwidth]{Figures/Cell_domain1.jpg}\hfill
-    \includegraphics[width=0.24\textwidth]{Figures/Cell_domain2.jpg}\hfill
-    \includegraphics[width=0.24\textwidth]{Figures/Cell_domain3.jpg}
-    \caption{Vier Aufnahmen von Zellen. Die Bilddomänen sind durch die verschiedenen Marker, Aufnahmegeräte und Zoom-Stufen klar zu unterscheiden \cite{Schermelleh2008, Peng2015, Ali2012}.}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/Cell_domain0.jpg}
+        \caption{Zieldaten TODO Aufnahmegeräte usw.}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/Cell_domain1.jpg}
+        \caption{3D-SIM Superauflösungsmikroskopie mit DAPI-Färbung \cite{Schermelleh2008}.}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/Cell_domain2.jpg}
+        \caption{Konfokale Fluoreszenzmikroskopie mit antikörperbasierten Farbstoffen \cite{Peng2015}.}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{Figures/Cell_domain3.jpg}
+        \caption{Klassische Hellfeldmikroskopie \cite{Ali2012}.}
+    \end{subfigure}
+    \caption{Vier Aufnahmen von Zellen. Die Bilddomänen sind durch die verschiedenen Marker und Aufnahmetechniken klar zu unterscheiden \cite{Schermelleh2008, Peng2015, Ali2012}.}
     \label{fig:domains}
 \end{figure}
-Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Katze}, aber die Merkmale wie Detailgrad, Abstraktion und Stil unterscheiden sich stark. 
+Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Zellkern}, aber der Stil unterscheidet sich stark. 
 Sie unterscheiden sich also in ihrer Domäne.
 In der Bildverarbeitung ist es essenziell die Domäne der Quelldaten im Hinblick auf die Aufgabe der Applikation zu beachten \cite{wang2018domain, peng2017domain}. 
-Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenanpassung durchgeführt werden \cite{han2022binsimilarity_domain, pinheiro2018domain, ganin2016domain}. \textit{NOTIZ: Muss ich Domänenanpassung erklären?}
+Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenanpassung durchgeführt werden \cite{han2022binsimilarity_domain, pinheiro2018domain, ganin2016domain}. %\textit{NOTIZ: Muss ich Domänenanpassung erklären?}
+Ghosh et al. definieren Domänenanpassung: "Gegeben Quell- und Ziel-Domänen $D_s$ und $D_t$ sowie die Aufgaben $\tau_s$ und $\tau_t$ zielen Domänenadaptations-basierte Verfahren darauf ab, ein Modell mit Parametern $\theta$ zu erlernen, das für die Zielaufgabe geeignet ist, wenn $D_s \neq D_t$ und $\tau_s = \tau_t$." \cite{Ghosh2020}.
 \subsection{Segmentierung}\label{sec:Segmentierung}
 %\textbf{KOMMENTAR} ist das notwendig?
-\begin{itemize}
-    \item Was ist Segmentierung?
-    \item Welche klassischen Ansätze gibt es?
-    \item Welche KI-Lösungen gibt es?
-    %\item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
-\end{itemize}
+%\begin{itemize}
+%    \item Was ist Segmentierung?
+%    \item Welche klassischen Ansätze gibt es?
+%    \item Welche KI-Lösungen gibt es?
+%    %\item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
+%\end{itemize}
 Segmentierung ist die Aufgabe, Pixel mit semantischen Labels zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
-In Fig. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} der verschiedenen Arten von Segmentierung zu sehen.
+In Abb. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} der verschiedenen Arten von Segmentierung zu sehen.
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.24\textwidth}
@@ -85,9 +108,11 @@ In Fig. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} 
 Für die verschiedenen Segmentierungsarten werden Architekturen an die Aufgabe angepasst \cite{Arnab2017, Chen2018}. 
 Modelle sind dabei in der Regel nach dem Vorbild des \textit{U-Net} \cite{Ronneberger2015} aus einem Merkmalsextraktor (Encoder) und einem Vorhersagenetz (Decoder) aufgebaut \cite{Girshick2014}.
 Der Encoder nutzt beispielsweise Bildfaltungen mit Kernen, deren optimale Gewichte anhand von annotierten Daten gelernt werden, zur Merkmalsextraktion \cite{Long2015}.
-Dabei verringert der Encoder iterativ die Größe der Eingabe jeder Schicht des Netzes in X und Y Richtung, erhöht dabei aber die Informationstiefe pro verbleibendem Pixel, bis ein hochdimensionaler Merkmalsvektor übrig bleibt. 
+Dabei verringert der Encoder iterativ die Größe der Eingabe jeder Schicht des Netzes in X, Y, und im dreidimensionalen Fall in Z Richtung, erhöht dabei aber die Informationstiefe pro verbleibendem Pixel, bis ein hochdimensionaler Merkmalsvektor übrig bleibt. 
 Der Decoder hebt, meist durch transponierte Bildfaltungen \cite{Zeiler2010, Zeiler2014}, die räumliche Auflösung schrittweise wieder an, indem er die Bilddimensionen vergrößert und die Merkmalskanäle gleichzeitig reduziert \cite{Noh2015}. 
-Über sogenannte Skip-Connections \cite{Ronneberger2015} werden dabei Merkmale aus den entsprechenden Encoder-Schichten mit den Decoder-Stufen verknüpft, sodass sowohl globale Kontextinformationen als auch feine Strukturen für die Segmentierung erhalten bleiben \cite{Mostajabi2015, Gu2018}. 
+Über sogenannte Skip-Connections \cite{Ronneberger2015} werden dabei Merkmale aus den entsprechenden Encoder-Schichten mit den Decoder-Stufen verknüpft, sodass sowohl globale Kontextinformationen als auch feine Strukturen für die Segmentierung erhalten bleiben \cite{Mostajabi2015, Gu2018}. \newline
+TODO: 3D bzw 2.5D - Welche Methoden werden speziell für 3D genutzt?
+
 %Long2015 - semantische Segmentierung - FCN
 %Ronneberger2015 - U-Net
 %Arnab2017 - Pixelwise instance segmentation with a dynamically instantiated network
@@ -134,25 +159,7 @@ Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} 
 Als \textbf{Decoder} wird der klassifizierende Teil des Klassifikators bezeichnet.
 Der State-of-the-Art für den Decoder ist ein Neuronales Netz, das auf Basis der abstrakten Merkmale des Encoder eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
 Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger \ac{gt} den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\newline.
-%Diesen Zus in Gewichtungen von der Ausgabe des Encoders und nicht-linearen Aktivierungsfunktionen auszudrücken 
-%Yuan2022 - Reinforcement Learning
-%Bain2021 - ViT Encoder
-%Krizhevsky2012- ImageNet CNN
-%Lecun1998 - BASE RNN
-%Elngar2021 - CNN Survey - unsupervised/supervised
-%Optionen für klassifikatoren: \begin{verbatim}
-%    https://monai.io/model-zoo.html#/model/pathology_nuclei_classification 
-%    pre-trained model for classifying nuclei cells as the following types - Other - Inflammatory - Epithelial - Spindle-Shaped
-%    This model is trained using DenseNet121 over ConSeP dataset.
-%    
-%    https://monai.io/model-zoo.html#/model/hf_exaonepath-crc-msi-predictor
-%    MSI classification of CRC tumors using EXAONEPath 1.0.0 Patch-level Foundation Model for Pathology
-%
-%    https://monai.io/model-zoo.html#/model/hf_exaonepath
-%    EXAONEPath 1.0 Patch-level Foundation Model for Pathology
-%
-%    https://github.com/BMEII-AI/RadImageNet
-%\end{verbatim} 
+TODO: 3D bzw 2.5D - Welche Methoden werden speziell für 3D genutzt, gibt es Methoden zur Anpassung?
 \section{Literaturrecherche}
 
 \subsection{Benchmark}
@@ -175,7 +182,7 @@ Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generie
 Zudem umfasst das Framework eine Trainingsroutine, um ein \ac{gan} zu trainieren, das Bilddaten und passende Annotationen automatisch erzeugt und an eine gewünschte Bilddomäne anpasst. 
 %
 %\begin{itemize}
-%    \item \cite{zhu2020domain_similarity} Speech recognition - Herrausforderung der Anpassung an Audio domänen
+%    \item \cite{zhu2020domain_similarity} Speech recognition - Herausforderung der Anpassung an Audio domänen
 %    \item \cite{han2022binsimilarity_domain} Domain adaption für Bilder (in domain "bins")
 %    \item \cite{koohi2018similarity} Maß für Ähnlichkeit in Workflows
 %    \item \cite{cai2009similarity} Maß für Ähnlichkeit in Netzwerken
@@ -193,7 +200,7 @@ Sie werden zunächst für allgemeine Aufgaben vortrainiert und anschließend auf
 Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
 In der aktuellen Forschung werden verschiedene \textit{foundation-models} für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
 Ein prominentes Exemplar ist das \ac{sam} \cite{kirillov2023sam} von Meta AI. 
-Es besteht aus einem Bild Encoder, einem Prompt Encoder und einem Masken Decoder (siehe Fig. \ref{fig:SAM_Architektur}). 
+Es besteht aus einem Bild Encoder, einem Prompt Encoder und einem Masken Decoder (siehe Abb. \ref{fig:SAM_Architektur}). 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{Figures/SAM_Architecture.png}
@@ -217,7 +224,7 @@ Er kombiniert den Bild-Encoder von \ac{sam} mit dem \textit{Flow}-Segmentierungs
 Dabei generiert der Bild-Encoder direkt Vekotoren, die Zwischenrepräsentationen, die sogenannten \textit{Flows}, darstellen.
 Diese \textit{Flows} werden pixelweise zu einem Gradientenfeld überführt.
 Mithilfe der Gradienten werden Objektinstanzen vorhergesagt.
-Fig. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
+Abb. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{Figures/CellposeSAM_Diagramm.png}
@@ -238,7 +245,7 @@ Für Klassifikatoren werden in der Regel nur Encoder vortrainiert, der Decoder m
 State-of-the-Art für Bild Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet \cite{Russakovsky2015} Datensatz vortrainiert werden \cite{You2018, Kornblith2019}.
 Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.\newline
 \textbf{ResNet} ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
-Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Fig. \ref{fig:ResCon}).
+Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Abb. \ref{fig:ResCon}).
 Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He2015, srivastava2015highway} von Netzen mit steigender Tiefe entgegenwirken \cite{He2016}.
 %\begin{figure}
 %    \centering
@@ -252,7 +259,7 @@ Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides,
 \textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet Modellfamilie \cite{Tan2019, Tan2021}.
 Die Architektur basiert auf einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}.
 Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1 Faltungsschichten.
-Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Fig. \ref{fig:MBConv}).\newline
+Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Abb. \ref{fig:MBConv}).\newline
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
@@ -265,7 +272,7 @@ Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung
         \caption{MBConv- und Fused-MBConv-Blöcke. Die Blöcke nutzt neben einer residual connection auch Faltungsschichten und Squeeze-and-Excitation um die Datendimension zu erhöhen \cite{Tan2021}.}
         \label{fig:MBConv}
     \end{subfigure}
-    \caption{Diagramme der Residual Connections, MBConv-Blöcke und Fused-MBConv-Blöcke.}
+    \caption{Diagramme a) der Residual Connections und b) MBConv-Blöcke und Fused-MBConv-Blöcke.}
     \label{fig:ResDiagramms}
 \end{figure}
 \textbf{ConvNeXt} \cite{Liu2022} ist eine \ac{cnn}-Modellfamilie mit besonders großen Faltungskernen. 
@@ -278,7 +285,7 @@ Hierzu wird ein Bildfenster $z$ und dessen relativen Koordinaten im Bild $\Delta
 Die Positionen werden in einem MLP-Netz verarbeitet, währen das Bildfenster mit drei verschiedenen Gewichtsmatrizen multipliziert wird.
 Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
 Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2} Block.
-Dieser Aufbau ist in Fig. \ref{fig:SwinArchitecture} dargestellt. 
+Dieser Aufbau ist in Abb. \ref{fig:SwinArchitecture} dargestellt. 
 
 %Backbones:
 %\cite{He2016} ResNet

@@ -5,12 +5,15 @@
 \section{Überblick}
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.99\linewidth]{Figures/graphAbstract.png}
-  \caption{Graphical Abstract - Das Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird, das für die Anwendung der vorliegenden Arbeit eingesetzt wird. 
-  Ein peer-reviewed Benchmark Datensatz aus Bildern von diversen Zellkulturen mit dazugehörigen Ground Truths wird links eingegeben. 
-  Mehrere austauschbare Segmentierungsnetze führen eine Inferenz für den Benchmark aus, zwischen den entstehenden Segmentierungsmasken und den Ground Truths werden dann Übereinstimmungen gesucht. 
-  Aus diesen Korrespondenzen, den Metadaten und den Masken wird die neu eingeführte IPQ (siehe \ref{sec:Kriterien}) berechnet. 
-  Mithilfe der Ergebnisse kann dann das optimale Segmentierungsnetz für die Anwendung gewählt werden.}
+  \includegraphics[width=0.99\linewidth]{Figures/graphAbstract_horizontal.png}
+  \caption{Graphical Abstract - Das obere Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird, das für die Anwendung der vorliegenden Arbeit eingesetzt wird. 
+  Ein peer-reviewed Benchmark Datensatz aus dreidimensionalen Bildern (1) von diversen Zellkulturen mit dazugehörigen Ground Truths (2) wird links eingegeben. 
+  Mehrere austauschbare Segmentierungsnetze (3) führen eine Inferenz für den Benchmark aus. 
+  Die entstehenden Masken (4) werden dann zur Berechnung der neu eingeführten IPQ (siehe Kapitel \ref{sec:Kriterien}) eingesetzt. 
+  Aus jeder Maske werden hierzu die einzelnen Instanzen extrahiert, die sich mit einer einzelnen Instanz der Ground Truth überlagern (5).
+  Außerdem wird ein Fehlerbild als die logische XOR Fläche der Maske und der Ground Truth dargestellt (6), als Platzhalter für die Berechnung der Intersection over Union.
+  Zuletzt wird zur Berechnung der IPQ ein Zuweisungsbild erstellt, das die \acp{tp}, \acp{fp} und \acp{fn} festhält (7).
+  Durch Vergleiche der Ergebnisse (8) kann dann das optimale Segmentierungsnetz für die Anwendung gewählt werden.}
   \label{fig:graph_abstract}
 \end{figure}
 Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. 
@@ -18,6 +21,11 @@ Es behandelt vor allem die selbstentwickelten Beiträge zu den Methoden.
 Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
 
 \section{Bewertungskriterien}\label{sec:Kriterien}
+Für den Vergleich der Methoden der Klassifikation wird die Genauigkeit des getesteten Netz auf dem manuell annotierten Testanteil des Zieldatensatz verwendet:
+\begin{equation}
+  \text{Genauigkeit} = \frac{1}{N} \sum_{i=1}^{N} \mathbf{1}\{\hat{y}_i = y_i\},
+\end{equation}
+wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klasifikators und $y_i$ die \ac{gt} ist. (\textit{Notiz: Ist das hier richtig platziert?})\newline
 Zur Wahl des Segmentierungsnetzes wird ein neues Bewertungskriterien eingeführt und auf einem annotierten Datensatz getestet.
 Als Datensatz wird der S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset} genutzt, da dieser nicht in den Trainingsdaten eines der Segmentierungsnetze vorkommt.
 Im Gegensatz zu selbstentwickelten synthetischen Daten weicht die Bilddomäne dieses Benchmarks zwar stärker von der Domäne der Zieldaten ab,
@@ -28,7 +36,7 @@ Zum anderen sollen Verletzungen der injektiven Abbildung von segmentierten Nucle
 Für die Berechnung wird im ersten Schritt der nachfolgende Brute Force Algorithmus angewandt, der die Zuordnung von Segmentierungsinstanzen zu \ac{gt}-Instanzen durchführt.
 
 \begin{algorithm}
-\caption{Beste \ac{gt}-Zuordnung für jede Segmentierungsinstanzen}
+\caption{Beste \ac{gt}-Zuordnung für jede Segmentierungsinstanz}
 \begin{algorithmic}
 \REQUIRE $mask_\text{prediction}$, $mask_\text{groundTruth}$
 \ENSURE $gt_\text{opt}$, $IoU_\text{opt}$
@@ -50,7 +58,7 @@ Für die Berechnung wird im ersten Schritt der nachfolgende Brute Force Algorith
 %    \STATE $union \gets \sum (pred\_blob \vee gt\_blob)$
 %    \STATE $iou \gets intersection / union$ wenn $union > 0$ sonst $0$
 
-    \IF{$iou > IoU_\text{opt}[id_\text{blob}]$}
+    \IF{$IoU > IoU_\text{opt}[id_\text{blob}]$}
       \STATE $IoU_\text{opt}[id_\text{blob}] \gets iou$
       \STATE $gt_\text{opt}[id_\text{blob}] \gets gt\_id$
     \ENDIF
@@ -101,7 +109,7 @@ Hierzu ist ein Klassifikator notwendig, der einen Bildausschnitt mit der Instanz
 Um diesen Klassifikator optimal zu erstellen wird ein umfangreicher Benchmark aus den Zieldaten erstellt, da bei der Messung der Klassifikationsleistung eine vollkommene Übereinstimmung der Bilddomäne notwendig ist.
 Benchmarks aus der Literatur umfassen weder dieselben Klassen noch dieselben Objektmerkmale und eignen sich daher nicht.
 Für das Training wird einheitlich der Adam Algorithmus \cite{Kinga2015} mit einer Lernrate von 0.0001 eingesetzt.
-Außerdem wird der Cross-Entropy-Loss \cite{Sukhbaatar2014} verwendet. \textbf{ * Notiz: muss ich das erklären? (in der Theorie dann) *} \newline
+Außerdem wird der Cross-Entropy-Loss \cite{Sukhbaatar2014} verwendet. %\textbf{ * Notiz: muss ich das erklären? (in der Theorie dann) *} \newline
 Aus den annotierten Bilddaten werden für jede Anwendung ein Test- und ein Trainingsanteil im Verhältnis eins zu neun extrahiert.
 Alle betrachteten Variationen des Klassifikators werden ausschließlich mit den Trainingsdaten trainiert und ihre Leistung ausschließlich mithilfe der Testdaten getestet.
 Beide Anteile des Datensatzes werden durch Augmentierung erweitert und in Batches zusammengefasst.
@@ -114,7 +122,7 @@ Zur Datenaugmentierung werden die folgenden Methoden eingesetzt:
 Prominente Encoder aus der Literatur werden vergleichend eingesetzt. 
 Darüber hinaus werden hier verschiedene Methoden der Vorverarbeitung, des Vortraining und der Decoder-architektur eingeführt und verglichen.
 Im Folgenden sind diese Methoden einzeln beschrieben.
-Da jede mögliche Kombination mit jedem Netz zu trainieren einen zu hohen Rechenaufwand bedeutet, wird eine Vorauswahl von Kombinationen getroffen. \newline 
+Da jede mögliche Kombination mit jedem Netz zu trainieren einen unausführbar hohen Rechenaufwand bedeutet, wird eine Vorauswahl von Kombinationen getroffen. \newline 
 
 %Es werden sowohl \ac{cnn} als auch Vision Transformer basierte Klassifikatioren in Betracht gezogen.
 \subsection{Encoder}

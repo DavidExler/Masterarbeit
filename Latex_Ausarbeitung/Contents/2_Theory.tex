@@ -22,7 +22,29 @@ wobei $\hat{f}(x,y)$ der neue Wert, $p, q \in [0, 1]$ die relativen Abstände zu
 Batch Normalization normalisiert die Eingaben einer Schicht über eine Mini-Batch, indem für jeden abstrakte Merkmal der Schicht, das bei der Dimensionsreduktion des Bilds entsteht, eine Transformation durchgeführt wird \cite{Ioffe2015}.
 Für die Transformation werden der Mittelwert des Mini-Batch vom Wert abgezogen und durch die Standardabweichung geteilt.
 Layer Normalization verfolgt einen ähnlichen Ansatz, berechnet Mittelwert und Varianz aber pro Schicht von allen Neuronen \cite{Ba2016}.
-Beide stabilisieren das Training tiefer neuronaler Netze und lassen die Normalisierung als Bestandteil der Modellarchitektur lernen, statt sie nur als Preprocessing-Schritt durchzuführen \cite{Santurkar2018, Xu2019}.
+Beide stabilisieren das Training tiefer neuronaler Netze und lassen die Normalisierung als Bestandteil der Modellarchitektur lernen, statt sie nur als Preprocessing-Schritt durchzuführen \cite{Santurkar2018, Xu2019}.\newline
+\textbf{Cross-Entropy-Loss}:\newline
+Der Cross-Entropy Loss \cite{Sukhbaatar2014} \newline
+\begin{equation}
+    \mathcal{L}(\theta) = \frac{1}{N} \sum_{n=1}^{N} 
+    - \log p(\tilde{y} = \tilde{y}_n \mid x_n, \theta), 
+%    = \frac{1}{N} \sum_{n=1}^{N} 
+%    - \log \Bigg( \sum_{i=1}^{c} 
+%    p(\tilde{y} = \tilde{y}_n \mid y = i)\, p(y=i \mid x_n, \theta) \Bigg), 
+\end{equation}
+ist die etablierte Loss Funktion für das Training von Klassifikatoren \cite{GordonRodriguez2020, Mao2023}.
+Ein Problem der Cross-Entropy Loss Minimierung ist ihre Anfälligkeit für Rauschen der \acp{gt}.
+Viele verschiedene Ansätze in der Forschung gehen diesen Problem an \cite{Goldberger2017, Han2018, Hendrycks2018}.
+Eine häufig genutzte Methode ist die Minimierung des Generalized Cross Entropy Loss:
+\begin{equation}
+%    \argmin_{\theta} 
+%    \sum_{i=1}^{n} v_i \mathcal{L}_q(f(x_i; \theta), y_i) - v_i \mathcal{L}_q(k) 
+%    = 
+    \argmin_{\theta,\, w \in [0,1]^n} 
+    \sum_{i=1}^{n} w_i \mathcal{L}_q(f(x_i; \theta), y_i) 
+    - \mathcal{L}_q(k) \sum_{i=1}^{n} w_i ,
+\end{equation}
+für das Klassifikatior-Training \cite{Zhang2018}.
 
 \subsection{Benchmark}
 Um die Leistungsfähigkeit der Applikation, die im Rahmen der vorliegenden Thesis erstellt wird, zu prüfen sind umfangreiche Datensätze notwendig. 

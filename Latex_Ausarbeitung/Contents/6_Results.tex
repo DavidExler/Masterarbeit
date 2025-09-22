@@ -7,9 +7,9 @@
 \section{Überblick}
 
 \section{Segmentierung}
-Für die Wahl eines Segmentierungsnetzes wird in Kapitel \ref{ch:NewMethods} das Bewertungskriterien \ac{ipq} eingeführt.
-Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518 Datensatz vorgestellt.
-Die \ac{ipq} wird auf dem Datensatz mit den Masken von drei vortainierten Segmentierungsnetzen und, zur Validierung, mit der \ac{gt} ausgeführt.
+Für die Wahl eines Segmentierungsnetzes wird in Kapitel \ref{ch:NewMethods} das Bewertungskriterium \ac{ipq} eingeführt.
+Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518Datensatz vorgestellt.
+Die \ac{ipq} wird auf dem Datensatz mit den Masken von drei vortrainierten Segmentierungsnetzen und, zur Validierung, mit der \ac{gt} ausgeführt.
 Die Masken unterscheiden sich optisch stark (siehe Abb. \ref{fig:example_masks}), was sich auch in starken Unterschieden in der \ac{ipq} äußert.
 \begin{figure}[htbp]
     \centering
@@ -36,17 +36,17 @@ Die Masken unterscheiden sich optisch stark (siehe Abb. \ref{fig:example_masks})
         \caption{\ac{gt} Maske}
         \label{fig:gtMaske}
     \end{subfigure}
-    \caption{Darstellung der Segmentierungsmasken der verschiedenen Segmentierungsnetze als Konturen auf einem zweidimensionalen Durchschnitt einer Stichprobe des S\_BIAD1518 Datensatz.}
+    \caption{Darstellung der Segmentierungsmasken der verschiedenen Segmentierungsnetze als Konturen auf einem zweidimensionalen Durchschnitt einer Stichprobe des S\_BIAD1518 Datensatzes.}
     \label{fig:example_masks}
 \end{figure}
 \newline
 Die Ergebnisse jedes Segmentierungsnetzes sind einzeln und für jedes Bild im Appendix \ref{supp:ipq} angehängt. 
 Eine Zusammenfassung der Ergebnisse ist in den Boxplots in Abb. \ref{fig:boxplots_ipq} gegeben.
 Das zentrale Ergebnis ist, dass CellposeSAM die besten \ac{ipq}-Werte erzielt. 
-Mit einem Mittelwert von \num{0.64} ist die \ac{ipq} von CellposeSAM signifikant höher, als der Mittelwert bei nnUNet (\num{0.04}) und Deepcell (\num{0.02}), mit entsprechenden p-Werten von \num{1.80e-80} bzw. \num{1.59e-81} bei einseitigen T-Tests. 
+Mit einem Mittelwert von \num{0.64} ist die \ac{ipq} von CellposeSAM signifikant höher als der Mittelwert bei nnUNet (\num{0.04}) und Deepcell (\num{0.02}), mit entsprechenden p-Werten von \num{1.80e-80} bzw. \num{1.59e-81} bei einseitigen T-Tests. 
 Dennoch zeigt sich, dass CellposeSAM lediglich in der Kategorie Segmentatierungs-Qualität (SQ) sowohl den höchsten Median als auch den höchsten Mittelwert erreicht. 
-Die Recognition Qualität (RQ) der nnUNet-Masken ist signifikant höher als die der CellposeSAM-Masken (p-Wert: \num{3.4764e-06}), und ebenso die Injektive Qualität (IQ) der Deepcell-Masken (p-Wert: \num{6.7763e-08}).
-Obwohl nnUNet und Deepcell jeweils eine Metrik dominieren wird ihr \ac{ipq}-Wert durch die beiden schlechten Faktoren stark heruntergezogen, während CellposeSAM in jeder Metrik gut, wenn auch nicht am besten, abschneidet.
+Die Recognition-Qualität (RQ) der nnUNet-Masken ist signifikant höher als die der CellposeSAM-Masken (p-Wert: \num{3.4764e-06}), und ebenso die Injektive Qualität (IQ) der Deepcell-Masken (p-Wert: \num{6.7763e-08}).
+Obwohl nnUNet und Deepcell jeweils eine Metrik dominieren, wird ihr \ac{ipq}-Wert durch die beiden schlechten Faktoren stark heruntergezogen, während CellposeSAM in jeder Metrik gut, wenn auch nicht am besten, abschneidet.
 Außerdem zeigen die Boxplots viele Ausreißer in den Daten, was den Unterschieden der Bildkategorien, die der Datensatz enthält, geschuldet sein könnte.
 
 \begin{figure}[t]
@@ -57,12 +57,51 @@ Außerdem zeigen die Boxplots viele Ausreißer in den Daten, was den Unterschied
     Für jede Metrik sind drei farbige Boxplots zu sehen, einer für jedes Segmentierungsnetz.
     Die Boxplots visualisieren hierbei die Verteilung der Metriken.
     Die Box repräsentiert das Interquartilsintervall (25.–75. Perzentil), wobei der Median als Linie innerhalb der Box dargestellt ist. 
-    Die sogenannten Whisker reichen bis zum 1.5-fachen des Interquartilsabstands über die Box hinaus. 
+    Die sogenannten Whisker reichen bis zum 1,5-fachen des Interquartilsabstands über die Box hinaus. 
     Darüber hinausgehende Punkte gelten als Ausreißer und werden einzeln dargestellt.}
     \label{fig:boxplots_ipq}
 \end{figure}
 
 
 \section{Klassifikation}
-Die in Kapitel \ref{ch:NewMethods} vorgestellten Methoden zur Klassifikation werden anhand eines seperaten Anteil des manuell gelabelten Datensatz getestet.
-Die Genauigkeit, also der Prozentuale Anteil richtiger Vorhersagen, wird als Kriterium verwendet.
+Die in Kapitel \ref{ch:NewMethods} vorgestellten Methoden zur Klassifikation werden anhand eines separaten Anteils des manuell gelabelten Datensatzes getestet.
+Die Genauigkeit, also der prozentuale Anteil richtiger Vorhersagen, auf dem Test-Anteil des Zieldatensatzes wird als Kriterium verwendet.
+Da die Modelle während des Trainings rauschbehaftete Verläufe der Genauigkeit und es zu Overfitting kommen kann, wird nicht das Modell am Ende des Trainings zur Evaluation eingesetzt, sondern das Modell der Trainingsepoche, in der die Genauigkeit am höchsten ist.
+\textit{TODO: Trainings-Verlauf Kurve einfügen}
+\textit{TODO: Text zu den Abbildungen, t-Tests ausführen}
+In Abb. \ref{fig:bars_encoders} ist die Genauigkeit der Klassifikatoren pro Encoder gegeben.
+
+\begin{figure}
+    \centering\includegraphics[width=\linewidth]{Figures/encoders_compare.png}
+    \caption{Das Balkendiagramm zeigt an der Y-Achse die Genauigkeit der Klassifikatoren unter Verwendung der verschiedenen Encoder.
+    Auf der X-Achse sind die Encoder als Gruppen aufgetragen.
+    Jede Gruppe enthält einen Maximalwert (Orange) und einen Durchschnittswert (Blau), da jeder Encoder mit verschiedenen Kombinationen von Methoden getestet wird.
+    Die Encoder sind nach aufsteigendem Maximalwert von links nach rechts sortiert.
+    }
+    \label{fig:bars_encoders}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width=\linewidth]{Figures/encodersVdecoder.png}
+    \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung eines bestimmten Decoder.
+    Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diesen Decoder nutzen, aufgetragen. 
+    Die X-Achse zeigt Gruppen von Encodern, jeweils besetzt mit einem Wert für den Schichten- und den Volumen-Klassifikator.
+    Rechts zu sehen sind Balken, die den Durchschnitt der Werte aller Encoder, abhängig von dem Decoder, zeigen.}
+    \label{fig:bars_decoders}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width=\linewidth]{Figures/encodersVchannel1.png}
+    \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung einer bestimmten Vorverarbeitungsart.
+    Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diese Vorverarbeitungsart nutzen, aufgetragen. 
+    Die X-Achse zeigt Gruppen von Encodern, jeweils besetzt mit einem Wert für den Typ Eins, der den Nucleus-Kanal des Bilds mit der Segmentierungsmaske ersetzt, und Typ 2, der eine Distanztransformation auf den Nucleus-Kanal anwendet.
+    Rechts zu sehen sind Balken, die den Durchschnitt der Werte aller Encoder, abhängig von der Vorverarbeitungsmethode, zeigen.}
+    \label{fig:bars_channel1}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width=\linewidth]{Figures/encodersVpretrain.png}
+    \caption{Die Heatmap zeigt die Genauigkeiten der Klassifikatoren unter Verwendung der verschiedenen Vortrainingsmethoden.
+    Auf der Y-Achse sind die verschiedenen Encoder aufgetragen.
+    Die X-Achse stellt die getesteten Methoden des Vortrainings dar.
+    Die Farbe der Felder und der Wert darin zeigen die Durchschnitte der Genauigkeiten aller Klassifikatoren, die die entsprechende Vortrainingsmethode nutzen.
+    Die letzte Zeile zeigt den Durchschnitt der Werte aller Encoder, abhängig von der Vortrainingsmethode.}
+    \label{fig:heatmap_pretrain}
+\end{figure}

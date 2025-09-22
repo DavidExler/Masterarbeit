@@ -10,59 +10,69 @@ Im nachfolgenden Kapitel wird die Implementierung aller relevanten Methoden erkl
 \section{Segmentierungsnetze}
 \begin{itemize}
     \item Wie sind die Netze je eingebunden?
-    \item Welche Hardware?
     \item Welche Vor-/Nachverarbeitung?
+    \item Wie wird die Bewertung durchgeführt?
+    \item Wie ist der Workflow für Nutzer*Innen
+\end{itemize}
+
+\section{Klassifikatoren}
+\begin{itemize}
+    \item Wie sind die Netze je eingebunden?
+    \item Welche Vor-/Nachverarbeitung?
+    \item Welche Software Komponenten sind Teil des Trainings?
+    \item Wie ist der Workflow für Nutzer*Innen
 \end{itemize}
 
 \section{Labeling App}
-Um den Klassifikator zu trainieren werden \ac{gt} zu einigen Zieldaten mithilfe der Labeling App erstellt. 
-Als Frontend dieser App dient eine dash Anwendung die eine einfache html \ac{gui} bereitstellt. 
+Um den Klassifikator zu trainieren, wird \ac{gt} zu einigen Zieldaten mithilfe der Labeling App erstellt. 
+Als Frontend dieser App dient eine Dash-Anwendung, die eine einfache html \ac{gui} bereitstellt. 
 Das Backend ist mit Python erstellt und die gesammelten Daten werden als JSON gespeichert.
 Hierzu ist ein Docker mit Zugriff auf das lokale Dateiensystem versehen und über Kubernetes betrieben.
 \begin{figure}
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/GUI_Labeling_App.png}
-    \caption{Die Grafik zeigt die \ac{gui} der Labeling App. In der Mitte wird die Zelle angezeigt, die gelabelt werden soll und links sind Bedienelemente zu sehen. Unter der dargestellten Zelle befindet sich ein Schieberegler, der die Navigation entlang der Z-Achse ermöglicht. Über die Bedienelemente kann der/die Nutzer*In zwischen Bildern und Zellen umschalten, die Klasse der Zelle bestimmen, den gezeigten Ausschnitt mit prozentualen Schwellenwerten normalisieren und und die Fenstergröße ändern.}
+    \caption{Die Grafik zeigt die \ac{gui} der Labeling App. In der Mitte wird die Zelle angezeigt, die gelabelt werden soll, und links sind Bedienelemente zu sehen. Unter der dargestellten Zelle befindet sich ein Schieberegler, der die Navigation entlang der Z-Achse ermöglicht. Über die Bedienelemente kann der/die Nutzer*In zwischen Bildern und Zellen umschalten, die Klasse der Zelle bestimmen, den gezeigten Ausschnitt mit prozentualen Schwellenwerten normalisieren und die Fenstergröße ändern.}
     \label{fig:Labeling_App}
 \end{figure}
 Abb. \ref{fig:Labeling_App} zeigt die \ac{gui} der Labeling App. 
-Zentral zu sehen sind zwei Fenster, die einen 2D Schnitt des ausgewählten Nucleus anzeigen. 
-Darauf ist jeweils ein Kasten gezeichnet, der die ausgewählten Nucleus umrandet, um Nuclei, die dicht aneinander liegen, zu unterscheiden. 
-Mit dem Schieberegler unter den Fenstern wird ausgewählt, welche der Schichten in denen der Nucleus anwesend ist, gezeigt werden soll. 
+Zentral zu sehen sind zwei Fenster, die je einen 2D-Schnitt des ausgewählten Nucleus anzeigen. 
+Das linke Bild zeigt den Nucleus stark vergrößert, das rechte Bild zeigt die Umgebung des Nucleus.
+Auf den Bildern ist jeweils ein Kasten gezeichnet, der den ausgewählten Nucleus umrandet, um Nuclei, die dicht aneinander liegen, zu unterscheiden. 
+Mit dem Schieberegler unter den Fenstern wird ausgewählt, welche der Schichten, in denen der Nucleus anwesend ist, gezeigt werden soll. 
 Über dem Fenster ist der Index des aktuell dargestellten Nucleus und des Bilds angegeben.
 Links neben dem Fenster befinden sich Bedienelemente mit den folgenden Funktionen:
 \begin{itemize}
     \item \textit{Previous picture}: Vorheriges Bild auswählen.
     \item \textit{Next picture}: Nächstes Bild auswählen.
-    \item \textit{Previous nucleus}: Vorherige Zelle auswählen.
-    \item \textit{Next nucleus}: Näxchste Zelle auswählen.
-    \item \textit{Next undefined}: Nächste Zelle ohne eingetragene \ac{gt} auswählen.
-    \item \textit{Image}: 
-    \item \textit{Nucleus}: 
-    \item \textit{go to...}: 
-    \item \textit{Myo}: "Myotuben-Zellkern" Klasse als \ac{gt} der ausgewählten Zelle definieren.
-    \item \textit{Debris}: "Überreste" Klasse als \ac{gt} der ausgewählten Zelle definieren.
-    \item \textit{Other}: "Andere" Klasse als \ac{gt} der ausgewählten Zelle definieren.
-    \item \textit{Schwann}: "Schwannzellen-Zellkern" Klasse als \ac{gt} der ausgewählten Zelle definieren.
+    \item \textit{Previous nucleus}: Vorherigen Nucleus auswählen.
+    \item \textit{Next nucleus}: Nächsten Nucleus auswählen.
+    \item \textit{Next undefined}: Nächsten Nucleus ohne eingetragene \ac{gt} auswählen.
+    \item \textit{Image}: Eingabefeld für das auszuwählende Bild.
+    \item \textit{Nucleus}: Eingabefeld für den auszuwählenden Nucleus.
+    \item \textit{go to...}: Bild und Nucleus auswählen, wie in den Eingabefeldern.
+    \item \textit{Myo}: "Myotuben-Zellkern"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
+    \item \textit{Debris}: "Überreste"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
+    \item \textit{Other}: "Andere"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
+    \item \textit{Schwann}: "Schwannzellen-Zellkern"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
     \item \textit{Save}: Speichert manuell die festgelegten \ac{gt}s ab. Die Labeling App speichert außerdem eigenständig periodisch.
     \item \textit{Overlay Myotubes (Green)}: Mit einem Haken bei "Enable" wird der Marker, der die Myotuben einfärbt, in Grün eingeblendet.
     \item \textit{Overlay Marker (Blue)}: Einer oder keiner der restlichen vorhandenen Marker wird in Blau eingeblendet. 
     \item \textit{Lower Percentile}: Unteren prozentualen Schwellwert wählen, der bei der nächsten Normalisierung angewandt werden soll.
     \item \textit{Upper Percentile}: Oberen prozentualen Schwellwert wählen, der bei der nächsten Normalisierung angewandt werden soll.
-    \item \textit{Normalize}: Normalisierung lokal auf den Ausschnitt der aktuell ausgewählten Zelle anwenden. Intensitätswerte die im beziehungsweise über dem Perzentil der eingetragenen Schwellwerten werden hierbei zusammengefasst.
+    \item \textit{Normalize}: Normalisierung lokal auf den Ausschnitt des aktuell ausgewählten Nucleus anwenden. Intensitätswerte, die im beziehungsweise über dem Perzentil der eingetragenen Schwellwerte, werden hierbei zusammengefasst.
     \item \textit{Zoom In}: Verkleinert den anzuzeigenden Ausschnitt.    
     \item \textit{Zoom Out}: Vergrößert den anzuzeigenden Ausschnitt.    
 \end{itemize}
 
-Für das Backend sind einige Python Skripte direkt im Docker mounted. 
-Da die wichtigste Anforderung der Anwendung die nutzerfreundliche Bedienung ist, sind alle Berechnungen, die während der Nutzung der Labeling App ausgeführt werden, darauf ausgelegt die Rechnenzeit zu minimieren. 
-Hierzu werden alle Bilder und Masken bei der Initialisierung der App in den cache geladen.
+Für das Backend sind einige Python-Skripte direkt im Docker mounted. 
+Da die wichtigste Anforderung der Anwendung die nutzerfreundliche Bedienung ist, sind alle Berechnungen, die während der Nutzung der Labeling App ausgeführt werden, darauf ausgelegt, die Rechenzeit zu minimieren. 
+Hierzu werden alle Bilder und Masken bei der Initialisierung der App in den Cache geladen.
 Des Weiteren ist eine Klasse angelegt, die separat noch das aktuell ausgewählte Bild und die ausgewählte Zelle speichert. 
-Erst wenn eine Änderung der Auswahl ausgeführt wird, wird eine neue Zelle oder ein neues gesamtes Bild geladen und selbst dann lediglich aus dem cache. 
+Erst wenn eine Änderung der Auswahl ausgeführt wird, wird eine neue Zelle oder ein neues gesamtes Bild geladen und selbst dann lediglich aus dem Cache. 
 
 \section{Training}
-Für das Training der Klassifikatoren wurde eine NVIDIA GeForce RTX 3090 Ti mit 24GB VRAM verwendet.
-\textbf{CPU und RAM fehlt noch}.
-Die vortrainierten Modelle werden vom Open-Source Framework Pytorch bereitgestellt, genauso wie die Methoden zum Erstellen der Decoder-Köpfe, der Optimizer und die Backpropagation Funktionalitäten.
+Für das Training der Klassifikatoren wurde eine NVIDIA GeForce RTX 3090 Ti mit 24 GB VRAM verwendet.
+\textbf{CPU und RAM fehlen noch}.
+Die vortrainierten Modelle werden vom Open-Source Framework Pytorch bereitgestellt, genauso wie die Methoden zum Erstellen der Decoder-Köpfe, der Optimizer und die Backpropagation-Funktionalitäten.
 Der Trainingsablauf ist modular aufgebaut, um die Kombinationen der Methoden aus Kapitel \ref{ch:NewMethods} nahtlos zu implementieren.
 %In Abb. \ref{} ist der Ablauf kurz systematisch dargestellt.

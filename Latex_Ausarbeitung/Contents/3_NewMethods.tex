@@ -3,15 +3,16 @@
 \chapter{Neues Konzept} \label{ch:NewMethods}
 %Describe your new methods/procedure (mathematically, conceptually, comprehensibly). Change the title of this chapter if there is a term for your new methods.
 \section{Überblick}
+\textit{TODO: Graph. Abstract anpassen: Umfang von der Segmentierungsnetz-Komponentenwahl erweitern zur ganzen Arbeit, oder: Neu machen und diese Abbildung verschieben}
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.99\linewidth]{Figures/graphAbstract_horizontal.png}
   \caption{Graphical Abstract - Das obere Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird, das für die Anwendung der vorliegenden Arbeit eingesetzt wird. 
-  Ein peer-reviewed Benchmark Datensatz aus dreidimensionalen Bildern (1) von diversen Zellkulturen mit dazugehörigen Ground Truths (2) wird links eingegeben. 
+  Ein peer-reviewed Benchmark-Datensatz aus dreidimensionalen Bildern (1) von diversen Zellkulturen mit dazugehörigen Ground Truths (2) wird links eingegeben. 
   Mehrere austauschbare Segmentierungsnetze (3) führen eine Inferenz für den Benchmark aus. 
   Die entstehenden Masken (4) werden dann zur Berechnung der neu eingeführten IPQ (siehe Kapitel \ref{sec:Kriterien}) eingesetzt. 
   Aus jeder Maske werden hierzu die einzelnen Instanzen extrahiert, die sich mit einer einzelnen Instanz der Ground Truth überlagern (5).
-  Außerdem wird ein Fehlerbild als die logische XOR Fläche der Maske und der Ground Truth dargestellt (6), als Platzhalter für die Berechnung der Intersection over Union.
+  Außerdem wird ein Fehlerbild als die logische XOR-Fläche der Maske und der Ground Truth dargestellt (6), als Platzhalter für die Berechnung der Intersection over Union.
   Zuletzt wird zur Berechnung der IPQ ein Zuweisungsbild erstellt, das die \acp{tp}, \acp{fp} und \acp{fn} festhält (7).
   Durch Vergleiche der Ergebnisse (8) kann dann das optimale Segmentierungsnetz für die Anwendung gewählt werden.}
   \label{fig:graph_abstract}
@@ -25,14 +26,16 @@ Für den Vergleich der Methoden der Klassifikation wird die Genauigkeit des gete
 \begin{equation}
   \text{Genauigkeit} = \frac{1}{N} \sum_{i=1}^{N} \mathbf{1}\{\hat{y}_i = y_i\},
 \end{equation}
-wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klasifikators und $y_i$ die \ac{gt} ist. (\textit{Notiz: Ist das hier richtig platziert?})\newline
+wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klassifikators und $y_i$ die \ac{gt} ist. 
+Als Genauigkeit eines trainierten Klassifikators wird dann der maximale Wert bezeichnet, den der Klassifikator während des Trainings erreicht.
+Hierzu werden die Modelle nach jeder Epoche evaluiert.
+(\textit{Notiz: Ist das hier richtig platziert?})\newline
 Zur Wahl des Segmentierungsnetzes wird ein neues Bewertungskriterien eingeführt und auf einem annotierten Datensatz getestet.
 Als Datensatz wird der S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset} genutzt, da dieser nicht in den Trainingsdaten eines der Segmentierungsnetze vorkommt.
-Im Gegensatz zu selbstentwickelten synthetischen Daten weicht die Bilddomäne dieses Benchmarks zwar stärker von der Domäne der Zieldaten ab,
-aber dafür sind die Daten an eine Veröffentlichung mit standardisiertem Peer-Review-Prozess gebunden.
+Im Gegensatz zu selbstentwickelten synthetischen Daten weicht die Bilddomäne dieses Benchmarks zwar stärker von der Domäne der Zieldaten ab, aber dafür sind die Daten an eine Veröffentlichung mit standardisiertem Peer-Review-Prozess gebunden.
 Das Kriterium ist eine Abwandlung der \ac{pq} \cite{kirillov2019PQ}, die hier \ac{ipq} genannt wird. 
 Ziel dabei ist es, zum einen, durch standard \ac{pq} die \ac{iou} für individuelle Instanzen zu bewerten und \ac{fp} sowie \ac{fn} Detektionen zu bestrafen. 
-Zum anderen sollen Verletzungen der injektiven Abbildung von segmentierten Nuclei auf die Instanzen der \ac{gt} negativ bewertet werden, da die Anzahl der Nuclei eine bedeutungsvoll Metrik für den Nutzer ist. 
+Zum anderen sollen Verletzungen der injektiven Abbildung von segmentierten Nuclei auf die Instanzen der \ac{gt} negativ bewertet werden, da die Anzahl der Nuclei eine bedeutungsvolle Metrik für Nutzer*Innen ist. 
 Für die Berechnung wird im ersten Schritt der nachfolgende Brute Force Algorithmus angewandt, der die Zuordnung von Segmentierungsinstanzen zu \ac{gt}-Instanzen durchführt.
 
 \begin{algorithm}
@@ -90,7 +93,7 @@ wobei:
     \item $k_1, k_2, k_3$ Optionale Vorfaktoren zur Gewichtung der drei Teile der Metrik sind.
     \item $TP$ die Menge aller \ac{tp}-Tupel $(p, g)$ ist, wobei $g$ eine \ac{gt}-Instanz und $p$ der Vektor aller zugehörigen Segmentierungsinstanzen ist.
     \item $|TP| \in \mathbb{Z}$ die Anzahl an korrekt erkannten Instanzen bezeichnet, also \ac{gt}-Instanzen mit $\text{IoU} > 0{,}5$.
-    \item \ac{iou}$(\bigcup_{p_i \in p}p_i, g) \in [0,1] $ die \ac{iou} zwischen der allen Segmentierungsinstanzen $p_i$ in der \ac{tp}-Instanz \textit{p} und der zugehörigen \ac{gt}-Instanz \textit{g} beschreibt.   
+    \item \ac{iou}$(\bigcup_{p_i \in p}p_i, g) \in [0,1] $ die \ac{iou} zwischen allen Segmentierungsinstanzen $p_i$ in der \ac{tp}-Instanz \textit{p} und der zugehörigen \ac{gt}-Instanz \textit{g} beschreibt.   
     \item $|FP| \in \mathbb{Z}$ die Anzahl an falsch-positiven Segmentierungen ist, d.\,h. vorhergesagte Instanzen ohne \ac{gt}-Entsprechung.
     \item $|FP| \in \mathbb{Z}$ die Anzahl an nicht erkannten \ac{gt}-Instanzen ist, also \ac{gt}-Instanzen ohne zugehörige Vorhersage.
     \item $|GT| \in \mathbb{Z}$ die Anzahl der \ac{gt}-Instanzen ist.
@@ -99,16 +102,18 @@ wobei:
     \item $n_p$ die Dimension des Vektors $p$ ist.
     \item $\text{SQ} \in [0,1]$ ein Faktor ist, der die Qualität der Segmentierung anhand der \ac{iou} von der segmentierten und der erwarteten Instanz vergleicht.
     \item $\text{RQ} \in [0,1]$ ein Faktor ist, der bewertet, wie vollständig und das Segmentierungsnetz die vorhandenen Nuclei gefunden hat und, ob es dabei zu Halluzinationen kam.
-    \item $\text{IQ} \in [0,1]$ ein Faktor ist, der das Unterteilen von Nuclei durch das Segmentierungsnetz zu bestrafen. Wird ein Nucleus durch mehrere Instanzen der Segmentierungsmaske dargestellt, wird $n_p$ größer als Eins und der Faktor sinkt.
+    \item $\text{IQ} \in [0,1]$ ein Faktor ist, der das Unterteilen von Nuclei durch das Segmentierungsnetz zu bestrafen. Wird ein Nucleus durch mehrere Instanzen der Segmentierungsmaske dargestellt, wird $n_p$ größer als eins und der Faktor sinkt.
     \item $\text{IPQ} \in [0,1]$ ein Maß für die panoptische Segmentierungsqualität mit der Voraussetzung von injektiver Abbildung der Segmentierungsmasken-Instanzen auf die \ac{gt}-Instanzen darstellt, wobei höhere Werte bessere Übereinstimmung bedeuten.
 \end{itemize}
 
 \section{Klassifikator}
 Jedem instanzsegmentierten Nuclei muss eine Klasse zugewiesen werden, um die Ausgabe zur panoptischen Segmentierungsmaske zu erweitern.
-Hierzu ist ein Klassifikator notwendig, der einen Bildausschnitt mit der Instanz als Eingabe annimmt und eine der vier Klassen als Ausgabe zuweist.
-Um diesen Klassifikator optimal zu erstellen wird ein umfangreicher Benchmark aus den Zieldaten erstellt, da bei der Messung der Klassifikationsleistung eine vollkommene Übereinstimmung der Bilddomäne notwendig ist.
+Erst die panoptische Segmentierungsmaske ermöglicht die halbautomatische Überwachung der Entwicklung von Myotubenkulturen.
+Nuter*Innen der vorgestellten Methoden wird mit dieser panoptischen Maske und den daraus erzeugbaren, interpretierbaren Merkmalen der Kultur ein klarer Überblick über den Status der Zellkultur geboten.\newline 
+Für die Klassenzuweisung ist ein Klassifikator notwendig, der einen Bildausschnitt mit einer Nucleus-Instanz als Eingabe annimmt und ihr eine der vier Klassen als Ausgabe zuweist.
+Um diesen Klassifikator optimal zu erstellen, wird ein umfangreicher Benchmark aus den Zieldaten erstellt, da bei der Messung der Klassifikationsleistung eine vollkommene Übereinstimmung der Bilddomäne notwendig ist.
 Benchmarks aus der Literatur umfassen weder dieselben Klassen noch dieselben Objektmerkmale und eignen sich daher nicht.
-Für das Training wird einheitlich der Adam Algorithmus \cite{Kinga2015} mit einer Lernrate von 0.0001 eingesetzt.
+Für das Training wird einheitlich der Adam-Algorithmus \cite{Kinga2015} mit einer Lernrate von 0.0001 eingesetzt.
 Außerdem wird der Cross-Entropy-Loss \cite{Sukhbaatar2014} verwendet. %\textbf{ * Notiz: muss ich das erklären? (in der Theorie dann) *} \newline
 Aus den annotierten Bilddaten werden für jede Anwendung ein Test- und ein Trainingsanteil im Verhältnis eins zu neun extrahiert.
 Alle betrachteten Variationen des Klassifikators werden ausschließlich mit den Trainingsdaten trainiert und ihre Leistung ausschließlich mithilfe der Testdaten getestet.
@@ -127,11 +132,11 @@ Da jede mögliche Kombination mit jedem Netz zu trainieren einen unausführbar h
 %Es werden sowohl \ac{cnn} als auch Vision Transformer basierte Klassifikatioren in Betracht gezogen.
 \subsection{Encoder}
 Tab. \ref{tab:network_comparison} zeigt die verschiedenen Encoder, die hier eingesetzt werden.
-Bis auf das Segmentierungsmodell CellposeSAM handelt es sich dabei um Encodern, die aus Klassifikator Applikationen, die auf dem ImageNet Datensatz \cite{Russakovsky2015} vortrainiert wurden, stammen.  
+Bis auf das Segmentierungsmodell CellposeSAM handelt es sich dabei um Encodern, die aus Klassifikatorapplikationen, die auf dem ImageNet-Datensatz \cite{Russakovsky2015} vortrainiert wurden, stammen.  
 In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die Top-1-Genauigkeit (Acc@1) und die Top-5-Genauigkeit (Acc@5) auf dem ImageNet Datensatz angegeben.
 \begin{table}[ht]
   \centering
-  \caption{Vergleich der sechs vortrrainierten Netze hinsichtlich Genauigkeit auf dem ImageNet Datensatz \cite{Russakovsky2015} und der Anzahl an Parametern.
+  \caption{Vergleich der sechs vortrainierten Netze hinsichtlich Genauigkeit auf dem ImageNet-Datensatz \cite{Russakovsky2015} und der Anzahl an Parametern.
   Angegeben sind sowohl die Top-1-Genauigkeit (Acc@1) als auch die Top-5-Genauigkeit (Acc@5), also  ob die korrekte Klasse unter den besten 1 bzw. 5 Vorhersagen enthalten ist.}
   \label{tab:network_comparison}
   \begin{tabular}{lccc}
@@ -152,12 +157,12 @@ In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die To
 Da in vielen Bildausschnitten Nuclei sehr nah aneinander liegen und dem Klassifikator signalisiert werden muss, welcher der sichtbaren Nuclei klassifiziert werden soll, werden für jeden Klassifikator zwei verschiedene Eingangsdaten-Formate getestet.
 Diese Typen unterscheiden sich in der Art, wie die Segmentierungsmaske des zu klassifizierenden Nucleus dem Klassifikator zugänglich gemacht wird.
 %Für Daten des ersten Typs wird lediglich der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
-Daten des ersten Typs ersetzenden Nucleus-Kanal, mit der Segmentierungsmaske des gesuchten Nucleus.
-Das Ziel ist dabei das Risiko zu minimieren, dass umliegende Nuclei das Klassifikationsergebnis verfälschen.
-Mit dieser Risikominimierung geht allerdings der Verlsut der Oberflächenmerkmale einher.
+Daten des ersten Typs ersetzen den Nucleus-Kanal mit der Segmentierungsmaske des gesuchten Nucleus.
+Das Ziel ist dabei, das Risiko zu minimieren, dass umliegende Nuclei das Klassifikationsergebnis verfälschen.
+Mit dieser Risikominimierung geht allerdings der Verlust der Oberflächenmerkmale einher.
 Außerdem ist das Klassifikationsergebnis bei dieser Vorverarbeitungsart von der Qualität der Segmentierung abhängig.
 %Alle anderen Kanäle, einschließlich des Nuclei Kanal bleiben unverändert.
-Für Daten des Typ zwei wird der Nucleus-Kanal mit einer Entfernungsmaske skaliert.
+Für Daten des Typs zwei wird der Nucleus-Kanal mit einer Entfernungsmaske skaliert.
 Hierzu wird pixelweise der originale Nucleus-Kanal mit einer Transformation des Abstand aller Pixel außerhalb der Segmentierungsmaske wie folgt multipliziert:
 \begin{equation}
 I'(x) = I(x) \cdot \exp\left( -\frac{1}{\sigma} \min_{y \in \lnot M} \|x - y\|_2 \right),
@@ -171,10 +176,10 @@ wobei:
   \item $\quad M \subseteq \Omega$ die Segmentierungsmaske und $\lnot M = \Omega \setminus M$ deren Komplement im Bildraum sind,
   \item und $\sigma \in \mathbb{R}^+$ ein Parameter zur Steuerung des exponentiellen Abfalls ist.
 \end{itemize}
-Die Verwendung des Typ zwei hat zum Ziel, dass die Oberflächenmerkmale des Nucleus erhalten bleiben.
-Außerdem wird mit der Vorverarbeitung des zweiten Typs der Einfluss den eventuelle fehlerhafte Segmentierungsmasken haben durch die kontinuierliche Abstandstransformation minimiert.
+Die Verwendung des Typs zwei hat zum Ziel, dass die Oberflächenmerkmale des Nucleus erhalten bleiben.
+Außerdem wird mit der Vorverarbeitung des zweiten Typs der Einfluss der eventuell fehlerhaften Segmentierungsmasken durch die kontinuierliche Abstandstransformation minimiert.
 Allerdings ist hierdurch auch das Risiko von Einflussnahme auf das Klassifikationsergebnis durch umliegende Nuclei nicht vollständig eliminiert, sondern nur vermindert.
-Im Folgenden sind die Nuclei Kanäle der verschiedenen Methoden dargestellt.
+Im Folgenden sind die Nuclei-Kanäle der verschiedenen Methoden dargestellt.
 \begin{figure}[htbp]
   \centering
   % \begin{subfigure}[t]{0.18\textwidth}
@@ -208,12 +213,12 @@ Im Folgenden sind die Nuclei Kanäle der verschiedenen Methoden dargestellt.
   \label{fig:five_images}
 \end{figure}
 
-Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bervor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
+Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bevor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
 %Hierzu werden zwei Methoden eingeführt und in Experimenten verglichen.
-%Die erste Methode ist konventionelles Zero-Padding, also das symetrische Hinzufügen von Nullen an die Ränder des Bilds.
-Dazu wird einfache bilineare Interpolation verwendet. \textbf{ *  muss ich das erklären? *} \newline
+%Die erste Methode ist konventionelles Zero-Padding, also das symmetrische Hinzufügen von Nullen an die Ränder des Bilds.
+Dazu wird einfache bilineare Interpolation verwendet. %\textbf{ *  muss ich das erklären? *} \newline
 %Zuletzt wird eine lernbare Methode betrachtet.
-%Ein kleines neuronales Netzwerk, vergrößert das Bilder schrittweise. 
+%Ein kleines neuronales Netzwerk vergrößert die Bilder schrittweise. 
 %Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.
 
 \subsection{Vortraining}
@@ -224,28 +229,28 @@ Hier werden:
   \item semi-supervised, und
   \item fully-supervised Vortraining 
 \end{itemize}
-betrachtet.%, sowohl in Kombination, als auch in standalone Umsetzung.
+betrachtet. %, sowohl in Kombination, als auch in standalone Umsetzung.
 Die Abb. \ref{fig:pretrain} zeigt die hier umgesetzten Methoden.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/PretrainingMethods.png}
   \caption{Übersicht über die Vortrainingsmethoden. 
   Links zu sehen sind die beiden verfügbaren Bildermengen, ImageNet und die Zeildaten.
-  Rechts von diesen Bildermengen werden diesen Bildern \ac{gt} Klassen hinzugefügt, entweder durch die ImageNet Datenbank, Experten oder einen Algorithmus.
+  Rechts von diesen Bildermengen werden diesen Bildern \ac{gt} Klassen hinzugefügt, entweder durch die ImageNet-Datenbank, Experten oder einen Algorithmus.
   Jeder Encoder (linke Seite eines Netzwerks) und jeder Decoder (rechte Seite eines Netzwerks) wird mit einer dieser drei Label-Mengen trainiert.
   Die Farbe der Label und des Netzwerks zeigt dabei die Zuordnung.
   Mit offenen oder geschlossenen Schlössern über den En- und Decodern ist dargestellt, ob die Gewichte eingefroren werden.
   Vier verschiedene Versionen jedes Klassifikators werden hier trainiert.
-  Das erste Netzwerk wird auf den ImageNet Daten vortrainiert. 
+  Das erste Netzwerk wird auf den ImageNet-Daten vortrainiert. 
   Anschließend wird mit Experten-Labels der Decoder neu trainiert.
   Das Zweite erhält kein Vortraining, es ist komplett mit den Zieldaten trainiert.
-  Für das dritte Netzwerk werdem lediglich die Label des semi-supervised Algorithmus eingesetzt.
-  Die letzte Variante wird semi supervised vortrainiert und anschließend mit den Zieldaten finetuned. }
+  Für das dritte Netzwerk werden lediglich die Label des semi supervised Algorithmus eingesetzt.
+  Die letzte Variante wird semi supervised vortrainiert und anschließend mit den Zieldaten fine-tuned. }
   \label{fig:pretrain}
 \end{figure}
 \paragraph{Kein Vortraining}
-Ohne Vortraining startet der Encoder, der den Großteil der Gewichte umfasst, mit zuffällig initialisierten Werten.
-Da diese zufälligen Werte keine sinnvollen Merkmale extrahieren wird ein besonders langes Training mit den Zeildaten durchgeführt.
+Ohne Vortraining startet der Encoder, der den Großteil der Gewichte umfasst, mit zufällig initialisierten Werten.
+Da diese zufälligen Werte keine sinnvollen Merkmale extrahieren, wird ein besonders langes Training mit den Zeildaten durchgeführt.
 Jedes Modell wird jeweils für 75 Epochen trainiert.
 %\textit{NOTIZ:} Das wird sehr kurz, kann ich das irgendwie anders machen, fällt dir etwas ein?
  
@@ -255,10 +260,10 @@ Ein Experte erstellt hierzu \acp{gt} von wenigen Nuclei.
 Danach werden aus den restlichen Segmentierungsmasken einige Merkmale generiert und zu einem Vektor zusammengefasst.
 Zuerst werden das Volumen, die Oberfläche und die Achsenlängen jedes Nucleus direkt bestimmt. 
 Außerdem wird die Exzentrizität aus dem Verhältnis der längsten und der kürzesten Achse berechnet.
-Für die Kompaktheit wird das Volumen der Maske durch die kleinste mmögliche Begrenzungsbox geteilt.
-Darüber hinaus wird aus der Z-Schicht, in der die Segmentierungsmaske am größten ist wird die 2D-Kontur erfasst.
+Für die Kompaktheit wird das Volumen der Maske durch die kleinste mögliche Begrenzungsbox geteilt.
+Darüber hinaus wird aus der Z-Schicht, in der die Segmentierungsmaske am größten ist, die 2D-Kontur erfasst.
 Aus dieser Kontur wird eine komplexe Zahlenfolge berechnet und der Absolutwert der ersten zehn Koeffizienten als einzelne, weitere Merkmale dem Merkmalsvektor hinzugefügt. \newline
-Die entstehenden Merkmalsvektoren werden durch eine Standardisierung der Werte, zu einem Mittelwert von Null und Varianz von Eins überführt.
+Die entstehenden Merkmalsvektoren werden durch eine Standardisierung der Werte zu einem Mittelwert von Null und Varianz von Eins überführt.
 Daraufhin wird eine Principal Component Analysis \cite{Pearson1901} angewandt, um die Dimensionalität der Merkmalsvektoren auf zehn zu reduzieren und redundante Informationen zu entfernen.
 Das Ziel dabei ist es, einen Mittelweg zwischen Informationserhalt und Overfitting-Gefahr sowie Rechenaufwand zu erzielen.
 Mithilfe des Label Spreading-Algorithmus \cite{Zhou2003}, mit einer Radial Basis Funktion \cite{Lowe1988} als Kernelfunktion, werden die Experten-\acp{gt} über die Struktur der Daten auf alle Stichproben ausgebreitet.
@@ -267,7 +272,7 @@ Diese neuen \acp{gt} werden dann eingesetzt, um in 25 Epochen sowohl die Encoder
 Optional werden die Gewichte des Encoder hiernach, bis auf die letzten beiden Schichten eingefroren und nur der Encoder wird in weiteren 35 Epochen mit dem Trainingsdatensatz der Zieldaten trainiert.
 Das Ziel dieses Vorgehens ist es, eine stärkere Generalisierung zu erreichen, indem Overfitting bei der Merkmalsextraktion vermieden wird.
 Da der Encoder mit anderen Daten vortrainiert wird, ist zu erwarten, dass er eine sinnvolle Merkmalsextraktion lernt, ohne auf die expliziten Merkmale der individuellen Stichproben im Trainingsdatensatz angewiesen zu sein.
-Dadurch sind die Beziehungen zwischen Merkmalen und Klassen, die der Decoder lernt, nicht nur auf die Merkmale des Trainingsdatensatz beschränkt.
+Dadurch sind die Beziehungen zwischen Merkmalen und Klassen, die der Decoder lernt, nicht nur auf die Merkmale des Trainingsdatensatzes beschränkt.
 %\textit{NOTIZ:} Hier soll stehen:
 %\begin{itemize}
 %  \item Wie werden "pseudo-labels" mit semi-supervision erstellt?
@@ -289,25 +294,25 @@ Dadurch sind die Beziehungen zwischen Merkmalen und Klassen, die der Decoder ler
 An die Encoder werden jeweils zwei verschiedene Decoder angehängt.
 Abb. \ref{fig:classifiers} zeigt die beiden Architekturen systematisch.
 Der erste Klassifikator wird hier \textit{Volumen-Klassifikator} genannt.
-Er interpretiert die Merkmale, die der Encoder generiert, als Volumen und generiert mithilfe von 3D Faltungen und Pooling eine Repräsentation daraus.
+Er interpretiert die Merkmale, die der Encoder generiert, als Volumen und generiert mithilfe von 3D-Faltungen und Pooling eine Repräsentation daraus.
 Diese Repräsentation wird dann durch Linear Layers zu vier Ausgabe-Klassen umgeformt.
-Die Idee des \textit{Volumen-Klassifikators} ist es, die Merkmale die der Encoder generiert möglichst vollständig zu erfassen und alle räumlichen Beziehungen, auch in Z-Richtung festzustellen.
-Hierbei ist das Ziel, dass durch die 3D-Faltungen eine domänenspezifische Interpretation der Merkmale gelernt wird, sodass die neuen Merkmale nach dem anschließenden Pooling aussagekräftig und niederdimensionale sind.
+Die Idee des \textit{Volumen-Klassifikators} ist es, die Merkmale, die der Encoder generiert, möglichst vollständig zu erfassen und alle räumlichen Beziehungen, auch in Z-Richtung, festzustellen.
+Hierbei ist das Ziel, dass durch die 3D-Faltungen eine domänenspezifische Interpretation der Merkmale gelernt wird, sodass die neuen Merkmale nach dem anschließenden Pooling aussagekräftig und niederdimensional sind.
 Daneben wird hier der \textit{Schichten-Klassifikator} eingeführt.
 Der \textit{Schichten-Klassifikator} betrachtet die einzelnen Schichten des Bilds anhand der individuellen Schichten, die der Encoder ausgibt. 
-Dazu werden die räumlichen X und Y Dimensionen durch einen spatial-average zusammengefasst.
-Durch eine multihead attention mit vier attention-Köpfen und embedding dimension 256 wird dann eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
+Dazu werden die räumlichen X- und Y-Dimensionen durch einen spatial-average zusammengefasst.
+Durch eine multihead Attention mit vier Attention-Köpfen und Embedding-Dimension 256 wird dann eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
 Lineare Layers formen anschließend die Repräsentation zu den vier Klassen um.
 Für den textit{Schichten-Klassifikator} ist das Ziel, dass durch die Vereinfachung der Daten aussagekräftige, schichtenweise Merkmale entstehen und, dass diese räumlich invariant sind, da der betrachtete Nucleus in den Bildfenstern zentriert sind.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.9\linewidth]{Figures/Klassifikatoren.png}
   \caption{Architektur der beiden Klassifikatoren. Der Encoder wird bei beiden modular ausgetauscht. 
-  Links zu sehen ist die Architektur des \textit{Volumen-Klassifikator}, der die Merkmale, die der Encoder generiert, als Volumen interpretiert und mithilfe von 3D Faltungen und Pooling daraus eine Repräsentation generiert.
+  Links zu sehen ist die Architektur des \textit{Volumen-Klassifikators}, der die Merkmale, die der Encoder generiert, als Volumen interpretiert und mithilfe von 3D-Faltungen und Pooling daraus eine Repräsentation generiert.
   Diese Repräsentation wird dann durch Linear Layers zu vier Ausgabe-Klassen umgeformt.
   Rechts zu sehen ist der \textit{Schichten-Klassifikator}.
-  Die räumlichen X und Y Dimensionen werden im \textit{Schichten-Klassifikator} durch einen spatial-average zusammengefasst.
-  Durch eine multihead attention mit vier attention-Köpfen und embedding dimension 256 wird dann eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
+  Die räumlichen X- und Y-Dimensionen werden im \textit{Schichten-Klassifikator} durch einen spatial-average zusammengefasst.
+  Durch eine multihead Attention mit vier Attention-Köpfen und Embedding-Dimension 256 wird dann eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
   Lineare Layers formen anschließend die Repräsentation zu den vier Klassen um.}
   \label{fig:classifiers}
 \end{figure}

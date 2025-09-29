@@ -33,7 +33,7 @@ Der Cross-Entropy Loss \cite{Sukhbaatar2014} \newline
 %    p(\tilde{y} = \tilde{y}_n \mid y = i)\, p(y=i \mid x_n, \theta) \Bigg), 
 \end{equation}
 ist die etablierte Loss Funktion für das Training von Klassifikatoren \cite{GordonRodriguez2020, Mao2023}.
-Ein Problem der Cross-Entropy Loss Minimierung ist ihre Anfälligkeit für Rauschen der \acp{gt}.
+Ein Problem der Cross-Entropy Loss Minimierung ist ihre Anfälligkeit für Rauschen der Annotationen.
 Viele verschiedene Ansätze in der Forschung gehen dieses Problem an \cite{Goldberger2017, Han2018, Hendrycks2018}.
 Eine häufig genutzte Methode ist die Minimierung des Generalized Cross Entropy Loss:
 \begin{equation}
@@ -45,17 +45,26 @@ Eine häufig genutzte Methode ist die Minimierung des Generalized Cross Entropy 
     - \mathcal{L}_q(k) \sum_{i=1}^{n} w_i ,
 \end{equation}
 für das Klassifikator-Training \cite{Zhang2018}.
+\textbf{Genauigkeit}
+Für den Vergleich der Methoden der Klassifikation wird die Genauigkeit des getesteten Netz auf dem manuell annotierten Testanteil des Zieldatensatz verwendet:
+\begin{equation}
+  \text{Genauigkeit} = \frac{1}{N} \sum_{i=1}^{N} \mathbf{1}\{\hat{y}_i = y_i\},
+\end{equation}
+wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klassifikators und $y_i$ die Annotation ist. 
+Als Genauigkeit eines trainierten Klassifikators wird dann der maximale Wert bezeichnet, den der Klassifikator während des Trainings erreicht.
+Hierzu werden die Modelle nach jeder Epoche evaluiert.
+(\textit{Notiz: Ist das hier richtig platziert?})\newline
 
 \subsection{Benchmark}
 Um die Leistungsfähigkeit der Applikation, die im Rahmen der vorliegenden Thesis erstellt wird, zu prüfen, sind umfangreiche Datensätze notwendig. 
-Für jede isolierbare Aufgabe muss ein Datensatz gewählt werden, der eine \ac{gt} entsprechend dieser Aufgabe mitbringt.
+Für jede isolierbare Aufgabe muss ein Datensatz gewählt werden, der Annotationen entsprechend dieser Aufgabe mitbringt.
 Die Herausforderung bei der Auswahl eines Datensatzes ist, dass die darin enthaltenen Daten (Quelldaten) den Daten, für die die Anwendung entworfen wird (Zieldaten), \textit{ähnlich} sein müssen.
 So wird sichergestellt, dass sich die auf den Quelldaten gemessene Qualität der Anwendung sinnvoll auf die Zieldaten übertragen lässt \cite{ganin2015domain_big}.
 Der Begriff \textit{Ähnlichkeit} ist mehrdeutig und das Definieren von Merkmalen in Daten, die das Messen von \textit{Ähnlichkeit} ermöglichen, ist anspruchsvoll.
 Metriken, die als Maß für \textit{Ähnlichkeit} genutzt werden müssen, müssen maßgeschneidert zur Anwendung passen und sind bereits breit erforscht \cite{zhu2020domain_similarity, koohi2018similarity, cai2009similarity}.
 Daten können mithilfe passender Metriken \textit{Ähnlichkeits-}gruppen, sogenannten \textit{Domänen}, zugeordnet werden \cite{yuan2005domainsimilarity}.
 Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind verschiedene Farb-Marker, Aufnahmegeräte oder Zoom-Stufen (siehe Abb. \ref{fig:domains}). 
-Sind verschiedene Darstellungen gleicher Objekte in Bildern wie in Abb.? \ref{fig:domains} dargestellt. 
+Sind verschiedene Darstellungen gleicher Objekte in Bildern wie in Abb. \ref{fig:domains} dargestellt. \newline
 %\newline Altes Bild (Katzen) ersetzt \newline
 %\begin{figure}[htbp]
 %    \centering
@@ -101,7 +110,7 @@ Ghosh et al. definieren Domänenanpassung: "Gegeben Quell- und Ziel-Domänen $D_
 %    %\item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
 %\end{itemize}
 Segmentierung ist die Aufgabe, Pixel mit semantischen Labels zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
-In Abb. \ref{fig:Segmentation} \cite{kirillov2019PQ} sind beispielhaft \acp{gt} der verschiedenen Arten von Segmentierung zu sehen.
+In Abb. \ref{fig:Segmentation} sind beispielhaft Annotationen der verschiedenen Arten von Segmentierung zu sehen \cite{kirillov2019PQ}. \newline
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.24\textwidth}
@@ -152,56 +161,60 @@ Klassifikation beschreibt das Zuordnen einer Kategorie oder Klasse zu der eine g
 Hierzu werden die Merkmale des Objekts, das in der Stichprobe präsentiert wird, durch Beobachtung oder Messung gewonnen \cite{Kulkarni1998}.
 Nach wiederholter Extraktion der Merkmale von Objekten verschiedener Klassen werden Muster in den Merkmalen gesucht, um Regeln für die Zuweisung von Objekten zu Klassen auf Basis der Muster festzulegen \cite{Jain1999, ShalevShwartz2014}.
 Sowohl die Algorithmen zur Merkmalsextraktion als auch zum Ableiten der Muster und Regeln können mit unterschiedlich hohem Rechenaufwand, Abstraktionsgrad und Maß an Generalisierbarkeit implementiert werden \cite{Loog2018}. 
-Zur Merkmalsextraktion werden klassisch Metriken zu einem Vektor kombiniert \cite{Guyon2006}.
-Diese Metriken können beispielsweise die Verteilung der Farbkanäle, eine Charakterisierung der Textur, die Fläche des Objekts und vieles mehr sein \cite{Kunaver2005, Mutlag2020}.
-Eine weitere verbreitete Metrik ist eine Kombination von Parametern der Fourier-Entwicklung einer Kontur, die aus der diskreten komplexen Zahlenfolge
+Zur Merkmalsextraktion werden klassisch beschreibende Eigenschaften des Objekts berechnet und kombiniert \cite{Guyon2006}.
+Als Eigenschaften eignen sich beispielsweise die Verteilung der Farbkanäle, eine Charakterisierung der Textur, die Fläche des Objekts \cite{Kunaver2005, Mutlag2020}.
+Eine weitere verbreitete Eigenschaft ist eine Kombination von Parametern der Fourier-Entwicklung einer Kontur, die aus der diskreten komplexen Zahlenfolge
 \begin{equation}
-  c[n] = x[n] + i \cdot y[n]
+  c[n] = x[n] + i \cdot y[n], n = 0,...,N-1
 \end{equation}
 mithilfe der diskreten Fourier-Transformation 
 \begin{equation}
-  F[k] = \sum_{n=0}^{N-1} c[n] \cdot e^{-2 \pi i \frac{kn}{N}}
+  F[k] = \sum_{n=0}^{N-1} c[n] \cdot e^{-2 \pi i \frac{kn}{N}, k = 0,...,N-1}
 \end{equation} gebildet werden \cite{Zahn1972, Kuhl1982}.
+Hierbei sind $x[n]$ und $y[n]$ die Koordinaten des $n$-ten von N equidistanten Sützpunkten entlang der Kontur des Objekts, $c[n]$ ihre komplexe Darstellung und $F[k]$ die Fourier-Transformation der komplexen Darstellungen ist.
+Die Ergebnisse der Fourier-Transformationen mehrerer Stützpunkte werden dann als Eigenschaft verwendet.
 Merkmalsvektoren werden häufig abstrahiert und in ihrer Dimension reduziert, beispielsweise durch eine Principal Component Analysis \cite{Pearson1901, Hotelling1933}
 Sind keine Beispiele von Stichproben der verfügbaren Klassen verfügbar, werden diese Metriken zum Clustering verwendet \cite{Jain1999, Xu2005}. 
-Sind nur wenige \acp{gt} vorhanden, können semi supervised Verfahren angewandt werden, die besonders die Ähnlichkeit der Stichproben ohne Labels herausarbeiten \cite{Boser1992, Yarowsky1995}.
-Eine prominente Methode des semi supervised Lernens ist das label spreading, das mithilfe einer Kernfunktion \cite{Schoelkopf1997, Smola1998} die Dimension von Merkmalsvektoren ändert und in einen alternativen Merkmalsraum transformiert \cite{Zhou2003}.
-Verschiedene Kernfunktionen wie Radiale Basis Funktionen \cite{Lowe1988}
+Sind nur wenige Annotationen vorhanden, können semi-supervised-Verfahren angewandt werden, die besonders die Ähnlichkeit der Stichproben ohne Annotationen herausarbeiten \cite{Boser1992, Yarowsky1995}.
+Eine prominente Methode des semi-supervised-Lernens ist das label spreading, das mithilfe einer Kernfunktion \cite{Schoelkopf1997, Smola1998} die Dimension von Merkmalsvektoren ändert und in einen alternativen Merkmalsraum transformiert \cite{Zhou2003}.
+Verschiedene Kernfunktionen wie die Radiale-Basis-Funktion \cite{Lowe1988}
 \begin{equation}
     \phi(x, y) = \exp\!\left(-\gamma \|x - y\|^2\right), \quad \gamma > 0
     %\phi(\mathbf{x}) = \exp\Big(-\frac{\|\mathbf{x}-\mathbf{c}\|^2}{2\sigma^2}\Big)
 \end{equation}
 werden für das label spreading eingesetzt \cite{Delalleau2005}.
+Hierbei sind $x, y \in \mathbb{R}^d$ die Koordinaten der Stichprobe im Merkmalsraum, $\gamma$ ein Parameter, der die Breite der Radialbasisfunktion steuert und $\phi(x,y)$ der Wert der Radialen-Basis-Funktion.
 Die meist genutzten Methoden der Klassifikation sind logik-basierte Ansätze wie Entscheidungsbäume, Perzeptron-basierte Ansätze wie neuronale Netze, statistische Ansätze wie Bayes'sche Netzwerke oder Nächster-Nachbar-Verfahren und Support Vector Maschinen \cite{Kotsiantis2007}.
-Diese Methoden basieren direkt auf Ähnlichkeiten zwischen den Metriken von unbekannten Stichproben und Stichproben mit bekannter Klasse \cite{Hughes1968}.
+Diese Methoden basieren direkt auf Ähnlichkeiten zwischen den Merkmalen von unbekannten Stichproben und Stichproben mit bekannter Klasse \cite{Hughes1968}.
 Moderne Anwendungen nutzen zur Merkmalsextraktion verschiedene Deep-Learning-basierte Methoden \cite{Khan2023}.
 %Recurrent Neural Networks \cite{Lecun1998} und vor allem \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} sind in der Lage aus Bildern aussagekräftige, abstrakte Merkmale zu generieren \cite{Plested2022}.
 Vor allem \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} sind in der Lage, aus Bildern aussagekräftige, abstrakte Merkmale zu generieren \cite{Plested2022}.
 Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} bezeichnet.
-Als \textbf{Decoder} wird der klassifizierende Teil des Klassifikators bezeichnet.
+Als \textbf{Decoder} wird der zusammenfassende Teil des Klassifikators bezeichnet, er gibt einen Zuversichtlichkeitswert für jede Klasse aus.
 Der State-of-the-Art für den Decoder ist ein neuronales Netz, das auf Basis der abstrakten Merkmale des Encoders eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
-Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger \ac{gt} den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\newline.
+Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger Annotation den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\newline.
 \textit{TODO: 3D bzw 2.5D - Welche Methoden werden speziell für 3D genutzt, gibt es Methoden zur Anpassung?}
 \section{Literaturrecherche}
 
-\subsection{Benchmark}
-Da das manuelle Erstellen der \ac{gt} für die Segmentierung von Zelldaten mit erheblichem manuellem Aufwand verbunden ist und zusätzlich Expertenwissen voraussetzt, sind Datensätze hierfür selten. 
-Einige prominente Datensätze, deren Domänen zu den Zieldaten der Anwendung dieser Arbeit \textit{ähnlich} sind, sind:  
+\subsection{Benchmark}\label{sec:bench}
+Da das manuelle Erstellen der Annotationen für die Segmentierung von Zelldaten mit erheblichem manuellem Aufwand verbunden ist und zusätzlich Expertenwissen voraussetzt, sind Datensätze hierfür selten. 
+Einige prominente Datensätze mit Annotationen für eine Instanzsegmentierung, deren Domänen zu den Zieldaten der Anwendung dieser Arbeit \textit{ähnlich} sind, sind:  
 \begin{itemize}
     \item LiveCell \cite{edlund2021livecell}, ein manuell annotierter und Experten-validierter Datensatz aus 5.239 2D-Bildern. 
-    Die Daten sind mit incucyter HD Phasenkontrastmikroskopie gesammelt und enthalten 1.686.352 individuelle Zellen von acht verschiedenen Zelltypen.
+    Die Daten sind mit Phasenkontrastmikroskopie gesammelt und enthalten 1.686.352 individuelle Zellen von acht verschiedenen Zelltypen.
     \item YeaZ \cite{dietler2020YeaZ}, ein zweiteiliger Datensatz von Hefe-Zellen aus 87 Phasenkontrast-Bildern mit insgesamt 10.422 Zellen und 614 Hellfeld-Bildern mit insgesamt 3.841 Zellen in 6 Beleuchtungsstufen aufgenommen. Die Annotationen sind semi-manuell erstellt, da die Phasenkontrast-Bilder manuell, und die Lichtfeld-Bilder aus den Phasenkonstrast-Segmentierungsmasken annotiert wurden. 
     \item DeepBas \cite{holden2021deepbacs, cspahn2021deepbacs}, ein Datensatz von \textit{B. subtilis strain SH130} Bakterien. Er besteht aus Weitfeldaufnahmen (Fluoreszenz), aufgenommen mit einem inversen Mikroskop, bestehend aus sieben manuell annotierten Bildern mit je zwischen 46 und 335 Zellen.
     \item die Cell Tracking Challenge \cite{ulman2017cellTrackingChallenge}, eine Sammlung aus 13 Datensätzen verschiedener Mikroskopiemodalitäten, die sich zum Messen der Segmentierungs- und Verfolgungsfähigkeiten für verschiedene Zelltypen eignen.
     \item MoNuSeg \cite{kumar2017MoNuSeg}, eine Zusammenstellung manuell annotierter Gewebeschnitte von sieben verschiedenen Organen. Über 21.000 Zellen sind pro Bild in den 30 Bildern mit verschiedenen Färbungen und Aufnahmetechniken verteilt.
     \item TissueNet \cite{greenwald2022Tissuenet} ein umfassender Datensatz mit über 1.000.000 Zellen mit diversen Gewebearten und unterschiedlichen Aufnahmetechniken.
-    \item S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset}, ein Datensatz der neben manuell annotierten Bildern von acht verschiedenen Zellarten sind synthetisch erzeugte Daten enthält. Mit Hilfe von SpCycleGAN \cite{fu2018cycleGAN} wurden dazu auf Basis von simulierten \ac{gt}s Bildern generiert, die anstreben die Merkmale der realen Bilder zu reproduzieren. Es handelt sich hierbei um 3D-multispektrale Daten, aufgenommen mittels Fluoreszenzbildgebung. 
+    \item S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset}, ein Datensatz der neben manuell annotierten Bildern von acht verschiedenen Zellarten sind synthetisch erzeugte Daten enthält. Mit Hilfe von SpCycleGAN \cite{fu2018cycleGAN} wurden dazu auf Basis von simulierten Annotationen Bildern generiert, die anstreben die Merkmale der realen Bilder zu reproduzieren. Es handelt sich hierbei um 3D-multispektrale Daten, aufgenommen mittels Fluoreszenzbildgebung. 
 \end{itemize}
 Aufgrund des geringen Volumens frei zugänglicher Daten sind diese Sammlungen auch für das Training von Segmentierungsnetzen begehrt. 
-Jeder Datensatz, der bereits im Trainingssatz eines gewählten Segmentierungsnetzes enthalten war, eignet sich nicht mehr zur unabhängigen Bewertung der Netze. 
+%Jeder Datensatz, der bereits im Trainingssatz eines gewählten Segmentierungsnetzes enthalten war, eignet sich nicht mehr zur unabhängigen Bewertung der Netze. 
 Neben annotierten Datensätzen bietet die Literatur auch Methoden zum eigenständigen Erzeugen domänenspezifischer Datensätze \cite{Abay2019, Raghunathan2021, Nikolenko2021, Choi2017, Lu2023}.
-Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generieren von 3D-Trainingsdaten mit realistischer Zellform und -ausrichtung und umgebenden Markern. 
-Zudem umfasst das Framework eine Trainingsroutine, um ein \ac{gan} zu trainieren, das Bilddaten und passende Annotationen automatisch erzeugt und an eine gewünschte Bilddomäne anpasst. 
+Beispielsweise können 3D-Trainingsdaten mit realistischer Zellform und -ausrichtung und umgebenden Markern synthetisch erzeugt und durch ein Generative Adversarial Network an eine gewünschte Bilddomäne angepasst werden \cite{bruch2025}. 
+%Das cell synthesis Projekt \cite{bruch2025} ermöglicht das synthetische Generieren von 3D-Trainingsdaten mit realistischer Zellform und -ausrichtung und umgebenden Markern. 
+%Zudem umfasst das Framework eine Trainingsroutine, um ein \ac{gan} zu trainieren, das Bilddaten und passende Annotationen automatisch erzeugt und an eine gewünschte Bilddomäne anpasst. 
 %
 %\begin{itemize}
 %    \item \cite{zhu2020domain_similarity} Speech recognition - Herausforderung der Anpassung an Audio domänen
@@ -217,12 +230,12 @@ Zudem umfasst das Framework eine Trainingsroutine, um ein \ac{gan} zu trainieren
 %\end{itemize}
 
 \subsection{Segmentierungsnetz}
-\textit{Foundation-models} sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
-Sie werden zunächst für allgemeine Aufgaben vortrainiert und anschließend auf spezifische Anwendungen angepasst (\textit{fine-tuning}), meist unter Einfrieren von Teilen der Gewichte \cite{Yosinski2014}.
+Foundation-models sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
+Sie werden zunächst für allgemeine Aufgaben vortrainiert und anschließend auf spezifische Anwendungen angepasst (fine-tuning), meist unter Einfrieren von Teilen der Gewichte \cite{Yosinski2014}.
 Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
-In der aktuellen Forschung werden verschiedene \textit{foundation-models} für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
-Ein prominentes Exemplar ist das \ac{sam} \cite{kirillov2023sam} von Meta AI. 
-Es besteht aus einem Bild-Encoder, einem Prompt-Encoder und einem Masken-Decoder (siehe Abb. \ref{fig:SAM_Architektur}). 
+In der aktuellen Forschung werden verschiedene foundation-models für Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
+Ein prominentes Exemplar ist das \ac{sam} von Meta AI \cite{kirillov2023sam} (siehe Abb. \ref{fig:SAM_Architektur}). 
+Es besteht aus einem Bild-Encoder, einem Prompt-Encoder und einem Masken-Decoder. 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{Figures/SAM_Architecture.png}
@@ -239,7 +252,7 @@ Für textuelle Prompts wird der Encoder des CLIP \cite{Radford2021} Models genut
 Außerdem werden Bildfaltungen als Encoder auf Masken-Nutzereingaben angewandt.
 Mithilfe dieser Encoder wird dem Modell eine Repräsentation von dem zu segmentierenden Bild und optionalen, manuellen Hinweisen auf das erwünschte Ergebnis gegeben, die bereits semantische Informationen und abstrakte Bildmerkmale beinhalten.
 Aus diesen Repräsentationen generiert dann der Decoder mehrere mögliche Masken mit zugehörigen Zuversichtlichkeiten, aus denen ein finales Segmentierungsergebnis ausgewählt wird.\newline
-\ac{sam} wurde bereits für viele Mikroskopie-Zelldaten downstream Anwendungen \textit{fine-tuned} \cite{archit2025samfine, israel2023samfine, vandeloo2025samfine}. 
+\ac{sam} wurde bereits für viele explizite Mikroskopie-Zelldaten Anwendungen angepasst \cite{archit2025samfine, israel2023samfine, vandeloo2025samfine}. 
 Auch für bestehende biologische Segmentierungsanwendungen, wie etwa Cellpose\cite{stringer2021cellpose}, wurde \ac{sam} auf Zelldaten angepasst \cite{pachitariu2025samcellpose}.
 Dieser \textit{Fine-tune} nennt sich CellposeSAM.
 Er kombiniert den Bild-Encoder von \ac{sam} mit dem \textit{Flow}-Segmentierungsansatz von Cellpose.
@@ -250,7 +263,9 @@ Abb. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{Figures/CellposeSAM_Diagramm.png}
-    \caption{Ablauf des CellposeSAM-Modells. Eingabebilder werden durch einen Bild-Encoder direkt zu \textit{Flows} umgeformt. Die Gradienten der Flows werden verfolgt und aus dem entstehenden Gradientenfeld werden Segmentierungsinstanzen vorhergesagt \cite{pachitariu2025samcellpose}.}
+    \caption{Ablauf des CellposeSAM-Modells. 
+    Eingabebilder werden durch einen Bild-Encoder (ViT-L) direkt zu sogenannten \textit{Flows} umgeformt, einer Repräsentation von vorhergesagten Objektmerkmalen, deren Wert von der relativen Position innerhalb des detektierten Objekts abhängt. 
+    Die Gradienten der Flows werden verfolgt (gradient tracking) und aus dem daraus entstehenden Gradientenfeld werden Segmentierungsinstanzen (ROIs) vorhergesagt \cite{pachitariu2025samcellpose}.}
     \label{fig:CellposeSAM}
 \end{figure}
 Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell} bietet weitere Zellsegmentierungsnetze.
@@ -263,12 +278,11 @@ Die Leistungsfähigkeit des Ansatzes ergibt sich nicht aus einer neuen Architekt
 
 \subsection{Klassifikator}
 %\textbf{QUELLEN NOCH!}\newline
-Für Klassifikatoren werden in der Regel nur Encoder vortrainiert, der Decoder muss an die Klassen der downstream Anwendung angepasst werden \cite{Yosinski2014, Dippel2022, Plested2022}.
-State-of-the-Art für Bild-Encodern sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet \cite{Russakovsky2015} Datensatz vortrainiert werden \cite{You2018, Kornblith2019}.
+Für Klassifikatoren werden in der Regel nur Encoder vortrainiert, der Decoder muss an die Klassen des vorliegenden Problems angepasst werden \cite{Plested2022, Yosinski2014, Dippel2022}.
+State-of-the-Art für Bild-Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet \cite{Russakovsky2015} Datensatz vortrainiert werden \cite{You2018, Kornblith2019}.
 Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.\newline
 \textbf{ResNet} ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
-Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten (siehe Abb. \ref{fig:ResCon}).
-Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He2015, srivastava2015highway} von Netzen mit steigender Tiefe entgegenwirken \cite{He2016}.
+Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten und verbessern die Leistungsfähigkeit tiefer neuronaler Netze \cite{He2015, He2016, srivastava2015highway} (siehe Abb. \ref{fig:ResCon}).
 %\begin{figure}
 %    \centering
 %    \includegraphics[width=0.4\textwidth]{Figures/ResidualConns.png}
@@ -277,10 +291,12 @@ Es wurde gezeigt, dass residual connections dem Degradierungsproblem \cite{He201
 %\end{figure}
 In ihrem Paper stellen die Autoren fünf unterschiedlich tiefe Varianten der \textbf{ResNet}-Architektur vor.
 Jede Variante enthält fünf Blöcke mit residual connections.
-Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, Batch normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\newline\textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet-Modellfamilie \cite{Tan2019, Tan2021}.
-Die Architektur basiert auf einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}.
-Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1-Faltungsschichten.
-Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung (siehe Abb. \ref{fig:MBConv}).\newline
+Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, Batch normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\newline
+\textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet-Modellfamilie \cite{Tan2019, Tan2021}.
+Die Architektur basiert auf modularen Blöcken von Bildfaltungsoperatoren mit besonders kleinen Faltungskernen und Squeeze-and-Excitations, genannt MBConv \cite{Sandler2018, Tan2019} und Fused-MBConv \cite{Gupta2019} (siehe Abb. \ref{fig:MBConv}).\newline
+%einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}, also aus .
+%Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1-Faltungsschichten.
+%Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung 
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
@@ -301,7 +317,7 @@ Die \textbf{ConvNeXt}-Architektur umfasst fünf modulare Blöcke mit Faltungen u
 Allerdings verändert dabei \textbf{ConvNeXt} einige Details der ResNet Architektur, wie beispielsweise die GeLU Aktivierungsfunktion \cite{Hendrycks2016} und Layer normalization \cite{Ba2016}.\newline
 Swin Transformer \cite{liu2021} ist eine beliebte Modellfamilie von \acp{vit}.
 Ihr Nachfolger, die \textbf{Swin Transformer V2} \cite{Liu2022a}, vergrößert die Modelle noch.
-Die Architektur \acp{vit} kombiniert Bildausschnitte mit einem Positions-Bias.
+Die Architektur kombiniert Bildausschnitte mit einem Positions-Bias.
 Hierzu werden ein Bildfenster $z$ und dessen relativen Koordinaten im Bild $\Delta x$ und $\Delta y$ in einem Attention-Mechanismus zusammengeführt.
 Die Positionen werden in einem MLP-Netz verarbeitet, während das Bildfenster mit drei verschiedenen Gewichtsmatrizen multipliziert wird.
 Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax-Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
@@ -313,15 +329,6 @@ Dieser Aufbau ist in Abb. \ref{fig:SwinArchitecture} dargestellt.
 %\cite{Tan2021} EfficientNetV2L
 %\cite{Liu2022} convnextxl
 %\cite{Liu2022a} SwinV2
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{Figures/SWINV2_Architecture.png}
-    \caption{\textbf{Swin Transformer V2} Architektur \cite{Liu2022a}. 
-    Ein Bildfenster $z$ und dessen relative Koordinaten im Bild $\Delta x$ und $\Delta y$ werden in einem Attention-Mechanismus zusammengeführt.
-    Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax-Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
-    Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2} Block.}
-    \label{fig:SwinArchitecture}
-\end{figure}
 
 \section{Offene Probleme}
 

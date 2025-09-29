@@ -3,6 +3,18 @@
 
 \appendix
 \chapter{Appendix}\label{ch:app}
+
+\section{SWINV2 Architektur}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{Figures/SWINV2_Architecture.png}
+    \caption{\textbf{Swin Transformer V2} Architektur \cite{Liu2022a}. 
+    Ein Bildfenster $z$ und dessen relative Koordinaten im Bild $\Delta x$ und $\Delta y$ werden in einem Attention-Mechanismus zusammengeführt.
+    Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax-Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
+    Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2} Block.}
+    \label{fig:SwinArchitecture}
+\end{figure}
+
 \section{\ac{ipq}-Ergebnisse}\label{supp:ipq}
 
 

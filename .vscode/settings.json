@@ -1,37 +1,47 @@
 {
-    "latex-workshop.latex.recipes": [
-      {
-        "name": "latexmk (xelatex + biber)",
-        "tools": ["xelatex", "biber", "xelatex", "xelatex"]
-      }
-    ],
-    "latex-workshop.latex.tools": [
-      {
-        "name": "xelatex",
-        "command": "xelatex",
-        "args": [
-          "-synctex=1",
-          "-interaction=nonstopmode",
-          "-file-line-error",
-          "%DOC%"
-        ]
-      },
-      {
-        "name": "biber",
-        "command": "biber",
-        "args": ["%DOCFILE%"]
-      }
-    ],
-    "latex-workshop.latex.recipe.default": "latexmk (xelatex + biber)",
-    "latex-workshop.latex.autoBuild.run": "onSave",
-    "cSpell.language": "de,en",
-    "#cSpell.enabledFileTypes#": ["latex", "plaintext", "markdown"],
-    "cSpell.ignoreRegExpList": [
-      "/\\\\cite\\{[^}]*\\}/",
-      "/\\\\ref\\{[^}]*\\}/",
-      "/\\\\label\\{[^}]*\\}/",
-      "/\\\\begin\\{[^}]*\\}/",
-      "/\\\\end\\{[^}]*\\}/"
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "xelatex -> biber -> xelatex*2",
+      "tools": [
+        "xelatex",
+        "biber",
+        "xelatex",
+        "xelatex"
+      ]
+    }
+  ],
+
+  "latex-workshop.latex.tools": [
+    {
+      "name": "xelatex",
+      "command": "xelatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": [
+        "%DOCFILE%"
+      ]
+    }
+  ],
+
+  "latex-workshop.latex.recipe.default": "xelatex -> biber -> xelatex*2",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.outDir": "",
+  "cSpell.language": "de,en",
+  "#cSpell.enabledFileTypes#": ["latex", "plaintext", "markdown"],
+  "cSpell.ignoreRegExpList": [
+    "/\\\\cite\\{[^}]*\\}/",
+    "/\\\\ref\\{[^}]*\\}/",
+    "/\\\\label\\{[^}]*\\}/",
+    "/\\\\begin\\{[^}]*\\}/",
+    "/\\\\end\\{[^}]*\\}/"
     ],
     "ltex.language": "de",
     "ltex.enabled": ["latex"],

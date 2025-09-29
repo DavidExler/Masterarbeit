@@ -8,11 +8,7 @@
 %\section*{Objectives and Structure of this Thesis}
 %Give an outline of your thesis. Briefly repeat the problem and  your contribution, for example in the form of research questions. 
 
-\section{Überblick}
-Das nachfolgende Kapitel leitet in das Thema der vorliegenden Thesis ein. 
-Es beschreibt zu diesem Zweck das Projekt allgemein und beleuchtet die offenen Probleme, an denen das Projekt ansetzt. Davon ausgehend erläutert das Kapitel die Zielsetzung der Arbeit. Zuletzt wird die Struktur der schriftlichen Ausarbeitung erklärt.
-
-\section{Allgemeine Beschreibung}
+%\section{Allgemeine Beschreibung}
 Myotuben sind mehrkernige Muskelzellfäden \cite{lewis1917behavior, Enwere2014}. 
 Sie repräsentieren ein intermediäres Stadium der Muskelentwicklung, in dem sich die grundlegende Organisation der Muskelfaser bildet \cite{Gilbert2014}. 
 Menschliche Myotube-Kulturen \cite{Pogogeff1946} können für diverse Forschungszwecke als Modellsystem eingesetzt werden.
@@ -22,20 +18,20 @@ Die Bilddaten entstehen dabei mit unterschiedlichen Herstellungsbedingungen, Fä
 Im Zuge der vorliegenden Arbeit werden \textit{TODO Beschreibung der Daten und Aufnahmebedingungen} Daten analysiert und die Ergebnisse automatisiert ausgewertet.
 Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl und das Myotubenvolumen extrahiert.
 Diese Merkmale ermöglichen es, die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
-Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich auf die Anforderungen angepasst.   
+Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich auf die Anforderungen angepasst.\newline
 % - 3D!! bzw 2.5D als depth map plus intensity map \cite{Marr2010, Marr1978}
-\section{Offene Probleme}
+%\section{Offene Probleme}
 Um die Analyse biologischer Daten effizient und in großem Umfang durchführen zu können, sind Bildverarbeitungsprogramme notwendig \cite{Noe2022}, da die manuelle Auswertung sowohl anspruchsvoll als auch zeitintensiv ist \cite{Weisrock2024}.
 Myotuben in Forschungsumgebungen ordnen sich in chaotischen Netzen mit Verschränkungen und Überkreuzungen an \cite{Abdelmoez2020}.
 Aktuell sind Bildverarbeitungsmethoden nicht in der Lage, zuverlässig einzelne Myotuben in einem dreidimensionalen Bild zu erkennen und von ihrem Anfang bis zum Ende zu verfolgen \cite{Inoue2018}.
 Besonders die Bündel, die in der Entwicklung der Myotuben häufig entstehen, verhindern oft die getrennte Segmentierung der einzelnen Myotuben \cite{Jeong2025}.
 Außerdem stellen die dreidimensionalen Daten eine große Herausforderung für Hard- und Software dar \cite{Moore2021, Pan2023, Li2023, Bagheri2022}.
 Besonders herausfordernd sind dabei die stark erhöhten Speicher- und GPU-Anforderungen und dass weniger Methoden sowie Datensätze etabliert sind \cite{liu2021, James2023, Chan2020}. 
-Der Mehrwert einer dritten räumlichen Dimension kann allerdings die Ergebnisse wesentlich verbessern, was die Verarbeitung von 3D-Daten daher zu einem zentralen Forschungsaspekt macht \cite{Hirabayashi2024, Midgley2003}.
+Der Mehrwert einer dritten räumlichen Dimension kann allerdings die Ergebnisse wesentlich verbessern, was die Verarbeitung von 3D-Daten daher zu einem zentralen Forschungsaspekt macht \cite{Hirabayashi2024, Midgley2003}.\newline
 %Weniger Methoden und Daten und schwerere Ground truths: \cite{Liu2021}
 %Große Daten und Artefakte \cite{James2023}
 %"Challenge" \cite{Chan2020}
-\section{Zielsetzung}
+%\section{Zielsetzung}
 Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung einzelner Myotuben in dreidimensionalen Mikroskopiedaten zu ermöglichen.
 Aus den Segmentierungsmasken werden daraufhin morphologische Eigenschaften der einzelnen Myotuben gewonnen.
 Außerdem können die Ergebnisse genutzt werden, um den Status der Entwicklung einzelner Myotuben, unter anderem, anhand der darin enthaltenen Zellkerne zu ermitteln.
@@ -46,7 +42,7 @@ Die Zwischenziele umfassen:
     \item Das Klassifizieren von Zellkernen anhand ihrer Morphologie sowie der antikörperbasierten Marker in ihrer unmittelbaren Umgebung.
     \item Das Kodieren der gewonnenen Informationen auf eine Weise, die sie für bestehende Segmentierungsalgorithmen nutzbar macht. %\textit{NOTIZ: wäre diese Information hier zu viel? Nuclei von Myo Zellen als "Click" bei SAM, Nuclei von Nervenzellen/Synapsen/Schwann-Zellen als "negativ Click"} %\textit{NOTIZ: SAM basierte Segmentierung z.B. nutzt sowieso einen Encoder für "Hints" -> klassifizierte "In-Myo" Zellen als "Click", vielleicht die Längsachse der "In-Myo" Zellen als Längsachse der Myos}
 \end{itemize}
-\section{Strukturierung der Arbeit}
+%\section{Strukturierung der Arbeit}
 Die nachfolgende Ausarbeitung ist wie folgt strukturiert. %in die Kapitel \ref{ch:Theory} Theorie, \ref{ch:NewMethods} Methoden, \ref{ch:Implementation} Implementierung, \ref{ch:results} Ergebnisse, \ref{ch:Discussion} Diskussion und \ref{ch:Conclusion} Zusammenfassung.
 In Kapitel \ref{ch:Theory} sind Grundlagen, relevante Literatur und der Stand der Technik beschrieben. 
 Außerdem sind dort offene Probleme, sowie die Ansätze, die die vorliegende Arbeit verfolgt um sie zu lösen, dargestellt. 

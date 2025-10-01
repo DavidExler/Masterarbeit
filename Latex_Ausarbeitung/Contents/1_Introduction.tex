@@ -16,7 +16,7 @@ Sie werden beispielsweise verwendet, um Muskelkrankheiten zu modellieren \cite{W
 In den meisten Fällen werden die Myotuben, ihre Zellkerne und zugehörige, umliegende Strukturen eingefärbt und unter dem Mikroskop analysiert \cite{Velica2011, Nolan2024, Agley2012}.
 Die Bilddaten entstehen dabei mit unterschiedlichen Herstellungsbedingungen, Färbungen und Aufnahmegeräten, was eine generalisierte Automatisierung erschwert \cite{Chua2019, Shahini2018, Brunetti2021, NogalesGadea2010}. \newline
 Im Zuge der vorliegenden Arbeit werden \textit{TODO Beschreibung der Daten und Aufnahmebedingungen} Daten analysiert und die Ergebnisse automatisiert ausgewertet.
-Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl und das Myotubenvolumen extrahiert.
+Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl, die Verteilung der Zellkernklassen und das Myotubenvolumen extrahiert.
 Diese Merkmale ermöglichen es, die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
 Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich auf die Anforderungen angepasst.\newline
 % - 3D!! bzw 2.5D als depth map plus intensity map \cite{Marr2010, Marr1978}
@@ -35,13 +35,24 @@ Der Mehrwert einer dritten räumlichen Dimension kann allerdings die Ergebnisse 
 Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung einzelner Myotuben in dreidimensionalen Mikroskopiedaten zu ermöglichen.
 Aus den Segmentierungsmasken werden daraufhin morphologische Eigenschaften der einzelnen Myotuben gewonnen.
 Außerdem können die Ergebnisse genutzt werden, um den Status der Entwicklung einzelner Myotuben, unter anderem, anhand der darin enthaltenen Zellkerne zu ermitteln.
-Um die Segmentierung der Myotuben zu ermöglichen, werden verschiedene Zwischenziele definiert, die zusätzliche, unterstützende Informationen sammeln, welche den Segmentierungsalgorithmen zur Verfügung gestellt werden.
-Die Zwischenziele umfassen:
+Deshalb ist ein weiteres Ziel, die Zellkerne zu segmentieren und zu klassifizieren.
+Für die Klassifikation soll im Rahmen dieser Arbeit Expertenwissen zeiteffizient erfasst und genutzt werden.
+Aus diesen Zielen ergeben sich die folgenden Mehrwerte der vorliegenden Arbeit:
 \begin{itemize}
-    \item Die Segmentierung von individuellen Zellkernen in den dreidimensionalen Daten.
-    \item Das Klassifizieren von Zellkernen anhand ihrer Morphologie sowie der antikörperbasierten Marker in ihrer unmittelbaren Umgebung.
-    \item Das Kodieren der gewonnenen Informationen auf eine Weise, die sie für bestehende Segmentierungsalgorithmen nutzbar macht. %\textit{NOTIZ: wäre diese Information hier zu viel? Nuclei von Myo Zellen als "Click" bei SAM, Nuclei von Nervenzellen/Synapsen/Schwann-Zellen als "negativ Click"} %\textit{NOTIZ: SAM basierte Segmentierung z.B. nutzt sowieso einen Encoder für "Hints" -> klassifizierte "In-Myo" Zellen als "Click", vielleicht die Längsachse der "In-Myo" Zellen als Längsachse der Myos}
+    \item Eine Labeling App, die zeiteffizient Expertenwissen über die Klassen von Nuclei in dreidimensionalen Daten erfasst.
+    \item Ein Vergleich etablierter Segmentierungsmodelle für Nuclei auf vorher ungesehenen Daten.
+    \item Ein neues Kriterium zum Vergleich von Segmentierungsmodellen im Hinblick auf die Eignung der entstehenden Segmentierungsmasken zur Extraktion interpretierbarer Merkmale.
+    \item Ein Vergleich von Methoden des Vortraining, der Vorverarbeitung sowie etablierter Encoder und neuer Decoder für die Klassifikation von dreidimensionalen Zellkernen.
+    \item Eine Methode, um das Klassifikationsergebnis zu nutzen, um die Instanzsegmentierung von Myotuben zu verbessern. (\textit{NOTIZ: Das klappt sehr schlecht, soll das dann raus?})  
 \end{itemize}
+%Um die Segmentierung der Myotuben zu ermöglichen, werden verschiedene Zwischenziele definiert, die zusätzliche, unterstützende Informationen sammeln, welche den Segmentierungsalgorithmen zur Verfügung gestellt werden.
+%Die Zwischenziele umfassen:
+%\begin{itemize}
+%    \item Die Segmentierung von individuellen Zellkernen in den dreidimensionalen Daten.
+%    \item Das Entwickeln einer Anwendung zum Annotieren der dreidimensionalen Nuclei.
+%    \item Das Klassifizieren von Zellkernen anhand ihrer Morphologie sowie der antikörperbasierten Marker in ihrer unmittelbaren Umgebung.
+%    \item Das Kodieren der gewonnenen Informationen auf eine Weise, die sie für bestehende Segmentierungsalgorithmen nutzbar macht. %\textit{NOTIZ: wäre diese Information hier zu viel? Nuclei von Myo Zellen als "Click" bei SAM, Nuclei von Nervenzellen/Synapsen/%Schwann-Zellen als "negativ Click"} %\textit{NOTIZ: SAM basierte Segmentierung z.B. nutzt sowieso einen Encoder für "Hints" -> klassifizierte "In-Myo" Zellen als "Click", vielleicht die Längsachse der "In-Myo" Zellen als Längsachse der Myos}
+%\end{itemize}
 %\section{Strukturierung der Arbeit}
 Die nachfolgende Ausarbeitung ist wie folgt strukturiert. %in die Kapitel \ref{ch:Theory} Theorie, \ref{ch:NewMethods} Methoden, \ref{ch:Implementation} Implementierung, \ref{ch:results} Ergebnisse, \ref{ch:Discussion} Diskussion und \ref{ch:Conclusion} Zusammenfassung.
 In Kapitel \ref{ch:Theory} sind Grundlagen, relevante Literatur und der Stand der Technik beschrieben. 

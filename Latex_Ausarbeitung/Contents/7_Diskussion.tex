@@ -14,3 +14,21 @@ Deepcell (siehe Abb. \ref{fig:DeepcellMaske}) übersegmentiert die Nuclei, wodur
 Das Ergebnis sind Masken, die zu groß sind und oft mehr als einen Nucleus enthalten.
 Das bedeutet auch, dass einige Nuclei nicht von einer eigenen Maske gefunden werden, was sie als \ac{fn}-Instanzen kategorisiert und eine schlechte Recognition Qualität bedingt.
 Durch diese Übersegmentierung wird vermieden, dass Instanzen der \ac{gt} durch die Deepcell-Masken geteilt werden, was zu einer guten Injektiven Qualität führt.
+
+\section{Klassifikation}
+Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Decodern, Vorverarbeitungsmethoden und Vortrainingsmethoden legt einige Aussagen über Effektivität der Methoden nahe.
+%Encoder
+\newline 
+%Decodern
+Der Volumen-Klassifikator ist signifikant besser als der Schichten-Klassifikator (siehe Kapitel \ref{sec:resultsClassifier}).
+Dieses Erkenntnis legt nahe, dass die dreidimensionalen Faltungsschichten besser den zusammenhang der Merkmale erfassen können, als der Attention-Mechanismus des Schichten-Klassifikators.
+Das könnte daran liegen, dass die dreidimensionale Faltung räumliche Durchschnittswerte nur mit gelernten Gewichten durchführt, während die Spatial Average Operation großflächig die räumliche Beziehung der Merkmale vernachlässigt.
+Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen nicht ausreichend entlang der Z-Dimension erhalten sind, was zu einer schlechten Leistung des tiefen fokusierten Schichten-Klassifikators führen würde. 
+Stattdessen könnte auch die Kombination räumlicher Merkmale und der Merkmale entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen würde.
+Da der Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
+Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Decoder das Potential mit bestimmten Merkmalsräumen besonders zu synergieren. \newline 
+%Vorverarbeitungsmethoden
+...\newline 
+%Vortrainingsmethoden
+...\newline 
+...

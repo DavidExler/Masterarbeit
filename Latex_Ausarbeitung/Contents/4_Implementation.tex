@@ -1,11 +1,13 @@
 % !TeX root = ../Thesis.tex
 
-\chapter{Implementation} \label{ch:Implementation}
+\chapter{Implementierung} \label{ch:Implementation}
 %If appropriate and not done in the previous chapter, describe the implementation of your method.
 
 
 \section{Überblick}
-Im nachfolgenden Kapitel wird die Implementierung aller relevanten Methoden erklärt. Hierbei steht die praktische Anwendung dieser Methoden in Form von Nutzerschnittstellen oder als Entwicklerskript auf ausgewiesener Hardware im Vordergrund.
+Im nachfolgenden Kapitel wird die Implementierung aller relevanten Methoden erklärt. 
+Hierbei steht die praktische Anwendung dieser Methoden in Form von Nutzerschnittstellen oder als Entwicklerskript auf ausgewiesener Hardware im Vordergrund.
+
 
 \section{Segmentierungsnetze}
 \begin{itemize}
@@ -24,8 +26,11 @@ Im nachfolgenden Kapitel wird die Implementierung aller relevanten Methoden erkl
 \end{itemize}
 
 \section{Labeling App}
-Um den Klassifikator zu trainieren, wird \ac{gt} zu einigen Zieldaten mithilfe der Labeling App erstellt. 
-Als Frontend dieser App dient eine Dash-Anwendung, die eine einfache html \ac{gui} bereitstellt. 
+Um den Klassifikator zu trainieren, werden einigen Zieldaten mithilfe einer selbst erstellten Labeling App Annotationen hinzugefügt.
+Die Anforderungen an die Labeling App sind ein nutzerfreundlicher, zeiteffizienter Ablauf und Zugägnlichkeit für Nutzer*Innen ohne Programmiererfahrung.
+Funktional muss die Labeling App im Stande sein die zu klassifizierenden Nuclei zu visualisieren und Eingabemöglichkeiten bieten, mit der Experten die Klasse des Nucleus eintragen können.
+Diese eingetragenen Annotationen müssen sinnvoll gespeichert werden.   
+Als Frontend der App dient eine Dash-Anwendung, die eine einfache html \ac{gui} bereitstellt. 
 Das Backend ist mit Python erstellt und die gesammelten Daten werden als JSON gespeichert.
 Hierzu ist ein Docker mit Zugriff auf das lokale Dateiensystem versehen und über Kubernetes betrieben.
 \begin{figure}
@@ -35,6 +40,7 @@ Hierzu ist ein Docker mit Zugriff auf das lokale Dateiensystem versehen und übe
     \label{fig:Labeling_App}
 \end{figure}
 Abb. \ref{fig:Labeling_App} zeigt die \ac{gui} der Labeling App. 
+Mit den Bedienelementen werden die Anforderungen an die Funktionalität umgesetzt.
 Zentral zu sehen sind zwei Fenster, die je einen 2D-Schnitt des ausgewählten Nucleus anzeigen. 
 Das linke Bild zeigt den Nucleus stark vergrößert, das rechte Bild zeigt die Umgebung des Nucleus.
 Auf den Bildern ist jeweils ein Kasten gezeichnet, der den ausgewählten Nucleus umrandet, um Nuclei, die dicht aneinander liegen, zu unterscheiden. 
@@ -46,15 +52,15 @@ Links neben dem Fenster befinden sich Bedienelemente mit den folgenden Funktione
     \item \textit{Next picture}: Nächstes Bild auswählen.
     \item \textit{Previous nucleus}: Vorherigen Nucleus auswählen.
     \item \textit{Next nucleus}: Nächsten Nucleus auswählen.
-    \item \textit{Next undefined}: Nächsten Nucleus ohne eingetragene \ac{gt} auswählen.
+    \item \textit{Next undefined}: Nächsten Nucleus ohne eingetragene Annotation auswählen.
     \item \textit{Image}: Eingabefeld für das auszuwählende Bild.
     \item \textit{Nucleus}: Eingabefeld für den auszuwählenden Nucleus.
     \item \textit{go to...}: Bild und Nucleus auswählen, wie in den Eingabefeldern.
-    \item \textit{Myo}: "Myotuben-Zellkern"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
-    \item \textit{Debris}: "Überreste"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
-    \item \textit{Other}: "Andere"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
-    \item \textit{Schwann}: "Schwannzellen-Zellkern"-Klasse als \ac{gt} des ausgewählten Nucleus definieren.
-    \item \textit{Save}: Speichert manuell die festgelegten \ac{gt}s ab. Die Labeling App speichert außerdem eigenständig periodisch.
+    \item \textit{Myo}: "Myotuben-Zellkern"-Klasse als Annotation des ausgewählten Nucleus definieren.
+    \item \textit{Debris}: "Überreste"-Klasse als Annotation des ausgewählten Nucleus definieren.
+    \item \textit{Other}: "Andere"-Klasse als Annotation des ausgewählten Nucleus definieren.
+    \item \textit{Schwann}: "Schwannzellen-Zellkern"-Klasse als Annotation des ausgewählten Nucleus definieren.
+    \item \textit{Save}: Speichert manuell die festgelegten Annotations ab. Die Labeling App speichert außerdem eigenständig periodisch.
     \item \textit{Overlay Myotubes (Green)}: Mit einem Haken bei "Enable" wird der Marker, der die Myotuben einfärbt, in Grün eingeblendet.
     \item \textit{Overlay Marker (Blue)}: Einer oder keiner der restlichen vorhandenen Marker wird in Blau eingeblendet. 
     \item \textit{Lower Percentile}: Unteren prozentualen Schwellwert wählen, der bei der nächsten Normalisierung angewandt werden soll.
@@ -65,9 +71,9 @@ Links neben dem Fenster befinden sich Bedienelemente mit den folgenden Funktione
 \end{itemize}
 
 Für das Backend sind einige Python-Skripte direkt im Docker mounted. 
-Da die wichtigste Anforderung der Anwendung die nutzerfreundliche Bedienung ist, sind alle Berechnungen, die während der Nutzung der Labeling App ausgeführt werden, darauf ausgelegt, die Rechenzeit zu minimieren. 
+Aufgrund der Anforderung einer nutzerfreundlichen, zeiteffizienten Bedienung, sind alle Berechnungen, die während der Nutzung der Labeling App ausgeführt werden, darauf ausgelegt, die Rechenzeit zu minimieren. 
 Hierzu werden alle Bilder und Masken bei der Initialisierung der App in den Cache geladen.
-Des Weiteren ist eine Klasse angelegt, die separat noch das aktuell ausgewählte Bild und die ausgewählte Zelle speichert. 
+Des Weiteren ist eine Python-Klasse angelegt, die separat noch das aktuell ausgewählte Bild und die ausgewählte Zelle speichert. 
 Erst wenn eine Änderung der Auswahl ausgeführt wird, wird eine neue Zelle oder ein neues gesamtes Bild geladen und selbst dann lediglich aus dem Cache. 
 
 \section{Training}

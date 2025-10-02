@@ -26,9 +26,11 @@ Das könnte daran liegen, dass die dreidimensionale Faltung räumliche Durchschn
 Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen nicht ausreichend entlang der Z-Dimension erhalten sind, was zu einer schlechten Leistung des tiefen fokusierten Schichten-Klassifikators führen würde. 
 Stattdessen könnte auch die Kombination räumlicher Merkmale und der Merkmale entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen würde.
 Da der Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
-Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Decoder das Potential mit bestimmten Merkmalsräumen besonders zu synergieren. \newline 
+Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Decoder haben das Potential mit bestimmten Merkmalsräumen besonders gut zu synergieren. \newline 
 %Vorverarbeitungsmethoden
-...\newline 
+Auch für Vorverarbeitung ist eine signifikant bessere Methode zu erkennen. 
+Den Nucleus Kanal mit der Segmentierungsmaske zu ersetzen ist signifikant besser als eine Distanztransformation auf den Kanal anzuwenden.
+Kapitel \ref{sec:MethodsClassifier} beschreibt das Risiko der Distanztransformation ist der Fortbestand von Einfluss umliegender Nuclei auf das Klassifikationsergebnis.\newline 
 %Vortrainingsmethoden
 ...\newline 
 ...

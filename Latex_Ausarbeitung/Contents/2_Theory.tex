@@ -331,5 +331,25 @@ Dieser Aufbau ist in Abb. \ref{fig:SwinArchitecture} dargestellt.
 %\cite{Liu2022a} SwinV2
 
 \section{Offene Probleme}
+Einzelne Myotuben können durch kein Segmentierungsmodell der Literatur Instanzsegmentiert werden.
+Das verhindert nicht nur das automatische Auslesen der Eigenschaften von Myothuben, sondern unter umständen auch das manuelle Auslesen.
+Selbst für Experten sind in dichten Strukturen Instanzen von Myotuben nicht immer eindeutig trennbar.
+Es ist nicht erforscht, welches Segmentierungsmodell für Nuclei das beste ist, im Bezug auf die Eignung der Segmentierungsmasken zur Extraktion von Eigenschaften der Nuclei.
+Außerdem gibt es für die speziefischen Aufnahmebedingungen und Marker der vorliegenden Daten keinen angepassten Klassifikator.
+Aufgrund der Besonderheiten der vorliegenden Daten ist das Verhalten von vortrainierten Encodern und etablierten Methoden unvorhersehbar.
+Eine weitere Fragestellung ist deshlab, wie Methoden der Klassifikation mit der Kombination der Marker umgehen. 
+Des Weiteren ist der Umgang mit dreidimensionalen Daten, besonders in Umgebungen ohne große Rechenleistung.
+Diverse Lösungen existieren, um dreidimensionale Daten mit Expertenwissen zu versehen, allerdings keine, die angepasst an die vorliegenden Aufnahmen zeitoptimiert ablaufen.
 
 \section{Zielsetzung}
+Im Zuge der vorliegenden Arbeit soll die automatische Extraktion von interpretierbaren Eigenschaften der Myotubenkulturen ermöglicht werden.
+Es soll ein optimales Segmentierungsmodell gefunden werden, das die Eigenschaften der Nuclei in den vorliegenden, dreidimensionalen Daten besonders wenig durch Segmentierungsfehler verfälscht.
+Das Segmentierungsmodell soll dann genutzt werden, um außerdem einen Ablauf zu schaffen, in dem Experten ihr Wissen zu den Klassen der Nuclei besonders zeiteffizient äußern können.
+Durch das Anreichern der dreidimensionalen Daten durch die Segmentierungsmasken und durch automatisches Fokusieren einzelner Nuclei soll sowohl die Rechenzeit optimiert werden als auch der Aufwand einzelne Nuclei entlang drei Dimensionen zu suchen eliminiert werden.
+Die enstehenden Annotationen sollen direkt in einen Trainingsablauf für Klassifikatoren eingebunden sein.
+Hierbei müssen Klassifikatoren mit dreidimensionalen Daten von variierender Tiefe umgehen können.
+Durch einen ausführlichen Methodenvergleich soll durch die Applikaton der vorliegenden Arbeit dann ein Optimum für die Klassifikation der anwesenden Nuclei gefunden werden können.
+Dieser Methodenvergleich soll auch für Nutzer*Innen ohne Programmierkenntnisse zugänglich sein.
+Außerdem sollen die entstehenden Klassifikatoren einfach ausführbar sein und die ausgelesenen Eigenschaften leicht zugänglich sein.
+In einer Parameterbestimmung soll das Optimum explizit für die vorliegenden Aufnahmen durch die vorgestellte Applikation bestimmt werden.
+Die Positionen und Klassen der Nuclei sollen dann codiert werden, um die Daten damit Anzureichern und dadurch einem Segmentierungsmodell die Instanzsegmentierung der Myotuben zu ermöglichen. 

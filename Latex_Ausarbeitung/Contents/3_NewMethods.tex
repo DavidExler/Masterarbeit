@@ -3,35 +3,60 @@
 \chapter{Neues Konzept} \label{ch:NewMethods}
 %Describe your new methods/procedure (mathematically, conceptually, comprehensibly). Change the title of this chapter if there is a term for your new methods.
 \section{Überblick}
-\textit{TODO: Graph. Abstract anpassen: Umfang von der Segmentierungsnetz-Komponentenwahl erweitern zur ganzen Arbeit, oder: Neu machen und diese Abbildung verschieben}
-\begin{itemize}
-  \item Neuheitswert
-  \item Problemstellung
-\end{itemize}
-Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. 
-Es behandelt vor allem die selbstentwickelten Beiträge zu den Methoden. 
-Zuerst wird das neue Bewertungskriterium beschrieben.
-Dieses Kriterium wird eingeführt, um die Eignung von Segmentierungsmodellen zum Extrahieren interpretierbarer Merkmale, wie die Zellkernanzahl zu bewerten
-Darauf folgt die Beschreibung der Klassifikator-Methoden.
-Die beschriebenen Methoden werden angewandt, um einen umfassenden Vergleich bezüglich der Genauigkeit entstehender Klassifikatoren durchzuführen und einen optimalen Klassifikator für die vorliegenden Daten zu erstellen.
-Da die Daten eine neue, ungesehene Kombination von Markern und Aufnahmebedingungen darstellen ist eine individuelle Anpassung eines Klassifikators auf diese Daten notwendig für die Klassifikation. 
-
+%\textit{TODO: Graph. Abstract anpassen: Umfang von der Segmentierungsnetz-Komponentenwahl erweitern zur ganzen Arbeit, oder: Neu machen und diese Abbildung verschieben}
+%\begin{itemize}
+%  \item Neuheitswert
+%  \item Problemstellung
+%\end{itemize}
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.99\linewidth]{Figures/graphAbstract_horizontal.png}
-  \caption{Graphical Abstract - Das obere Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird, das für die Anwendung der vorliegenden Arbeit eingesetzt wird. 
-  Ein peer-reviewed Benchmark-Datensatz aus dreidimensionalen Bildern (1) von diversen Zellkulturen mit dazugehörigen Ground Truths (2) wird links eingegeben. 
-  Mehrere austauschbare Segmentierungsnetze (3) führen eine Inferenz für den Benchmark aus. 
-  Die entstehenden Masken (4) werden dann zur Berechnung der neu eingeführten IPQ (siehe Kapitel \ref{sec:Kriterien}) eingesetzt. 
-  Aus jeder Maske werden hierzu die einzelnen Instanzen extrahiert, die sich mit einer einzelnen Instanz der Ground Truth überlagern (5).
-  Außerdem wird ein Fehlerbild als die logische XOR-Fläche der Maske und der Ground Truth dargestellt (6), als Platzhalter für die Berechnung der Intersection over Union.
-  Zuletzt wird zur Berechnung der IPQ ein Zuweisungsbild erstellt, das die \acp{tp}, \acp{fp} und \acp{fn} festhält (7).
-  Durch Vergleiche der Ergebnisse (8) kann dann das optimale Segmentierungsnetz für die Anwendung gewählt werden.}
+  \includegraphics[width=0.99\linewidth]{Figures/graphAbstract_flowchart.pdf}
+  \caption{Graphical Abstract - Die Abbildung zeigt den Aufbau der Applikation der vorliegenden Arbeit.
+  Die Applikation kann regulär angewandt werden (Inferenz) oder optimiert werden (Optimierung).
+  Bei der Anwendung werden 3D Daten von der Applikation als Eingabe angenommmen und interpretierbare Eigenschaften wie die Verteilung der Klassen und Volumen der anwesenden Nuclei werden ausgegeben.
+  Zur Optimierung werden die 3D Daten auf den Ablauf für den Vergleich der Segmentierungsmodelle oder der Klassifikatormethoden angewandt.
+  Für den Vergleich der Segmentierungsmodelle wird mit verschiedenen Modellen das neu eingeführte Bewertungskriterium \acf{ipq} berechnet.
+  Dieses Bewertungskriterium quantifiziert die Eignung der Segmentierungsmodelle zur Extraktion der gewünschten Eigenschaften.
+  Mithilfe der \ac{ipq}-Werte wird ein optimales Modell gewählt.
+  Die Architektur und die Parameter des optimalen Model werden in den Ablauf der Applikation eingesetzt.
+  Um die Klassifikatormethoden zu oprimieren werden die Daten und die Segmente in die neu entwickelte Labeling App eingegeben.
+  Die Labeling App ermöglicht Experten zeiteffizient Annotationen für die Klassen der Nuclei zu erstellen, indem die relevanten Bildausschnitte anhand der Segmente extrahiert werden.
+  Mit den erstellten Annotationen und den 3D Daten werden dann verschiedene Klassifikatoren trainiert.
+  Diese Klassifikatoren ergeben sich aus Kombinationen der verfügbaren Klassifikatormethoden.
+  Die Klassifikatormethoden umfassen 1. Encoderarchitekturen, 2. Decoderarchitekturen, 3. Vorverarbeitungsmethoden und 4. Vortrainingsmethoden.
+  Unter den Methoden sind sowohl etablierte, als auch neu entwickelte Ansätze.
+  Anhand der Genauigkeit der trainierten Klassifikatoren auf einem seperaten Validierungsanteil des Datensatz werden die Methoden verglichen und eine optimale Konfiguration ausgegeben.
+  Die Architektur und die Parameter dieser Konfiguration werden dann in den Ablauf der Applikation eingesetzt.
+  }
   \label{fig:graph_abstract}
 \end{figure}
+Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. 
+Es behandelt die selbstentwickelten Beiträge zu den Methoden. 
+Zuerst wird ein neu entwickeltes Bewertungskriterium für Segmentierungsmodelle beschrieben.
+Dieses Kriterium wird eingeführt, um die Eignung von Segmentierungsmodellen zum Extrahieren interpretierbarer Merkmale, wie Zellkernanzahlen oder -volumina zu bewerten.
+Darauf folgen Beschreibungen von Klassifikatormethoden.
+Die Methoden umfassen Architekturen von Encodern und Decodern, sowie Methoden der Vorverarbeitung und des Vortrainings.
+Es werden sowohl Anwendungen bestehender Methoden, als auch neu entwickelte Ansätze eingeführt.
+Verschiedene Kombinationen der eingeführten Methoden werden beispielhaft auf die Daten der vorliegenden Arbeit angewandt und die entstehenden Klassifikatoren verglichen.
+Da die Daten eine neue, ungesehene Kombination von Markern und Aufnahmebedingungen darstellen ist eine individuelle Anpassung eines Klassifikators auf diese Daten notwendig für die Klassifikation. 
+
 %Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
 
 \section{Bewertungskriterien}\label{sec:Kriterien}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.99\linewidth]{Figures/IPQ_horizontal.pdf}
+  \caption{\ac{ipq} Visualisierung - Das obere Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsnetz gewählt wird, das für die Anwendung der vorliegenden Arbeit eingesetzt wird. 
+  Ein peer-reviewed Benchmark-Datensatz aus dreidimensionalen Bildern (1) von diversen Zellkulturen mit dazugehörigen Ground Truths wird links eingegeben. 
+  Das zu bewertende Segmentierungsmodell (2) führt eine Inferenz für die Bilder des Benchmark aus, um Segmentierungsmasken (3) bereitzustellen. 
+  Die entstehenden Masken werden dann zur Berechnung der neu eingeführten \ac{ipq} (siehe Kapitel \ref{sec:Kriterien}) eingesetzt. 
+  Der Ablauf der Bewertung ist dreigeteilt.
+  Aus jeder Maske werden zuerst die einzelnen Fragmente extrahiert, die sich mit einer einzelnen Instanz der Annotation überlagern (4).
+  Außerdem wird ein Fehlerbild als die logische XOR-Fläche der Maske und der Annotation dargestellt (5), als Platzhalter für die Berechnung der Intersection over Union.
+  Zuletzt wird zur ein Zuweisungsbild erstellt, das die \acp{tp}, \acp{fp} und \acp{fn} festhält (6).
+  Durch Vergleiche der Ergebnisse verschiedener Modelle kann dann das optimale Segmentierungsnetz für die Anwendung gewählt werden.}
+  \label{fig:ipq}
+\end{figure}
 Zur Wahl des Segmentierungsmodells wird ein neues Bewertungskriterium eingeführt und auf einem annotierten Datensatz getestet.
 Als Datensatz wird aus den in Kapitel \ref{sec:bench} vorgestellten Benchmarks der S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset} genutzt, da dieser nicht in den Trainingsdaten eines zu testenden Segmentierungsnetz vorkommt.
 Im Gegensatz zu selbstentwickelten synthetischen Daten weicht die Bilddomäne dieses Benchmarks zwar stärker von der Domäne der Zieldaten ab, aber dafür sind die Daten an eine Veröffentlichung mit standardisiertem Peer-Review-Prozess gebunden.\newline

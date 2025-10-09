@@ -1,4 +1,4 @@
-% !TeX root = thesis.tex
+% !TeX root = Thesis.tex
 
 
 \documentclass[12pt, table, twoside, headsepline, openright, english, fleqn,numbers=noenddot]{scrreprt}
@@ -23,20 +23,38 @@
 	scrlayer-scrpage,
 	setspace,
 	siunitx,
-	subfig,
+	%subfig,
 	tabu,
 	threeparttablex,
 	unicode-math,
 	url,
 	wallpaper,
-	xparse
+	xparse,
+	subcaption,
+	longtable
 }
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
-\usepackage[main=english, ngerman]{babel}
+\usepackage[main=ngerman, english]{babel}
 \usepackage[xspace]{ellipsis}
 \usepackage[nottoc, notlot, notlof, chapter]{tocbibind}
+
+%algorithm
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% Befehle auf Deutsch anpassen
+\renewcommand{\algorithmicrequire}{\textbf{Eingabe:}}
+\renewcommand{\algorithmicensure}{\textbf{Ausgabe:}}
+\renewcommand{\algorithmicfor}{\textbf{Für}}
+\renewcommand{\algorithmicendfor}{\textbf{EndeFür}}
+\renewcommand{\algorithmicif}{\textbf{Wenn}}
+\renewcommand{\algorithmicthen}{\textbf{dann}}
+\renewcommand{\algorithmicendif}{\textbf{EndeWenn}}
+\renewcommand{\algorithmicreturn}{\textbf{Rückgabe}}
+\renewcommand{\algorithmicdo}{\textbf{tue}}
+
 
 % Fonts
 \usepackage{libertine}
@@ -89,8 +107,8 @@
 
 
 % References
-\usepackage[backend=biber, style=ieee]{biblatex}
-%\usepackage[backend=biber, style=numeric]{biblatex}
+%\usepackage[backend=biber, style=ieee]{biblatex}
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
 %\usepackage[backend=biber, style=apa]{biblatex}
 %\DeclareLanguageMapping{ngerman}{english-apa}
 %\DeclareLanguageMapping{english}{english-apa}
@@ -146,7 +164,7 @@
 
 
 % Autorefnames
-\addto\extrasenglish{% \extrasngerman for German language
+\addto\extrasngerman{% \extrasenglish for German language
 	\renewcommand{\equationautorefname}{Eq.}%
 	\renewcommand{\chapterautorefname}{Chapter}%
 }
@@ -154,7 +172,7 @@
 
 % siunitx
 \sisetup{
-	locale=UK, % locale=DE for German language
+	locale=DE, % locale=DE for German language
 	separate-uncertainty,
 	exponent-product=\cdot
 }

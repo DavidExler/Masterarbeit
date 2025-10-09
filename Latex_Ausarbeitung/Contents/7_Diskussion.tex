@@ -1,0 +1,36 @@
+% !TeX root = ../Thesis.tex
+
+\chapter{Diskussion}\label{ch:Discussion}
+%Repeat the problem and its relevance, as well as the contribution (plus quantitative results). Look back at what you have written in the introduction. 
+
+\section{Überblick}
+
+\section{Segmentierung}
+Durch einen Vergleich der Masken mit der \ac{gt} in Abb. \ref{fig:boxplots_ipq} und ihren zugehörigen Ergebnissen der einzelnen Bewertungskriterien sind die Schwächen und Stärken der individuellen Netze ersichtlich.
+Die nnUNet-Masken sind sichtbar kleiner als die Nucleus-Instanzen, was eine schlechte Segmentierungsqualität bedingt.
+Oft zerteilen mehrere nnuNet-Masken eine Nucleus-Instanz, was von der Injektiven Qualität bestraft wird.
+Wie auch die gute Recognition Qualität zeigt, findet dafür nnUNet sehr zuverlässig die anwesenden Nuclei mit mindestens einer Maske.
+Deepcell (siehe Abb. \ref{fig:DeepcellMaske}) übersegmentiert die Nuclei, wodurch die Segmentierungsqualität stark abnimmt.
+Das Ergebnis sind Masken, die zu groß sind und oft mehr als einen Nucleus enthalten.
+Das bedeutet auch, dass einige Nuclei nicht von einer eigenen Maske gefunden werden, was sie als \ac{fn}-Instanzen kategorisiert und eine schlechte Recognition Qualität bedingt.
+Durch diese Übersegmentierung wird vermieden, dass Instanzen der \ac{gt} durch die Deepcell-Masken geteilt werden, was zu einer guten Injektiven Qualität führt.
+
+\section{Klassifikation}
+Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Decodern, Vorverarbeitungsmethoden und Vortrainingsmethoden legt einige Aussagen über Effektivität der Methoden nahe.
+%Encoder
+\newline 
+%Decodern
+Der Volumen-Klassifikator ist signifikant besser als der Schichten-Klassifikator (siehe Kapitel \ref{sec:resultsClassifier}).
+Dieses Erkenntnis legt nahe, dass die dreidimensionalen Faltungsschichten besser den zusammenhang der Merkmale erfassen können, als der Attention-Mechanismus des Schichten-Klassifikators.
+Das könnte daran liegen, dass die dreidimensionale Faltung räumliche Durchschnittswerte nur mit gelernten Gewichten durchführt, während die Spatial Average Operation großflächig die räumliche Beziehung der Merkmale vernachlässigt.
+Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen nicht ausreichend entlang der Z-Dimension erhalten sind, was zu einer schlechten Leistung des tiefen fokusierten Schichten-Klassifikators führen würde. 
+Stattdessen könnte auch die Kombination räumlicher Merkmale und der Merkmale entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen würde.
+Da der Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
+Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Decoder haben das Potential mit bestimmten Merkmalsräumen besonders gut zu synergieren. \newline 
+%Vorverarbeitungsmethoden
+Auch für Vorverarbeitung ist eine signifikant bessere Methode zu erkennen. 
+Den Nucleus Kanal mit der Segmentierungsmaske zu ersetzen ist signifikant besser als eine Distanztransformation auf den Kanal anzuwenden.
+Kapitel \ref{sec:MethodsClassifier} beschreibt das Risiko der Distanztransformation ist der Fortbestand von Einfluss umliegender Nuclei auf das Klassifikationsergebnis.\newline 
+%Vortrainingsmethoden
+...\newline 
+...

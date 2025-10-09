@@ -2,6 +2,337 @@
 
 
 \appendix
+\chapter{Appendix}\label{ch:app}
+
+\section{SWINV2 Architektur}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{Figures/SWINV2_Architecture.png}
+    \caption{\textbf{Swin Transformer V2} Architektur \cite{Liu2022a}. 
+    Ein Bildfenster $z$ und dessen relative Koordinaten im Bild $\Delta x$ und $\Delta y$ werden in einem Attention-Mechanismus zusammengeführt.
+    Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax-Funktion \cite{Bridle1989} und elementweiser Multiplikation sowie Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
+    Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2} Block.}
+    \label{fig:SwinArchitecture}
+\end{figure}
+
+\section{\ac{ipq}-Ergebnisse}\label{supp:ipq}
+
+
+
+\begin{longtable}{rccc @{\hskip 1cm} rccc}
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endfirsthead
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endhead
+    1 & 0.315 & 0.082 & 0.010 & 2 & 0.349 & 0.066 & 0.015 \\
+    3 & 0.326 & 0.139 & 0.008 & 4 & 0.405 & 0.138 & 0.017 \\
+    5 & 0.313 & 0.082 & 0.006 & 6 & 0.323 & 0.139 & 0.008 \\
+    7 & 0.349 & 0.066 & 0.015 & 8 & 0.406 & 0.139 & 0.018 \\
+    9 & 0.656 & 0.249 & 0.013 & 10 & 0.449 & 0.052 & 0.026 \\
+    11 & 0.500 & 0.056 & 0.022 & 12 & 0.500 & 0.056 & 0.025 \\
+    13 & 0.452 & 0.052 & 0.026 & 14 & 0.645 & 0.039 & 0.063 \\
+    15 & 0.529 & 0.056 & 0.112 & 16 & 0.645 & 0.039 & 0.063 \\
+    17 & 0.529 & 0.056 & 0.112 & 18 & 0.670 & 0.148 & 0.058 \\
+    19 & 0.304 & 0.048 & 0.015 & 20 & 0.297 & 0.197 & 0.013 \\
+    21 & 0.464 & 0.058 & 0.077 & 22 & 0.604 & 0.086 & 0.021 \\
+    23 & 0.516 & 0.114 & 0.029 & 24 & 0.585 & 0.151 & 0.057 \\
+    25 & 0.544 & 0.115 & 0.029 & 26 & 0.507 & 0.097 & 0.017 \\
+    27 & 0.576 & 0.172 & 0.030 & 28 & 0.502 & 0.118 & 0.030 \\
+    29 & 0.697 & 0.022 & 0.040 & 30 & 0.627 & 0.025 & 0.014 \\
+    31 & 0.646 & 0.023 & 0.031 & 32 & 0.613 & 0.029 & 0.030 \\
+    33 & 0.586 & 0.143 & 0.022 & 34 & 0.874 & 0.149 & 0.141 \\
+    35 & 0.862 & 0.159 & 0.054 & 36 & 0.868 & 0.180 & 0.080 \\
+    37 & 0.879 & 0.148 & 0.079 & 38 & 0.854 & 0.131 & 0.154 \\
+    39 & 0.852 & 0.167 & 0.121 & 40 & 0.874 & 0.210 & 0.044 \\
+    41 & 0.846 & 0.222 & 0.095 & 42 & 0.881 & 0.143 & 0.096 \\
+    43 & 0.876 & 0.160 & 0.109 & 44 & 0.880 & 0.139 & 0.067 \\
+    45 & 0.860 & 0.149 & 0.104 & 46 & 0.838 & 0.121 & 0.099 \\
+    47 & 0.872 & 0.146 & 0.113 & 48 & 0.852 & 0.138 & 0.080 \\
+    49 & 0.863 & 0.174 & 0.098 & 50 & 0.867 & 0.162 & 0.094 \\
+    51 & 0.854 & 0.142 & 0.091 & 52 & 0.872 & 0.199 & 0.118 \\
+    53 & 0.871 & 0.134 & 0.121 & 54 & 0.873 & 0.154 & 0.076 \\
+    55 & 0.877 & 0.157 & 0.114 & 56 & 0.880 & 0.135 & 0.126 \\
+    57 & 0.857 & 0.148 & 0.075 & 58 & 0.861 & 0.183 & 0.099 \\
+    59 & 0.865 & 0.151 & 0.085 & 60 & 0.850 & 0.184 & 0.085 \\
+    61 & 0.857 & 0.170 & 0.154 & 62 & 0.881 & 0.160 & 0.097 \\
+    63 & 0.851 & 0.113 & 0.102 & 64 & 0.861 & 0.173 & 0.170 \\
+    65 & 0.885 & 0.119 & 0.105 & 66 & 0.875 & 0.185 & 0.144 \\
+    67 & 0.863 & 0.169 & 0.084 & 68 & 0.853 & 0.171 & 0.129 \\
+    69 & 0.850 & 0.154 & 0.158 & 70 & 0.867 & 0.146 & 0.110 \\
+    71 & 0.859 & 0.139 & 0.132 & 72 & 0.856 & 0.133 & 0.153 \\
+    73 & 0.898 & 0.114 & 0.094 & 74 & 0.879 & 0.123 & 0.098 \\
+    75 & 0.860 & 0.233 & 0.117 & 76 & 0.879 & 0.162 & 0.138 \\
+    77 & 0.855 & 0.133 & 0.099 & 78 & 0.842 & 0.185 & 0.137 \\
+    79 & 0.876 & 0.167 & 0.137 & 80 & 0.872 & 0.154 & 0.117 \\
+    81 & 0.880 & 0.161 & 0.088 & 82 & 0.879 & 0.160 & 0.142 \\
+    83 & 0.879 & 0.124 & 0.106 & 84 & 0.869 & 0.141 & 0.096 \\
+    85 & 0.856 & 0.158 & 0.100 & 86 & 0.837 & 0.163 & 0.062 \\
+    87 & 0.863 & 0.149 & 0.108 & 88 & 0.867 & 0.187 & 0.119 \\
+    89 & 0.874 & 0.135 & 0.086 & 90 & 0.845 & 0.141 & 0.099 \\
+    91 & 0.860 & 0.181 & 0.199 & 92 & 0.868 & 0.168 & 0.111 \\
+    93 & 0.828 & 0.139 & 0.131 & 94 & 0.858 & 0.146 & 0.084 \\
+    95 & 0.886 & 0.144 & 0.093 & 96 & 0.863 & 0.115 & 0.102 \\
+    97 & 0.862 & 0.139 & 0.112 & 98 & 0.863 & 0.123 & 0.133 \\
+    99 & 0.856 & 0.168 & 0.130 & 100 & 0.875 & 0.129 & 0.111 \\
+    101 & 0.870 & 0.150 & 0.077 & 102 & 0.863 & 0.142 & 0.092 \\
+    103 & 0.843 & 0.145 & 0.125 & 104 & 0.856 & 0.161 & 0.197 \\
+    105 & 0.879 & 0.143 & 0.091 & 106 & 0.873 & 0.135 & 0.142 \\
+    107 & 0.870 & 0.148 & 0.105 & 108 & 0.845 & 0.143 & 0.055 \\
+    109 & 0.869 & 0.177 & 0.097 & 110 & 0.855 & 0.171 & 0.112 \\
+    111 & 0.894 & 0.143 & 0.118 & 112 & 0.865 & 0.130 & 0.051 \\
+    113 & 0.863 & 0.175 & 0.112 & 114 & 0.884 & 0.154 & 0.116 \\
+    115 & 0.848 & 0.137 & 0.099 & 116 & 0.874 & 0.154 & 0.104 \\
+    117 & 0.857 & 0.171 & 0.061 & 118 & 0.876 & 0.137 & 0.091 \\
+    119 & 0.871 & 0.143 & 0.050 & 120 & 0.872 & 0.151 & 0.111 \\
+    121 & 0.876 & 0.128 & 0.138 & 122 & 0.873 & 0.180 & 0.104 \\
+    123 & 0.857 & 0.170 & 0.108 & 124 & 0.870 & 0.185 & 0.131 \\
+    125 & 0.861 & 0.183 & 0.085 & 126 & 0.577 & 0.050 & 0.078 \\
+    127 & 0.560 & 0.107 & 0.037 & 128 & 0.572 & 0.090 & 0.037 \\
+    129 & 0.585 & 0.113 & 0.059 & 130 & 0.591 & 0.088 & 0.013 \\
+    \bottomrule
+    \caption{Einzelne SQ-Ergebnisse von jedem Segmentierungsnetz}
+\end{longtable}
+    
+    
+\begin{longtable}{rccc @{\hskip 1cm} rccc}
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endfirsthead
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endhead
+    1 & 0.794 & 0.741 & 0.271 & 2 & 0.958 & 0.872 & 0.176 \\
+    3 & 0.808 & 0.722 & 0.212 & 4 & 0.946 & 0.845 & 0.225 \\
+    5 & 0.797 & 0.739 & 0.275 & 6 & 0.814 & 0.716 & 0.222 \\
+    7 & 0.961 & 0.868 & 0.179 & 8 & 0.950 & 0.839 & 0.225 \\
+    9 & 0.844 & 0.664 & 0.347 & 10 & 0.942 & 0.565 & 0.509 \\
+    11 & 0.862 & 0.760 & 0.430 & 12 & 0.862 & 0.769 & 0.382 \\
+    13 & 0.937 & 0.570 & 0.514 & 14 & 0.902 & 0.892 & 0.306 \\
+    15 & 0.953 & 0.921 & 0.347 & 16 & 0.902 & 0.892 & 0.306 \\
+    17 & 0.953 & 0.921 & 0.347 & 18 & 0.663 & 0.688 & 0.453 \\
+    19 & 0.702 & 0.751 & 0.308 & 20 & 0.773 & 0.712 & 0.184 \\
+    21 & 0.773 & 0.825 & 0.144 & 22 & 0.956 & 0.930 & 0.167 \\
+    23 & 0.947 & 0.813 & 0.341 & 24 & 0.922 & 0.789 & 0.452 \\
+    25 & 0.945 & 0.879 & 0.346 & 26 & 0.935 & 0.821 & 0.348 \\
+    27 & 0.964 & 0.824 & 0.329 & 28 & 0.904 & 0.783 & 0.418 \\
+    29 & 0.937 & 0.948 & 0.323 & 30 & 0.947 & 0.870 & 0.346 \\
+    31 & 0.930 & 0.918 & 0.381 & 32 & 0.938 & 0.903 & 0.321 \\
+    33 & 0.980 & 0.804 & 0.532 & 34 & 0.847 & 0.937 & 0.261 \\
+    35 & 0.872 & 0.909 & 0.300 & 36 & 0.833 & 0.927 & 0.218 \\
+    37 & 0.813 & 0.943 & 0.295 & 38 & 0.862 & 0.957 & 0.289 \\
+    39 & 0.816 & 0.951 & 0.229 & 40 & 0.820 & 0.940 & 0.196 \\
+    41 & 0.819 & 0.914 & 0.259 & 42 & 0.826 & 0.951 & 0.308 \\
+    43 & 0.820 & 0.953 & 0.330 & 44 & 0.794 & 0.881 & 0.168 \\
+    45 & 0.823 & 0.944 & 0.206 & 46 & 0.867 & 0.890 & 0.158 \\
+    47 & 0.862 & 0.930 & 0.283 & 48 & 0.843 & 0.940 & 0.364 \\
+    49 & 0.870 & 0.909 & 0.149 & 50 & 0.813 & 0.906 & 0.263 \\
+    51 & 0.761 & 0.945 & 0.294 & 52 & 0.813 & 0.901 & 0.323 \\
+    53 & 0.826 & 0.947 & 0.227 & 54 & 0.877 & 0.935 & 0.178 \\
+    55 & 0.877 & 0.940 & 0.275 & 56 & 0.847 & 0.961 & 0.168 \\
+    57 & 0.864 & 0.935 & 0.265 & 58 & 0.833 & 0.950 & 0.224 \\
+    59 & 0.813 & 0.943 & 0.250 & 60 & 0.829 & 0.908 & 0.267 \\
+    61 & 0.872 & 0.941 & 0.283 & 62 & 0.826 & 0.960 & 0.226 \\
+    63 & 0.816 & 0.943 & 0.082 & 64 & 0.857 & 0.950 & 0.289 \\
+    65 & 0.800 & 0.910 & 0.263 & 66 & 0.840 & 0.937 & 0.330 \\
+    67 & 0.855 & 0.952 & 0.317 & 68 & 0.816 & 0.942 & 0.176 \\
+    69 & 0.872 & 0.945 & 0.200 & 70 & 0.794 & 0.933 & 0.235 \\
+    71 & 0.864 & 0.943 & 0.294 & 72 & 0.836 & 0.933 & 0.217 \\
+    73 & 0.840 & 0.973 & 0.272 & 74 & 0.800 & 0.947 & 0.286 \\
+    75 & 0.862 & 0.931 & 0.182 & 76 & 0.893 & 0.943 & 0.220 \\
+    77 & 0.833 & 0.928 & 0.238 & 78 & 0.911 & 0.935 & 0.222 \\
+    79 & 0.862 & 0.919 & 0.174 & 80 & 0.847 & 0.908 & 0.229 \\
+    81 & 0.794 & 0.945 & 0.224 & 82 & 0.893 & 0.963 & 0.323 \\
+    83 & 0.870 & 0.952 & 0.206 & 84 & 0.791 & 0.908 & 0.240 \\
+    85 & 0.887 & 0.935 & 0.272 & 86 & 0.847 & 0.936 & 0.218 \\
+    87 & 0.909 & 0.937 & 0.162 & 88 & 0.909 & 0.927 & 0.348 \\
+    89 & 0.806 & 0.933 & 0.289 & 90 & 0.773 & 0.920 & 0.168 \\
+    91 & 0.806 & 0.924 & 0.152 & 92 & 0.840 & 0.933 & 0.289 \\
+    93 & 0.852 & 0.927 & 0.271 & 94 & 0.813 & 0.917 & 0.118 \\
+    95 & 0.820 & 0.962 & 0.296 & 96 & 0.833 & 0.966 & 0.268 \\
+    97 & 0.823 & 0.950 & 0.351 & 98 & 0.895 & 0.945 & 0.326 \\
+    99 & 0.872 & 0.939 & 0.217 & 100 & 0.870 & 0.938 & 0.377 \\
+    101 & 0.813 & 0.937 & 0.240 & 102 & 0.829 & 0.934 & 0.245 \\
+    103 & 0.926 & 0.940 & 0.240 & 104 & 0.850 & 0.927 & 0.220 \\
+    105 & 0.877 & 0.942 & 0.204 & 106 & 0.877 & 0.935 & 0.213 \\
+    107 & 0.820 & 0.943 & 0.215 & 108 & 0.812 & 0.952 & 0.320 \\
+    109 & 0.781 & 0.929 & 0.255 & 110 & 0.872 & 0.948 & 0.275 \\
+    111 & 0.847 & 0.949 & 0.261 & 112 & 0.826 & 0.939 & 0.278 \\
+    113 & 0.862 & 0.951 & 0.214 & 114 & 0.820 & 0.941 & 0.365 \\
+    115 & 0.864 & 0.933 & 0.220 & 116 & 0.840 & 0.922 & 0.317 \\
+    117 & 0.885 & 0.941 & 0.216 & 118 & 0.847 & 0.908 & 0.305 \\
+    119 & 0.862 & 0.927 & 0.226 & 120 & 0.847 & 0.913 & 0.237 \\
+    121 & 0.800 & 0.909 & 0.235 & 122 & 0.820 & 0.935 & 0.274 \\
+    123 & 0.864 & 0.937 & 0.267 & 124 & 0.862 & 0.938 & 0.364 \\
+    125 & 0.840 & 0.893 & 0.280 & 126 & 0.984 & 0.876 & 0.267 \\
+    127 & 0.922 & 0.797 & 0.305 & 128 & 0.958 & 0.808 & 0.476 \\
+    129 & 0.934 & 0.780 & 0.528 & 130 & 0.922 & 0.832 & 0.481 \\
+    \bottomrule
+    \caption{Einzelne RQ-Ergebnisse von jedem Segmentierungsnetz}
+\end{longtable}
+    
+    
+\begin{longtable}{rccc @{\hskip 1cm} rccc}
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endfirsthead
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endhead
+    1 & 0.826 & 0.429 & 1.000 & 2 & 0.748 & 0.389 & 1.000 \\
+    3 & 0.894 & 0.506 & 1.000 & 4 & 0.861 & 0.458 & 1.000 \\
+    5 & 0.832 & 0.439 & 1.000 & 6 & 0.900 & 0.520 & 1.000 \\
+    7 & 0.753 & 0.395 & 1.000 & 8 & 0.869 & 0.474 & 1.000 \\
+    9 & 0.992 & 0.673 & 1.000 & 10 & 0.991 & 0.689 & 1.000 \\
+    11 & 0.957 & 0.401 & 1.000 & 12 & 0.954 & 0.385 & 1.000 \\
+    13 & 0.991 & 0.685 & 1.000 & 14 & 0.966 & 0.320 & 0.991 \\
+    15 & 0.840 & 0.242 & 0.986 & 16 & 0.966 & 0.320 & 0.991 \\
+    17 & 0.840 & 0.242 & 0.986 & 18 & 0.986 & 0.405 & 1.000 \\
+    19 & 0.712 & 0.334 & 0.987 & 20 & 0.932 & 0.570 & 1.000 \\
+    21 & 0.838 & 0.171 & 0.985 & 22 & 0.875 & 0.233 & 1.000 \\
+    23 & 0.950 & 0.505 & 1.000 & 24 & 0.944 & 0.400 & 0.987 \\
+    25 & 0.933 & 0.447 & 1.000 & 26 & 0.909 & 0.427 & 1.000 \\
+    27 & 0.959 & 0.541 & 1.000 & 28 & 0.940 & 0.501 & 1.000 \\
+    29 & 0.957 & 0.143 & 1.000 & 30 & 0.954 & 0.307 & 1.000 \\
+    31 & 0.954 & 0.201 & 1.000 & 32 & 0.935 & 0.277 & 1.000 \\
+    33 & 0.935 & 0.416 & 1.000 & 34 & 1.000 & 0.261 & 1.000 \\
+    35 & 0.985 & 0.324 & 1.000 & 36 & 1.000 & 0.326 & 0.968 \\
+    37 & 1.000 & 0.301 & 1.000 & 38 & 1.000 & 0.261 & 0.985 \\
+    39 & 0.986 & 0.321 & 1.000 & 40 & 1.000 & 0.365 & 1.000 \\
+    41 & 0.972 & 0.405 & 0.986 & 42 & 1.000 & 0.280 & 1.000 \\
+    43 & 1.000 & 0.308 & 1.000 & 44 & 1.000 & 0.283 & 1.000 \\
+    45 & 0.986 & 0.279 & 1.000 & 46 & 0.968 & 0.238 & 1.000 \\
+    47 & 1.000 & 0.281 & 1.000 & 48 & 0.985 & 0.261 & 1.000 \\
+    49 & 1.000 & 0.307 & 1.000 & 50 & 1.000 & 0.308 & 1.000 \\
+    51 & 0.985 & 0.275 & 1.000 & 52 & 1.000 & 0.368 & 0.984 \\
+    53 & 1.000 & 0.251 & 1.000 & 54 & 1.000 & 0.281 & 1.000 \\
+    55 & 1.000 & 0.302 & 0.986 & 56 & 1.000 & 0.253 & 1.000 \\
+    57 & 0.984 & 0.272 & 1.000 & 58 & 1.000 & 0.339 & 1.000 \\
+    59 & 1.000 & 0.316 & 1.000 & 60 & 0.986 & 0.363 & 1.000 \\
+    61 & 0.985 & 0.309 & 1.000 & 62 & 1.000 & 0.330 & 1.000 \\
+    63 & 0.983 & 0.211 & 1.000 & 64 & 0.986 & 0.312 & 0.971 \\
+    65 & 1.000 & 0.235 & 1.000 & 66 & 1.000 & 0.343 & 1.000 \\
+    67 & 1.000 & 0.324 & 1.000 & 68 & 0.984 & 0.311 & 1.000 \\
+    69 & 0.984 & 0.286 & 1.000 & 70 & 1.000 & 0.267 & 1.000 \\
+    71 & 0.985 & 0.265 & 0.985 & 72 & 0.983 & 0.244 & 1.000 \\
+    73 & 1.000 & 0.213 & 0.985 & 74 & 1.000 & 0.240 & 1.000 \\
+    75 & 1.000 & 0.420 & 1.000 & 76 & 1.000 & 0.291 & 0.984 \\
+    77 & 0.986 & 0.264 & 1.000 & 78 & 0.985 & 0.340 & 1.000 \\
+    79 & 1.000 & 0.304 & 1.000 & 80 & 1.000 & 0.305 & 1.000 \\
+    81 & 1.000 & 0.311 & 1.000 & 82 & 1.000 & 0.302 & 0.986 \\
+    83 & 1.000 & 0.234 & 1.000 & 84 & 0.984 & 0.256 & 1.000 \\
+    85 & 0.986 & 0.323 & 0.986 & 86 & 0.970 & 0.322 & 1.000 \\
+    87 & 1.000 & 0.278 & 0.984 & 88 & 1.000 & 0.335 & 1.000 \\
+    89 & 1.000 & 0.271 & 1.000 & 90 & 0.983 & 0.267 & 1.000 \\
+    91 & 0.984 & 0.331 & 1.000 & 92 & 1.000 & 0.278 & 1.000 \\
+    93 & 0.970 & 0.276 & 0.985 & 94 & 1.000 & 0.275 & 1.000 \\
+    95 & 1.000 & 0.269 & 0.986 & 96 & 1.000 & 0.228 & 1.000 \\
+    97 & 0.985 & 0.262 & 1.000 & 98 & 0.983 & 0.239 & 1.000 \\
+    99 & 0.984 & 0.293 & 1.000 & 100 & 1.000 & 0.258 & 0.985 \\
+    101 & 1.000 & 0.284 & 1.000 & 102 & 0.984 & 0.258 & 1.000 \\
+    103 & 0.985 & 0.281 & 1.000 & 104 & 0.983 & 0.278 & 1.000 \\
+    105 & 1.000 & 0.276 & 1.000 & 106 & 1.000 & 0.245 & 0.966 \\
+    107 & 1.000 & 0.275 & 1.000 & 108 & 0.971 & 0.282 & 1.000 \\
+    109 & 1.000 & 0.325 & 0.985 & 110 & 0.985 & 0.328 & 0.985 \\
+    111 & 1.000 & 0.249 & 1.000 & 112 & 1.000 & 0.263 & 1.000 \\
+    113 & 1.000 & 0.320 & 1.000 & 114 & 1.000 & 0.300 & 0.985 \\
+    115 & 0.985 & 0.256 & 0.970 & 116 & 1.000 & 0.303 & 0.986 \\
+    117 & 1.000 & 0.306 & 1.000 & 118 & 1.000 & 0.288 & 0.986 \\
+    119 & 1.000 & 0.278 & 1.000 & 120 & 1.000 & 0.296 & 1.000 \\
+    121 & 1.000 & 0.256 & 1.000 & 122 & 1.000 & 0.316 & 1.000 \\
+    123 & 0.986 & 0.342 & 1.000 & 124 & 1.000 & 0.325 & 1.000 \\
+    125 & 1.000 & 0.349 & 1.000 & 126 & 0.979 & 0.287 & 1.000 \\
+    127 & 0.923 & 0.361 & 1.000 & 128 & 0.975 & 0.465 & 1.000 \\
+    129 & 0.969 & 0.540 & 1.000 & 130 & 0.938 & 0.442 & 1.000 \\
+    \bottomrule
+    \caption{Einzelne IQ-Ergebnisse von jedem Segmentierungsnetz}
+\end{longtable}
+    
+    
+\begin{longtable}{rccc @{\hskip 1cm} rccc}
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endfirsthead
+    \toprule
+    Bild & CellposeSAM & nnUNet & Deepcell & Bild & CellposeSAM & nnUNet & Deepcell \\
+    \midrule
+    \endhead
+    1 & 0.207 & 0.026 & 0.003 & 2 & 0.250 & 0.022 & 0.003 \\
+    3 & 0.235 & 0.051 & 0.002 & 4 & 0.330 & 0.053 & 0.004 \\
+    5 & 0.207 & 0.027 & 0.002 & 6 & 0.237 & 0.052 & 0.002 \\
+    7 & 0.253 & 0.023 & 0.003 & 8 & 0.335 & 0.055 & 0.004 \\
+    9 & 0.549 & 0.112 & 0.005 & 10 & 0.419 & 0.020 & 0.013 \\
+    11 & 0.412 & 0.017 & 0.009 & 12 & 0.411 & 0.016 & 0.010 \\
+    13 & 0.419 & 0.020 & 0.013 & 14 & 0.563 & 0.011 & 0.019 \\
+    15 & 0.424 & 0.013 & 0.038 & 16 & 0.563 & 0.011 & 0.019 \\
+    17 & 0.424 & 0.013 & 0.038 & 18 & 0.438 & 0.041 & 0.026 \\
+    19 & 0.152 & 0.012 & 0.005 & 20 & 0.214 & 0.080 & 0.002 \\
+    21 & 0.300 & 0.008 & 0.011 & 22 & 0.505 & 0.019 & 0.003 \\
+    23 & 0.464 & 0.047 & 0.010 & 24 & 0.509 & 0.048 & 0.025 \\
+    25 & 0.480 & 0.045 & 0.010 & 26 & 0.431 & 0.034 & 0.006 \\
+    27 & 0.532 & 0.077 & 0.010 & 28 & 0.426 & 0.046 & 0.012 \\
+    29 & 0.625 & 0.003 & 0.013 & 30 & 0.566 & 0.007 & 0.005 \\
+    31 & 0.573 & 0.004 & 0.012 & 32 & 0.537 & 0.007 & 0.010 \\
+    33 & 0.537 & 0.048 & 0.012 & 34 & 0.741 & 0.036 & 0.037 \\
+    35 & 0.741 & 0.047 & 0.016 & 36 & 0.724 & 0.054 & 0.017 \\
+    37 & 0.714 & 0.042 & 0.023 & 38 & 0.736 & 0.033 & 0.044 \\
+    39 & 0.685 & 0.051 & 0.028 & 40 & 0.717 & 0.072 & 0.009 \\
+    41 & 0.673 & 0.082 & 0.024 & 42 & 0.728 & 0.038 & 0.030 \\
+    43 & 0.718 & 0.047 & 0.036 & 44 & 0.699 & 0.035 & 0.011 \\
+    45 & 0.697 & 0.039 & 0.021 & 46 & 0.703 & 0.026 & 0.016 \\
+    47 & 0.752 & 0.038 & 0.032 & 48 & 0.708 & 0.034 & 0.029 \\
+    49 & 0.751 & 0.049 & 0.015 & 50 & 0.705 & 0.045 & 0.025 \\
+    51 & 0.640 & 0.037 & 0.027 & 52 & 0.709 & 0.066 & 0.038 \\
+    53 & 0.720 & 0.032 & 0.027 & 54 & 0.765 & 0.040 & 0.014 \\
+    55 & 0.769 & 0.045 & 0.031 & 56 & 0.746 & 0.033 & 0.021 \\
+    57 & 0.729 & 0.038 & 0.020 & 58 & 0.717 & 0.059 & 0.022 \\
+    59 & 0.703 & 0.045 & 0.021 & 60 & 0.695 & 0.061 & 0.023 \\
+    61 & 0.736 & 0.049 & 0.043 & 62 & 0.728 & 0.051 & 0.022 \\
+    63 & 0.683 & 0.022 & 0.008 & 64 & 0.728 & 0.051 & 0.048 \\
+    65 & 0.708 & 0.026 & 0.027 & 66 & 0.736 & 0.059 & 0.048 \\
+    67 & 0.737 & 0.052 & 0.027 & 68 & 0.684 & 0.050 & 0.023 \\
+    69 & 0.729 & 0.042 & 0.032 & 70 & 0.688 & 0.036 & 0.026 \\
+    71 & 0.731 & 0.035 & 0.038 & 72 & 0.704 & 0.030 & 0.033 \\
+    73 & 0.754 & 0.024 & 0.025 & 74 & 0.703 & 0.028 & 0.028 \\
+    75 & 0.741 & 0.091 & 0.021 & 76 & 0.785 & 0.044 & 0.030 \\
+    77 & 0.703 & 0.033 & 0.023 & 78 & 0.755 & 0.059 & 0.030 \\
+    79 & 0.755 & 0.047 & 0.024 & 80 & 0.739 & 0.043 & 0.027 \\
+    81 & 0.698 & 0.047 & 0.020 & 82 & 0.785 & 0.047 & 0.045 \\
+    83 & 0.764 & 0.028 & 0.022 & 84 & 0.676 & 0.033 & 0.023 \\
+    85 & 0.749 & 0.048 & 0.027 & 86 & 0.688 & 0.049 & 0.014 \\
+    87 & 0.785 & 0.039 & 0.017 & 88 & 0.789 & 0.058 & 0.041 \\
+    89 & 0.705 & 0.034 & 0.025 & 90 & 0.642 & 0.035 & 0.017 \\
+    91 & 0.682 & 0.055 & 0.030 & 92 & 0.730 & 0.044 & 0.032 \\
+    93 & 0.684 & 0.036 & 0.035 & 94 & 0.698 & 0.037 & 0.010 \\
+    95 & 0.726 & 0.037 & 0.027 & 96 & 0.719 & 0.025 & 0.027 \\
+    97 & 0.699 & 0.035 & 0.039 & 98 & 0.759 & 0.028 & 0.043 \\
+    99 & 0.734 & 0.046 & 0.028 & 100 & 0.761 & 0.031 & 0.041 \\
+    101 & 0.707 & 0.040 & 0.019 & 102 & 0.704 & 0.034 & 0.022 \\
+    103 & 0.769 & 0.038 & 0.030 & 104 & 0.715 & 0.042 & 0.043 \\
+    105 & 0.771 & 0.037 & 0.019 & 106 & 0.765 & 0.031 & 0.029 \\
+    107 & 0.714 & 0.038 & 0.023 & 108 & 0.666 & 0.038 & 0.018 \\
+    109 & 0.679 & 0.053 & 0.024 & 110 & 0.735 & 0.053 & 0.030 \\
+    111 & 0.758 & 0.034 & 0.031 & 112 & 0.715 & 0.032 & 0.014 \\
+    113 & 0.744 & 0.053 & 0.024 & 114 & 0.724 & 0.044 & 0.042 \\
+    115 & 0.722 & 0.033 & 0.021 & 116 & 0.734 & 0.043 & 0.032 \\
+    117 & 0.758 & 0.049 & 0.013 & 118 & 0.742 & 0.036 & 0.027 \\
+    119 & 0.751 & 0.037 & 0.011 & 120 & 0.739 & 0.041 & 0.026 \\
+    121 & 0.701 & 0.030 & 0.032 & 122 & 0.716 & 0.053 & 0.029 \\
+    123 & 0.730 & 0.054 & 0.029 & 124 & 0.750 & 0.056 & 0.048 \\
+    125 & 0.724 & 0.057 & 0.024 & 126 & 0.555 & 0.012 & 0.021 \\
+    127 & 0.476 & 0.031 & 0.011 & 128 & 0.534 & 0.034 & 0.018 \\
+    129 & 0.530 & 0.048 & 0.031 & 130 & 0.511 & 0.032 & 0.006 \\
+    \bottomrule
+    \caption{Einzelne ipq-Ergebnisse von jedem Segmentierungsnetz}
+\end{longtable}
 
 % Bibliography
 \lehead[]{\quad References}
@@ -11,74 +342,74 @@
 \rohead[]{\headmark \quad}
 
 % Nomenclature and Symbols
-\chapter{Nomenclature and Symbols}\label{App:Nomenclature}
+%\chapter{Nomenclature and Symbols}\label{App:Nomenclature}
 
-\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
-\vect{A},\vect{B}, \vect{C},…& Matrices\\
-\vect{A}^{\top}& Transpose of matrix $\vect{A}$\\
-\vect{A}^{-1}& Inverse of matrix $\vect{A}$\\
-\vect{A}^{+}& Moore–Penrose pseudoinverse of matrix $\vect{A}$\\
-\vect{a}_{·i}& Column vector containing the $i$-th column of matrix $\vect{A}$\\
-\vect{a}_{i·}& Column vector containing the $i$-th row of matrix $\vect{A}$\\
-a_{ij}& Entry in the $i$-th row and $j$-th column of a matrix $\vect{A}$\\
-\vect{a}, \vect{b}, \vect{c}, …& Column vectors / matrices\\
-\vect{a}^{\top}& Row vector / matrix, transpose of column vector $\vect{a}$\\
-a_{i}& $i$-th component of vector $\vect{a}$\\
-a, b, c, …& Scalars, constants, variables\\
-α, β, γ, …& Parameters\\
-α^{*}, x^{*}, … & Optimal parameter, variable, …\\
-\vect{B}& B-spline basis matrix\\
-\vect{g}_{ij}& $\begin{pmatrix} p_{ij} & q_{ij} \end{pmatrix}^{\top}$, given discrete gradient field at position $\left(i,j\right)$\\
-\vect{g}\left(x,y\right)& $\begin{pmatrix} p\left(x,y\right) & q\left(x,y\right) \end{pmatrix}^{\top}$, given gradient field in the continuous domain\\
-\vect{I}_n& $n$-by-$n$ identity matrix\\
-\text{LAD}, \text{LS}& Least absolute deviations, least squares\\
-%\text{LS}& Least squares\\
-\symup{MSE}, \symup{RMSE}& Mean-squared error, root-mean-squared error\\
-\vect{P}& $x$-components of a given discrete gradient field\\
-p_{ij}& $x$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
-p, p\left(x,y\right)& $x$-component of a given gradient field in the continuous domain\\
-\vect{Q}& $y$-components of a given discrete gradient field\\
-q_{ij}& $y$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
-q, q\left(x,y\right)& $y$-component of a given gradient field in the continuous domain\\
-\vect{R}\ /\ \vect{r}& Matrix / vector containing residuals or errors\\
-%\symup{RMSE}& Root-mean-squared error\\
-S& Cost functional\\
-σ& Standard deviation of Gaussian noise\\
-\vect{Z}& Surface / height matrix (discrete)\\
-z_{ij}& Entries of the surface / height matrix\\
-z\left(x,y\right)& Surface / height function (continuous) \\
-\vect{0}, \vect{1}, …& Column vector whose elements are all $0$, $1$, …\\
-\end{tabu}
-\vfill
-
-%\clearpage
-%\thispagestyle{plain}
-\subsubsection{Operators}
-\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
-\symcal{C}& Discrete cosine transform\\
-\symcal{C}^{-1}& Inverse discrete cosine transform\\
-\vect{D}₁& Matrix operator for first-order differences\\
-\vect{D}₂& Matrix operator for second-order differences\\
-\symbfsfup{D}_x& Matrix operator for discrete differentiation with respect to $x$\\
-\symcal{F}& Fourier transform\\
-\symcal{F}^{-1}& Inverse Fourier transform\\
-\symup{tr}& Trace of a square matrix\\
-\symup{vec}& Vectorization of a matrix, converts a matrix into a column vector\\
-\times& Cross product / vector product\\
-\otimes& Kronecker product\\
-\odot& Hadamard product / Schur product\\
-\partial_x& Partial derivative with respect to $x$\\
-\partial_{xy}& $\partial_x \partial_y$ \\
-f_{x}& $\partial_x f$\\
-f_{xy}& $\partial_{xy} f$\\
-\symbf{∇}& Nabla operator\\
-\symup{Δ}& Laplace operator\\
-\le, \ge& Less than or equal to, greater than or equal to (scalars)\\
-\preceq, \succeq& Vector or componentwise inequality\\
-\| · \|& Norm on a vector space\\
-\| · \|_1& $L¹$-norm\\
-\| · \|_2& $L²$-norm / Euclidean norm\\
-\| · \|_F& Frobenius norm / Hilbert-Schmidt norm\\
-\| · \|_∞& $L^∞$-norm / maximum norm / uniform norm\\
-
-\end{tabu}
+%\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
+%\vect{A},\vect{B}, \vect{C},…& Matrices\\
+%\vect{A}^{\top}& Transpose of matrix $\vect{A}$\\
+%\vect{A}^{-1}& Inverse of matrix $\vect{A}$\\
+%\vect{A}^{+}& Moore–Penrose pseudoinverse of matrix $\vect{A}$\\
+%\vect{a}_{·i}& Column vector containing the $i$-th column of matrix $\vect{A}$\\
+%\vect{a}_{i·}& Column vector containing the $i$-th row of matrix $\vect{A}$\\
+%a_{ij}& Entry in the $i$-th row and $j$-th column of a matrix $\vect{A}$\\
+%\vect{a}, \vect{b}, \vect{c}, …& Column vectors / matrices\\
+%\vect{a}^{\top}& Row vector / matrix, transpose of column vector $\vect{a}$\\
+%a_{i}& $i$-th component of vector $\vect{a}$\\
+%a, b, c, …& Scalars, constants, variables\\
+%α, β, γ, …& Parameters\\
+%α^{*}, x^{*}, … & Optimal parameter, variable, …\\
+%\vect{B}& B-spline basis matrix\\
+%\vect{g}_{ij}& $\begin{pmatrix} p_{ij} & q_{ij} \end{pmatrix}^{\top}$, given discrete gradient field at position $\left(i,j\right)$\\
+%\vect{g}\left(x,y\right)& $\begin{pmatrix} p\left(x,y\right) & q\left(x,y\right) \end{pmatrix}^{\top}$, given gradient field in the continuous domain\\
+%\vect{I}_n& $n$-by-$n$ identity matrix\\
+%\text{LAD}, \text{LS}& Least absolute deviations, least squares\\
+%%\text{LS}& Least squares\\
+%\symup{MSE}, \symup{RMSE}& Mean-squared error, root-mean-squared error\\
+%\vect{P}& $x$-components of a given discrete gradient field\\
+%p_{ij}& $x$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
+%p, p\left(x,y\right)& $x$-component of a given gradient field in the continuous domain\\
+%\vect{Q}& $y$-components of a given discrete gradient field\\
+%q_{ij}& $y$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
+%q, q\left(x,y\right)& $y$-component of a given gradient field in the continuous domain\\
+%\vect{R}\ /\ \vect{r}& Matrix / vector containing residuals or errors\\
+%%\symup{RMSE}& Root-mean-squared error\\
+%S& Cost functional\\
+%σ& Standard deviation of Gaussian noise\\
+%\vect{Z}& Surface / height matrix (discrete)\\
+%z_{ij}& Entries of the surface / height matrix\\
+%z\left(x,y\right)& Surface / height function (continuous) \\
+%\vect{0}, \vect{1}, …& Column vector whose elements are all $0$, $1$, …\\
+%\end{tabu}
+%\vfill
+%
+%%\clearpage
+%%\thispagestyle{plain}
+%\subsubsection{Operators}
+%\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
+%\symcal{C}& Discrete cosine transform\\
+%\symcal{C}^{-1}& Inverse discrete cosine transform\\
+%\vect{D}₁& Matrix operator for first-order differences\\
+%\vect{D}₂& Matrix operator for second-order differences\\
+%\symbfsfup{D}_x& Matrix operator for discrete differentiation with respect to $x$\\
+%\symcal{F}& Fourier transform\\
+%\symcal{F}^{-1}& Inverse Fourier transform\\
+%\symup{tr}& Trace of a square matrix\\
+%\symup{vec}& Vectorization of a matrix, converts a matrix into a column vector\\
+%\times& Cross product / vector product\\
+%\otimes& Kronecker product\\
+%\odot& Hadamard product / Schur product\\
+%\partial_x& Partial derivative with respect to $x$\\
+%\partial_{xy}& $\partial_x \partial_y$ \\
+%f_{x}& $\partial_x f$\\
+%f_{xy}& $\partial_{xy} f$\\
+%\symbf{∇}& Nabla operator\\
+%\symup{Δ}& Laplace operator\\
+%\le, \ge& Less than or equal to, greater than or equal to (scalars)\\
+%\preceq, \succeq& Vector or componentwise inequality\\
+%\| · \|& Norm on a vector space\\
+%\| · \|_1& $L¹$-norm\\
+%\| · \|_2& $L²$-norm / Euclidean norm\\
+%\| · \|_F& Frobenius norm / Hilbert-Schmidt norm\\
+%\| · \|_∞& $L^∞$-norm / maximum norm / uniform norm\\
+%
+%\end{tabu}

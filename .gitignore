@@ -13,7 +13,6 @@ TestCode
 *.aux
 *.gz
 *.log
-*.pdf
 *.fls
 *.bbl
 *.fls
@@ -23,5 +22,6 @@ TestCode
 *.xml
 *.pickle
 *.fdb_latexmk
-*.json
 *.eps
+*.blg*
+*.synctex*

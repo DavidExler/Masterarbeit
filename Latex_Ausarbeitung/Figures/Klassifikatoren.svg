@@ -1,0 +1,972 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="219.23439mm"
+   height="228.35825mm"
+   viewBox="0 0 219.23439 228.35824"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   sodipodi:docname="Klassifikatoren.svg"
+   inkscape:export-filename="Klassifikatoren.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.4823793"
+     inkscape:cx="445.56747"
+     inkscape:cy="404.75471"
+     inkscape:window-width="2560"
+     inkscape:window-height="1387"
+     inkscape:window-x="1512"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showgrid="false" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="Triangle"
+       refX="2.5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-8"
+       refX="2.5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-2" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-4"
+       refX="2.5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-1" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-49"
+       refX="2.5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-49-9"
+       refX="2.5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-6-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-49-4"
+       refX="2.5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-6-9" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(3.2127407,15.34976)">
+    <rect
+       style="fill:#ffffff;stroke-width:0.447964;stroke-linecap:square;paint-order:markers fill stroke"
+       id="rect1"
+       width="219.23439"
+       height="228.35825"
+       x="-3.2127407"
+       y="-15.34976" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49-9)"
+       d="m 37.221818,112.41773 v 8.4375"
+       id="path15-1-3"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="149.36636"
+       y="189.41544"
+       id="text18-7-60-9-1"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-2-63-3"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="149.36636"
+         y="189.41544">(B, 4)</tspan></text>
+    <rect
+       style="fill:#fcc49c;fill-opacity:0.501497;stroke:#fcc49c;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-9"
+       width="62.317902"
+       height="12.69891"
+       x="115.31468"
+       y="0.94054681"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="139.47911"
+       y="8.6012774"
+       id="text2-8"><tspan
+         sodipodi:role="line"
+         id="tspan2-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="139.47911"
+         y="8.6012774">Input</tspan></text>
+    <rect
+       style="fill:#fcc49c;fill-opacity:0.501497;stroke:#fcc49c;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-7-7"
+       width="62.317902"
+       height="12.69891"
+       x="114.81455"
+       y="194.0275"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="136.64853"
+       y="201.72314"
+       id="text2-0-6"><tspan
+         sodipodi:role="line"
+         id="tspan2-3-3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="136.64853"
+         y="201.72314">Output</tspan></text>
+    <rect
+       style="fill:#fc9cf5;fill-opacity:0.501497;stroke:#fc9cf6;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-1"
+       width="62.317902"
+       height="12.69891"
+       x="115.31468"
+       y="27.076664"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="135.80246"
+       y="35.600998"
+       id="text2-1-54"><tspan
+         sodipodi:role="line"
+         id="tspan3-2"
+         x="135.80246"
+         y="35.600998">Encoder</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-8);paint-order:normal"
+       d="M 146.47364,13.639457 V 27.076664"
+       id="path11-0"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="150.89983"
+       y="22.525749"
+       id="text18-3"><tspan
+         sodipodi:role="line"
+         id="tspan18-7"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="150.89983"
+         y="22.525749">(B, D, C, 256, 256)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="149.36636"
+       y="48.661808"
+       id="text18-7-2"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-6"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="149.36636"
+         y="48.661808">(B, D, 256, 32, 32)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="169.95193"
+       y="76.25547"
+       id="text18-7-2-3"><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="169.95193"
+         y="76.25547"
+         id="tspan32">(B, D, 256)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="169.95193"
+       y="97.371964"
+       id="text18-7-2-3-8"><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="169.95193"
+         y="97.371964"
+         id="tspan32-0">(B, D, 256)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="149.36636"
+       y="118.79962"
+       id="text18-7-2-3-8-6"><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="149.36636"
+         y="118.79962"
+         id="tspan32-0-8">(B, D x 256)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="40.614677"
+       y="139.94058"
+       id="text18-7-60-3"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-2-4"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="40.614677"
+         y="139.94058">(B, 512)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="40.614677"
+       y="161.07698"
+       id="text18-7-60-6"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-2-6"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="40.614677"
+         y="161.07698">(B, 64)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="40.614677"
+       y="189.41544"
+       id="text18-7-60-9"><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="40.614677"
+         y="189.41544"
+         id="tspan8">(B, 4)</tspan></text>
+    <rect
+       style="fill:#fcc49c;fill-opacity:0.501497;stroke:#fcc49c;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2"
+       width="62.317902"
+       height="12.69891"
+       x="6.5629997"
+       y="0.94054681"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="30.727428"
+       y="8.6012774"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="30.727428"
+         y="8.6012774">Input</tspan></text>
+    <rect
+       style="fill:#fcc49c;fill-opacity:0.501497;stroke:#fcc49c;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-7"
+       width="62.317902"
+       height="12.69891"
+       x="6.0628676"
+       y="194.0275"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="27.896849"
+       y="201.72314"
+       id="text2-0"><tspan
+         sodipodi:role="line"
+         id="tspan2-3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="27.896849"
+         y="201.72314">Output</tspan></text>
+    <rect
+       style="fill:#fc9cf5;fill-opacity:0.501497;stroke:#fc9cf6;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8"
+       width="62.317902"
+       height="12.69891"
+       x="6.5630007"
+       y="27.076664"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="27.050776"
+       y="35.600998"
+       id="text2-1"><tspan
+         sodipodi:role="line"
+         id="tspan3"
+         x="27.050776"
+         y="35.600998">Encoder</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle);paint-order:normal"
+       d="M 37.721951,13.639457 V 27.076664"
+       id="path11"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#9cecfc;fill-opacity:0.501497;stroke:#9cecfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7"
+       width="62.317902"
+       height="12.69891"
+       x="6.0628676"
+       y="57.445999"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="25.794996"
+       y="65.846504"
+       id="text2-1-5"><tspan
+         sodipodi:role="line"
+         id="tspan3-5"
+         x="25.794996"
+         y="65.846504">Conv 3D</tspan></text>
+    <rect
+       style="fill:#9cfcbc;fill-opacity:0.501497;stroke:#9cfcbc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-0"
+       width="62.317902"
+       height="12.69891"
+       x="115.31468"
+       y="57.445999"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="126.31873"
+       y="65.255959"
+       id="text2-1-5-3"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-8"
+         x="126.31873"
+         y="65.255959">Spatial Average</tspan></text>
+    <rect
+       style="fill:#9cfcbc;fill-opacity:0.501497;stroke:#9cfcbc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-0-7"
+       width="62.317902"
+       height="12.69891"
+       x="115.31468"
+       y="99.718819"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="125.13446"
+       y="107.54147"
+       id="text2-1-5-3-1"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-8-0"
+         x="125.13446"
+         y="107.54147">Depth Attention</tspan></text>
+    <g
+       id="g25"
+       transform="translate(2.0660429,1.3386575)">
+      <rect
+         style="fill:#9cfcbc;fill-opacity:0.501497;stroke:#9cfcbc;stroke-width:0.75;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+         id="rect2-8-7-0-5"
+         width="12.968501"
+         height="12.96841"
+         x="112.56317"
+         y="77.109001"
+         rx="2"
+         ry="2" />
+      <g
+         id="g20"
+         transform="translate(-21.006139,-1.0007047)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+           x="135.33801"
+           y="85.853531"
+           id="text2-1-5-3-0"><tspan
+             sodipodi:role="line"
+             id="tspan3-5-8-9"
+             x="135.33801"
+             y="85.853531">W</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+           x="141.32539"
+           y="87.13871"
+           id="text2-1-5-3-0-3"><tspan
+             sodipodi:role="line"
+             id="tspan3-5-8-9-5"
+             x="141.32539"
+             y="87.13871">Q</tspan></text>
+      </g>
+    </g>
+    <g
+       id="g24"
+       transform="translate(2.8216727,1.7018319)">
+      <rect
+         style="fill:#9cfcbc;fill-opacity:0.501497;stroke:#9cfcbc;stroke-width:0.75;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+         id="rect2-8-7-0-5-8"
+         width="12.968501"
+         height="12.96841"
+         x="137.16771"
+         y="76.745827"
+         rx="2"
+         ry="2" />
+      <g
+         id="g21"
+         transform="translate(5.7424807,-9.1501065)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+           x="133.32933"
+           y="94.045937"
+           id="text2-1-5-3-0-1"><tspan
+             sodipodi:role="line"
+             id="tspan3-5-8-9-6"
+             x="133.32933"
+             y="94.045937">W</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+           x="139.31671"
+           y="95.331116"
+           id="text2-1-5-3-0-3-4"><tspan
+             sodipodi:role="line"
+             id="tspan3-5-8-9-5-0"
+             x="139.31671"
+             y="95.331116">K</tspan></text>
+      </g>
+    </g>
+    <g
+       id="g23"
+       transform="translate(11.516222,2.4018288)">
+      <rect
+         style="fill:#9cfcbc;fill-opacity:0.501497;stroke:#9cfcbc;stroke-width:0.75;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+         id="rect2-8-7-0-5-7"
+         width="12.968501"
+         height="12.96841"
+         x="153.83333"
+         y="76.04583"
+         rx="2"
+         ry="2" />
+      <g
+         id="g22"
+         transform="translate(23.225611,-17.258438)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+           x="132.53558"
+           y="101.45427"
+           id="text2-1-5-3-0-9"><tspan
+             sodipodi:role="line"
+             id="tspan3-5-8-9-8"
+             x="132.53558"
+             y="101.45427">W</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+           x="138.52296"
+           y="102.73945"
+           id="text2-1-5-3-0-3-41"><tspan
+             sodipodi:role="line"
+             id="tspan3-5-8-9-5-4"
+             x="138.52296"
+             y="102.73945">V</tspan></text>
+      </g>
+    </g>
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-8)"
+       d="M 146.47364,39.775574 V 57.446"
+       id="path12-9"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#9cecfc;fill-opacity:0.501497;stroke:#9cecfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-4"
+       width="62.317902"
+       height="12.69891"
+       x="6.0628676"
+       y="78.582405"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="25.794996"
+       y="86.98291"
+       id="text2-1-5-4"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-9"
+         x="25.794996"
+         y="86.98291">Conv 3D</tspan></text>
+    <rect
+       style="fill:#c39cfc;fill-opacity:0.501497;stroke:#c39cfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-4-2"
+       width="62.317902"
+       height="12.69891"
+       x="6.0628672"
+       y="120.85523"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="20.784838"
+       y="128.52231"
+       id="text2-1-5-4-4"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-9-5"
+         x="20.784838"
+         y="128.52231">Linear Layer</tspan></text>
+    <rect
+       style="fill:#c39cfc;fill-opacity:0.501497;stroke:#c39cfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-4-2-1"
+       width="62.317902"
+       height="12.69891"
+       x="6.0628672"
+       y="141.99164"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="20.784838"
+       y="149.65872"
+       id="text2-1-5-4-4-8"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-9-5-9"
+         x="20.784838"
+         y="149.65872">Linear Layer</tspan></text>
+    <rect
+       style="fill:#c39cfc;fill-opacity:0.501497;stroke:#c39cfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-4-2-4"
+       width="62.317902"
+       height="12.69891"
+       x="6.0628672"
+       y="163.12805"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="20.784838"
+       y="170.79514"
+       id="text2-1-5-4-4-3"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-9-5-1"
+         x="20.784838"
+         y="170.79514">Linear Layer</tspan></text>
+    <rect
+       style="fill:#9cecfc;fill-opacity:0.501497;stroke:#9cecfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-8"
+       width="62.317902"
+       height="12.69891"
+       x="6.0628676"
+       y="99.718819"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="14.577713"
+       y="107.54147"
+       id="text2-1-5-2"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-98"
+         x="14.577713"
+         y="107.54147">Adaptive Pool 3D</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 37.221819,70.144909 v 8.4375"
+       id="path13"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 37.221819,91.281318 v 8.437501"
+       id="path14"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 146.32339,112.41773 -0.19964,8.4375"
+       id="path15"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#rect2-8-7-0-7" />
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49)"
+       d="m 127.43803,90.20307 11.41732,9.515749"
+       id="path15-1"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#g25"
+       inkscape:connection-end="#rect2-8-7-0-7" />
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49-4)"
+       d="m 127.43803,90.20307 11.41732,9.515749"
+       id="path15-1-2"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#g25"
+       inkscape:connection-end="#rect2-8-7-0-7" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 37.221818,133.55414 v 8.4375"
+       id="path16"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 37.221818,154.69055 v 8.4375"
+       id="path17"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="149.36636"
+       y="139.94058"
+       id="text18-7-60-3-0"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-2-4-0"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="149.36636"
+         y="139.94058">(B, 512)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="149.36636"
+       y="161.07698"
+       id="text18-7-60-6-1"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-2-6-4"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="149.36636"
+         y="161.07698">(B, 64)</tspan></text>
+    <rect
+       style="fill:#c39cfc;fill-opacity:0.501497;stroke:#c39cfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-4-2-7"
+       width="62.317902"
+       height="12.69891"
+       x="114.81455"
+       y="120.85522"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="129.53653"
+       y="128.52229"
+       id="text2-1-5-4-4-1"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-9-5-7"
+         x="129.53653"
+         y="128.52229">Linear Layer</tspan></text>
+    <rect
+       style="fill:#c39cfc;fill-opacity:0.501497;stroke:#c39cfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-4-2-1-7"
+       width="62.317902"
+       height="12.69891"
+       x="114.81455"
+       y="141.99164"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="129.53653"
+       y="149.65872"
+       id="text2-1-5-4-4-8-7"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-9-5-9-3"
+         x="129.53653"
+         y="149.65872">Linear Layer</tspan></text>
+    <rect
+       style="fill:#c39cfc;fill-opacity:0.501497;stroke:#c39cfc;stroke-width:0.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect2-8-7-4-2-4-5"
+       width="62.317902"
+       height="12.69891"
+       x="114.81455"
+       y="163.12805"
+       rx="5"
+       ry="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       x="129.53653"
+       y="170.79514"
+       id="text2-1-5-4-4-3-9"><tspan
+         sodipodi:role="line"
+         id="tspan3-5-9-5-1-9"
+         x="129.53653"
+         y="170.79514">Linear Layer</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-4)"
+       d="m 145.97351,133.55414 v 8.43749"
+       id="path16-8"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-4)"
+       d="m 145.97351,154.69054 v 8.43751"
+       id="path17-1"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="M 37.721951,39.775574 V 57.446"
+       id="path12"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 37.221818,175.82696 1e-6,18.20054"
+       id="path18"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:none;fill-opacity:0.501497;stroke:#666666;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       id="rect18"
+       width="88.165909"
+       height="130.84013"
+       x="0.18800667"
+       y="51.217224"
+       rx="10"
+       ry="10" />
+    <rect
+       style="fill:none;fill-opacity:0.501497;stroke:#666666;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50002, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       id="rect18-5"
+       width="88.877617"
+       height="130.8376"
+       x="110.16307"
+       y="51.218491"
+       rx="10"
+       ry="10" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="42.14814"
+       y="22.525749"
+       id="text18"><tspan
+         sodipodi:role="line"
+         id="tspan18"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="42.14814"
+         y="22.525749">(B, D, C, 256, 256)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="8.8199291"
+       y="-4.3467193"
+       id="text18-4"><tspan
+         sodipodi:role="line"
+         id="tspan18-8"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="8.8199291"
+         y="-4.3467193">Volumen-Klassifikator</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="116.39369"
+       y="-4.3467193"
+       id="text18-4-4"><tspan
+         sodipodi:role="line"
+         id="tspan18-8-9"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="116.39369"
+         y="-4.3467193">Schichten-Klassifikator</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="40.614677"
+       y="48.661808"
+       id="text18-7"><tspan
+         sodipodi:role="line"
+         id="tspan18-4"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="40.614677"
+         y="48.661808">(B, D, 256, 32, 32)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="40.614677"
+       y="76.531349"
+       id="text18-7-9"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-3"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="40.614677"
+         y="76.531349">(B, D, 128, 32, 32)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="40.614677"
+       y="97.667755"
+       id="text18-7-6"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-5"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="40.614677"
+         y="97.667755">(B, D, 64, 32, 32)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-dasharray:4.50003, 1.5;stroke-dashoffset:0;stroke-opacity:0.501023;paint-order:normal"
+       x="40.614677"
+       y="118.80417"
+       id="text18-7-60"><tspan
+         sodipodi:role="line"
+         id="tspan18-4-2"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.5"
+         x="40.614677"
+         y="118.80417">(B, 4 x 64 x 4 x 4)</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="M 145.97351,175.82696 V 194.0275"
+       id="path20"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'Libertinus Serif';-inkscape-font-specification:'Libertinus Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#9cfcbc;fill-opacity:0.501497;stroke:#9cfcbc;stroke-width:0.750001;stroke-linecap:butt;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       x="146.65411"
+       y="85.821693"
+       id="text20"><tspan
+         sodipodi:role="line"
+         id="tspan20"
+         style="stroke-width:0.75"
+         x="146.65411"
+         y="85.821693" /></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49-4)"
+       d="m 146.47363,91.416068 0,8.302751"
+       id="path28"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#g24"
+       inkscape:connection-end="#rect2-8-7-0-7" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49-4)"
+       d="m 165.50923,90.20307 -11.41731,9.515749"
+       id="path29"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#g23"
+       inkscape:connection-end="#rect2-8-7-0-7" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49-4)"
+       d="m 138.85535,70.144909 -11.41732,9.515749"
+       id="path30"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#g25" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49-4)"
+       d="m 146.47363,70.144909 0,8.30275"
+       id="path31"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#g24" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-49-4)"
+       d="m 154.09192,70.144909 11.41731,9.515748"
+       id="path32"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#g23" />
+  </g>
+</svg>

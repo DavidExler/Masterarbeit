@@ -3,15 +3,65 @@
 \pagenumbering{arabic}
 
 \chapter{Einleitung}\label{ch:Introduction}
-Your thesis should start with an introduction. The introduction is supposed to motivate your thesis. Discuss the relevance of your topic, why are you looking into it, why is it relevant in the research field? Cite important research related to your motivation. 
+%Your thesis should start with an introduction. The introduction is supposed to motivate your thesis. Discuss the relevance of your topic, why are you looking into it, why is it relevant in the research field? Cite important research related to your motivation. 
 
-\section*{Objectives and Structure of this Thesis}
-Give an outline of your thesis. Briefly repeat the problem and  your contribution, for example in the form of research questions. 
+%\section*{Objectives and Structure of this Thesis}
+%Give an outline of your thesis. Briefly repeat the problem and  your contribution, for example in the form of research questions. 
 
-\section{Überblick}
-Das nachfolgende Kapitel leitet in das Thema der vorliegenden Thesis ein. Es beschreibt zu diesem Zweck das Projekt allgemein und beleuchtet die offenen Probleme, an denen das Projekt ansetzt. Davon ausgehend erläutert das Kapitel die Zielsetzung der Arbeit. Zuletzt wird die Struktur der schriftlichen Ausarbeitung erklärt.
-
-\section{Allgemeine Beschreibung}
-\section{Offene Probleme}
-\section{Zielsetzung}
-\section{Strukturierung der Arbeit}
+%\section{Allgemeine Beschreibung}
+Myotuben sind mehrkernige Muskelzellfäden \cite{lewis1917behavior, Enwere2014}. 
+Sie repräsentieren ein intermediäres Stadium der Muskelentwicklung, in dem sich die grundlegende Organisation der Muskelfaser bildet \cite{Gilbert2014}. 
+Menschliche Myotube-Kulturen \cite{Pogogeff1946} können für diverse Forschungszwecke als Modellsystem eingesetzt werden.
+Sie werden beispielsweise verwendet, um Muskelkrankheiten zu modellieren \cite{Weisrock2024}, Antworten auf neue Medikamente vorherzusagen \cite{Lair2025} oder synthetische Muskeln \cite{Jeong2025} sowie Muskelregeneration \cite{Scharner2011} zu erforschen.
+In den meisten Fällen werden die Myotuben, ihre Zellkerne und zugehörige, umliegende Strukturen eingefärbt und unter dem Mikroskop analysiert \cite{Velica2011, Nolan2024, Agley2012}.
+Die Bilddaten entstehen dabei mit unterschiedlichen Herstellungsbedingungen, Färbungen und Aufnahmegeräten, was eine generalisierte Automatisierung erschwert \cite{Chua2019, Shahini2018, Brunetti2021, NogalesGadea2010}. \newline
+Im Zuge der vorliegenden Arbeit werden \textit{TODO Beschreibung der Daten und Aufnahmebedingungen} Daten analysiert und die Ergebnisse automatisiert ausgewertet.
+Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl, die Verteilung der Zellkernklassen und das Myotubenvolumen extrahiert.
+Diese Merkmale ermöglichen es, die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
+Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich auf die Anforderungen angepasst.\newline
+% - 3D!! bzw 2.5D als depth map plus intensity map \cite{Marr2010, Marr1978}
+%\section{Offene Probleme}
+Um die Analyse biologischer Daten effizient und in großem Umfang durchführen zu können, sind Bildverarbeitungsprogramme notwendig \cite{Noe2022}, da die manuelle Auswertung sowohl anspruchsvoll als auch zeitintensiv ist \cite{Weisrock2024}.
+Myotuben in Forschungsumgebungen ordnen sich in chaotischen Netzen mit Verschränkungen und Überkreuzungen an \cite{Abdelmoez2020}.
+Aktuell sind Bildverarbeitungsmethoden nicht in der Lage, zuverlässig einzelne Myotuben in einem dreidimensionalen Bild zu erkennen und von ihrem Anfang bis zum Ende zu verfolgen \cite{Inoue2018}.
+Besonders die Bündel, die in der Entwicklung der Myotuben häufig entstehen, verhindern oft die getrennte Segmentierung der einzelnen Myotuben \cite{Jeong2025}.
+Außerdem stellen die dreidimensionalen Daten eine große Herausforderung für Hard- und Software dar \cite{Moore2021, Pan2023, Li2023, Bagheri2022}.
+Besonders herausfordernd sind dabei die stark erhöhten Speicher- und GPU-Anforderungen und dass weniger Methoden sowie Datensätze etabliert sind \cite{liu2021, James2023, Chan2020}. 
+Der Mehrwert einer dritten räumlichen Dimension kann allerdings die Ergebnisse wesentlich verbessern, was die Verarbeitung von 3D-Daten daher zu einem zentralen Forschungsaspekt macht \cite{Hirabayashi2024, Midgley2003}.\newline
+%Weniger Methoden und Daten und schwerere Ground truths: \cite{Liu2021}
+%Große Daten und Artefakte \cite{James2023}
+%"Challenge" \cite{Chan2020}
+%\section{Zielsetzung}
+Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung einzelner Myotuben in dreidimensionalen Mikroskopiedaten zu ermöglichen.
+Aus den Segmentierungsmasken werden daraufhin morphologische Eigenschaften der einzelnen Myotuben gewonnen.
+Außerdem können die Ergebnisse genutzt werden, um den Status der Entwicklung einzelner Myotuben, unter anderem, anhand der darin enthaltenen Zellkerne zu ermitteln.
+Deshalb ist ein weiteres Ziel, die Zellkerne zu segmentieren und zu klassifizieren.
+Für die Klassifikation soll im Rahmen dieser Arbeit Expertenwissen zeiteffizient erfasst und genutzt werden.
+In einer Applikation die keine Programmierkenntnisse benötigt sollen sowohl die Segmentierung, als auch die Annotation durch Experten, der Klassifikator-Methodenvergleich zur Anpassung an neue Daten und das Klassifikatortraining durchführbar sein. 
+Aus diesen Zielen ergeben sich die folgenden Mehrwerte der vorliegenden Arbeit:
+\begin{itemize}
+    \item Ein Vergleich etablierter Segmentierungsmodelle für Nuclei auf vorher ungesehenen, dreidimensionalen Daten.
+    \item Eine Labeling App, die zeiteffizient Expertenwissen über die Klassen von Nuclei in dreidimensionalen Daten erfasst.
+    \item Ein neues Kriterium zum Vergleich von Segmentierungsmodellen im Hinblick auf die Eignung der entstehenden Segmentierungsmasken zur Extraktion interpretierbarer Merkmale.
+    \item Ein Vergleich von Methoden des Vortraining, der Vorverarbeitung sowie etablierter Encoder und neuer Decoder für die Klassifikation von dreidimensionalen Zellkernen.
+    \item Ein optimaler Klassifikator für die Nuclei der vorliegenden Arbeit.
+    \item Eine Applikation mit automatischem Ablauf, die Nutzer*Innen durch die Annotation und das Training von Klassifikatoren leitet und einen Methodenvergleich für den Klassifikator ermöglicht.
+    \item Eine Methode, um das Klassifikationsergebnis zu nutzen, um die Instanzsegmentierung von Myotuben zu verbessern. (\textit{NOTIZ: Das klappt sehr schlecht, soll das dann raus?})  
+\end{itemize}
+%Um die Segmentierung der Myotuben zu ermöglichen, werden verschiedene Zwischenziele definiert, die zusätzliche, unterstützende Informationen sammeln, welche den Segmentierungsalgorithmen zur Verfügung gestellt werden.
+%Die Zwischenziele umfassen:
+%\begin{itemize}
+%    \item Die Segmentierung von individuellen Zellkernen in den dreidimensionalen Daten.
+%    \item Das Entwickeln einer Anwendung zum Annotieren der dreidimensionalen Nuclei.
+%    \item Das Klassifizieren von Zellkernen anhand ihrer Morphologie sowie der antikörperbasierten Marker in ihrer unmittelbaren Umgebung.
+%    \item Das Kodieren der gewonnenen Informationen auf eine Weise, die sie für bestehende Segmentierungsalgorithmen nutzbar macht. %\textit{NOTIZ: wäre diese Information hier zu viel? Nuclei von Myo Zellen als "Click" bei SAM, Nuclei von Nervenzellen/Synapsen/%Schwann-Zellen als "negativ Click"} %\textit{NOTIZ: SAM basierte Segmentierung z.B. nutzt sowieso einen Encoder für "Hints" -> klassifizierte "In-Myo" Zellen als "Click", vielleicht die Längsachse der "In-Myo" Zellen als Längsachse der Myos}
+%\end{itemize}
+%\section{Strukturierung der Arbeit}
+Die nachfolgende Ausarbeitung ist wie folgt strukturiert. %in die Kapitel \ref{ch:Theory} Theorie, \ref{ch:NewMethods} Methoden, \ref{ch:Implementation} Implementierung, \ref{ch:results} Ergebnisse, \ref{ch:Discussion} Diskussion und \ref{ch:Conclusion} Zusammenfassung.
+In Kapitel \ref{ch:Theory} sind Grundlagen, relevante Literatur und der Stand der Technik beschrieben. 
+Außerdem sind dort offene Probleme, sowie die Ansätze, die die vorliegende Arbeit verfolgt um sie zu lösen, dargestellt. 
+Die Methodik (Kapitel \ref{ch:NewMethods}) beschreibt das neue, praktische Konzept, das die Arbeit einführt, und das Kapitel \ref{ch:Implementation} (Implementierung), wie diese Methoden umgesetzt werden.
+Im Kapitel (\ref{ch:results}) (Ergebnisse) werden ungewertet die Ergebnisse der durchgeführten Experimente dargestellt, im Kapitel \ref{ch:Discussion} (Diskussion) werden dann diese Ergebnisse ausgewertet.
+Mit dem Kapitel \ref{ch:Conclusion} (Zusammenfassung) schließt die Ausarbeitung ab, legt kurz die gesamte Arbeit dar und liefert einen Ausblick für zukünftige Ziele.
+Der Code dieser Arbeit ist verfügbar unter: \href{https://github.com/DavidExler/Masterarbeit}{\nolinkurl{github.com/DavidExler/Masterarbeit}}. (TODO Öffentlich stellen)
+%Vorteile 3D Daten: Hirabayashi2024, Wichtigkeit: Midgley2003

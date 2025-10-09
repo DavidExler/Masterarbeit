@@ -47,7 +47,7 @@ app = dash.Dash(__name__)
 app.title = "3D Blob Labeling App"
 
 # ---- Layout ----
-app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize': '20px'}, children=[
+app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize': '20px', 'fontFamily': 'inherit'}, children=[
     html.H2(id='title', style={'textAlign': 'center'}),
 
     html.Div(style={'display': 'flex'}, children=[
@@ -55,49 +55,49 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
   html.Div(style={'flex': '0 0 200px', 'paddingRight': '10px', 'display': 'flex', 'flexDirection': 'column', 'gap': '20px'}, children=[
     # Image navigation
         html.Div([
-            html.Button("Vorheriges Bild", id='prev-image', n_clicks=0, style={'width': '90px'}),
-            html.Button("Nächstes Bild", id='next-image', n_clicks=0, style={'width': '90px'}),
+            html.Button("Previous picture", id='prev-image', n_clicks=0, style={'width': '90px'}),
+            html.Button("Next picture", id='next-image', n_clicks=0, style={'width': '90px'}),
         ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
 
         # Blob navigation
         html.Div([
-            html.Button("Vorherige Zelle", id='prev-blob', n_clicks=0, style={'width': '90px'}),
-            html.Button("Nächste Zelle", id='next-blob', n_clicks=0, style={'width': '90px'}),
+            html.Button("Previous nucleus", id='prev-blob', n_clicks=0, style={'width': '90px'}),
+            html.Button("Next nucleus", id='next-blob', n_clicks=0, style={'width': '90px'}),
         ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
 
         # Jump to next undefined
-        html.Button("Nächster undefinierter", id='next-undef', n_clicks=0, style={'width': '190px'}),
+        html.Button("Next undefined", id='next-undef', n_clicks=0, style={'width': '190px'}),
 
         # Go to specific image/blob
         html.Div([
-            html.Label("Bild", style={'fontSize': 12, 'alignSelf': 'center'}),
+            html.Label("Image", style={'fontSize': 12, 'alignSelf': 'center'}),
             dcc.Input(id='image-input', type='number', value=0, min=0, max=22, step=1, style={'width': '40px'}),
-            html.Label("Zelle", style={'fontSize': 12, 'alignSelf': 'center'}),
+            html.Label("Nucleus", style={'fontSize': 12, 'alignSelf': 'center'}),
             dcc.Input(id='blob-input', type='number', value=1, min=1, max=9999, step=1, style={'width': '40px'}),
-            html.Button("Gehe zu...", id='goto-btn', n_clicks=0, style={'width': '190px'}),
+            html.Button("go to...", id='goto-btn', n_clicks=0, style={'width': '190px'}),
         ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
 
         # Class selection buttons
         html.Div([
-            html.Button("Class 1", id='class-1', n_clicks=0, style={'width': '90px'}),
-            html.Button("Class 2", id='class-2', n_clicks=0, style={'width': '90px'}),
-            html.Button("Class 3", id='class-3', n_clicks=0, style={'width': '90px'}),
-            html.Button("Class 4", id='class-4', n_clicks=0, style={'width': '90px'}),
+            html.Button("Myo", id='class-1', n_clicks=0, style={'width': '90px'}),
+            html.Button("Debris", id='class-2', n_clicks=0, style={'width': '90px'}),
+            html.Button("Others", id='class-3', n_clicks=0, style={'width': '90px'}),
+            html.Button("Schwann", id='class-4', n_clicks=0, style={'width': '90px'}),
         ], style={'display': 'flex', 'flexWrap': 'wrap', 'gap': '10px'}),
 
         # Save
-        html.Button("Speichern", id='save-now', n_clicks=0, style={'width': '190px'}),
+        html.Button("Save", id='save-now', n_clicks=0, style={'width': '190px'}),
         
         html.Div([
-            html.Label("Overlay Myotubes (Green)", style={'fontSize': 12}),
+            html.Label("Overlay Myotubes (Green)", style={'fontSize': 14}),
             dcc.Checklist(
                 id='overlay-ch1',
                 options=[{'label': 'Enable', 'value': 'ch1'}],
                 value=[],  # empty = off
                 inline=True,
-                style={'fontSize': 12}
+                style={'fontSize': 14}
             ),
-            html.Label("Overlay Marker (Blue)", style={'fontSize': 12}),
+            html.Label("Overlay Marker (Blue)", style={'fontSize': 14}),
             html.Div([
                 dcc.RadioItems(
                     id='overlay-ch2to4',
@@ -108,7 +108,7 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
                         {'label': 'None', 'value': 'none'},
                     ],
                     value='none',
-                    labelStyle={'display': 'inline-block', 'width': '90px', 'fontSize': 12},
+                    labelStyle={'display': 'inline-block', 'width': '90px', 'fontSize': 14},
                     style={'columnCount': 2}
                 )
             ])
@@ -120,17 +120,17 @@ app.layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize
         html.Div([
             html.Div([
                 html.Div([
-                    html.Label("Unteres Perzentil", style={'fontSize': 12}),
+                    html.Label("Lower percentile", style={'fontSize': 14}),
                     dcc.Input(id='lower-pct', type='number', value=1, min=0, max=100, step=0.1, style={'width': '30px'}),
                 ], style={'display': 'flex', 'alignItems': 'center', 'gap': '5px'}),
 
                 html.Div([
-                    html.Label("Oberes Perzentil", style={'fontSize': 12}),
+                    html.Label("Upper percentile", style={'fontSize': 14}),
                     dcc.Input(id='upper-pct', type='number', value=97, min=0, max=100, step=0.1, style={'width': '30px'}),
                 ], style={'display': 'flex', 'alignItems': 'center', 'gap': '5px'}),
             ], style={'display': 'flex', 'flexDirection': 'column', 'gap': '10px'}),
 
-            html.Button("Normalisieren", id='normalize-btn', n_clicks=0, style={'height': '100%'}),
+            html.Button("Normalize", id='normalize-btn', n_clicks=0, style={'height': '100%'}),
         ], style={'display': 'flex', 'gap': '20px'})
 
     ]),
@@ -395,7 +395,7 @@ def update_view(
     )
 
 
-    title = f"Zelle Nummer {blob_index} im Bild {image_index}"
+    title = f"Nucleus {blob_index} in picture {image_index}"
     if edge_blob:
         title += " (die Zelle geht aus dem Bildrand)"
 

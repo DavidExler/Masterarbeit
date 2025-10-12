@@ -61,7 +61,7 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
     pseudo_all_indices = []
     pseudo_all_labels = []
 
-    with open(os.path.join(BASE_DIR, in_folder, 'pseudo_labels\\pseudo_labels.json'), "r") as f:
+    with open(os.path.join(BASE_DIR, in_folder, 'pseudo_labels','pseudo_labels.json'), "r") as f:
         pseudo_label_json = json.load(f)
     for img_idx, blobs in pseudo_label_json.items():
         img_idx = int(img_idx)

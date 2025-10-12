@@ -10,11 +10,11 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # load the masks
 masks3D_20xRenamed = []
-with open(os.path.join(BASE_DIR,'data\\masks.pkl'), 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','masks.pkl'), 'rb') as f:
     masks3D_20xRenamed = pickle.load(f)
 
 images3D_20xRenamed_full = []
-with open(os.path.join(BASE_DIR,'data\\images.pkl'), 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
     images3D_20xRenamed_full = pickle.load(f)
 images3D_20xRenamed_full = [np.transpose(img, (0, 3, 1, 2)) for img in images3D_20xRenamed_full]
 
@@ -23,14 +23,14 @@ for im in images3D_20xRenamed_full:
     images3D_20xRenamed.append(im[:,(0,1,3),:,:])
 
 pseudo_imgs_20xRenamed_full = []
-with open(os.path.join(BASE_DIR,'data\\pseudo_labels\\images.pkl'), 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','pseudo_labels','images.pkl'), 'rb') as f:
     pseudo_imgs_20xRenamed_full = pickle.load(f)
 pseudo_imgs_20xRenamed = []
 for im in pseudo_imgs_20xRenamed_full:
     pseudo_imgs_20xRenamed.append(im[:,:,:,(0,1,3)].transpose(0,3,1,2))
 
 pseudo_masks_20xRenamed = []
-with open(os.path.join(BASE_DIR,'data\\pseudo_labels\\masks.pkl'), 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','pseudo_labels','masks.pkl'), 'rb') as f:
     pseudo_masks_20xRenamed = pickle.load(f)
 
 
@@ -53,12 +53,12 @@ def read_new_blob_folder(in_path):
     for im in images3D_20xRenamed_full:
         images3D_20xRenamed.append(im[:,(0,1,3),:,:])
 
-    with open(os.path.join(BASE_DIR, in_path, 'pseudo_labels\\images.pkl'), 'rb') as f:
+    with open(os.path.join(BASE_DIR, in_path, 'pseudo_labels','images.pkl'), 'rb') as f:
         pseudo_imgs_20xRenamed_full = pickle.load(f)
     for im in pseudo_imgs_20xRenamed_full:
         pseudo_imgs_20xRenamed.append(im[:,:,:,(0,1,3)].transpose(0,3,1,2))
 
-    with open(os.path.join(BASE_DIR, in_path, 'pseudo_labels\\masks.pkl'), 'rb') as f:
+    with open(os.path.join(BASE_DIR, in_path, 'pseudo_labels','masks.pkl'), 'rb') as f:
         pseudo_masks_20xRenamed = pickle.load(f)
 
 

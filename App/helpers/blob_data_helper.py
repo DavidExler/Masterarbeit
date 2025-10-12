@@ -1,11 +1,14 @@
 import pickle
 import numpy as np
+import os
 #from helpers.visualization_helper import normalize_with_cutoffs
 # load the masks
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 masks3D_20xRenamed = []
 #with open('helpers/masks3D_CELLPOSE_RUN_1.pkl', 'rb') as f:
 #    masks3D_20xRenamed = pickle.load(f)
-with open('C:\\Users\\david\\Documents\\Uni\\Masterarbeit\\repo\\Masterarbeit\\Labeling_App\\helpers\\Aufteilung_Labeling_App\\all\\masks3D_CELLPOSE_RUN_1_Quadrants.pkl', 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','masks.pkl'), 'rb') as f:
     masks3D_20xRenamed = pickle.load(f)
 blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
 
@@ -19,7 +22,7 @@ blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
 #li = len(images3D_20xRenamed)
 
 normalized_channels = []
-with open('C:\\Users\\david\\Documents\\Uni\\Masterarbeit\\repo\\Masterarbeit\\Labeling_App\\helpers\\Aufteilung_Labeling_App\\all\\normalized_channels.pkl', 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
     normalized_channels = pickle.load(f)
 
 

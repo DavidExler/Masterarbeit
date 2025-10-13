@@ -23,14 +23,14 @@ for im in images3D_20xRenamed_full:
     images3D_20xRenamed.append(im[:,(0,1,3),:,:])
 
 pseudo_imgs_20xRenamed_full = []
-with open(os.path.join(BASE_DIR,'data','pseudo_labels','images.pkl'), 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
     pseudo_imgs_20xRenamed_full = pickle.load(f)
 pseudo_imgs_20xRenamed = []
 for im in pseudo_imgs_20xRenamed_full:
     pseudo_imgs_20xRenamed.append(im[:,:,:,(0,1,3)].transpose(0,3,1,2))
 
 pseudo_masks_20xRenamed = []
-with open(os.path.join(BASE_DIR,'data','pseudo_labels','masks.pkl'), 'rb') as f:
+with open(os.path.join(BASE_DIR,'data','masks.pkl'), 'rb') as f:
     pseudo_masks_20xRenamed = pickle.load(f)
 
 
@@ -43,22 +43,22 @@ def normalize_channel(data):
 
 def read_new_blob_folder(in_path):
     print(f"reading from {in_path}")
-    with open(os.path.join(BASE_DIR, in_path, 'masks.pkl'), 'rb') as f:
+    with open(os.path.join(BASE_DIR, 'data', in_path, 'masks.pkl'), 'rb') as f:
         masks3D_20xRenamed = pickle.load(f)
 
-    with open(os.path.join(BASE_DIR, in_path, 'images.pkl'), 'rb') as f:
+    with open(os.path.join(BASE_DIR, 'data', in_path, 'images.pkl'), 'rb') as f:
         images3D_20xRenamed_full = pickle.load(f)
     images3D_20xRenamed_full = [np.transpose(img, (0, 3, 1, 2)) for img in images3D_20xRenamed_full]
 
     for im in images3D_20xRenamed_full:
         images3D_20xRenamed.append(im[:,(0,1,3),:,:])
 
-    with open(os.path.join(BASE_DIR, in_path, 'pseudo_labels','images.pkl'), 'rb') as f:
+    with open(os.path.join(BASE_DIR, 'data', in_path, 'images.pkl'), 'rb') as f:
         pseudo_imgs_20xRenamed_full = pickle.load(f)
     for im in pseudo_imgs_20xRenamed_full:
         pseudo_imgs_20xRenamed.append(im[:,:,:,(0,1,3)].transpose(0,3,1,2))
 
-    with open(os.path.join(BASE_DIR, in_path, 'pseudo_labels','masks.pkl'), 'rb') as f:
+    with open(os.path.join(BASE_DIR, 'data', in_path, 'masks.pkl'), 'rb') as f:
         pseudo_masks_20xRenamed = pickle.load(f)
 
 
@@ -398,8 +398,11 @@ class ObjectPatchDataset(Dataset):
             #print("-"*100)
             blob, oob = self.blob_helper.get_blob(img_idx, blob_idx, in_channel_dist=True, binary_mask=False)
             blob = bicubic_upsample_3d(blob, (256, 256))  # Ensure blob is padded to 256
+
+        
         if self.transform:
             blob = self.transform(blob)
+            #print(f"[DEBUG] Transforming complete")
         else:
             if isinstance(blob, np.ndarray):
                 blob = torch.from_numpy(blob)
@@ -853,11 +856,11 @@ def get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset):
         enc = get_resnet18_encoder(pretrained=pretrained, semiPretrained=semi_pretrained)
     elif encoder == 'ResNet101':
         enc = get_resnet101_encoder(pretrained=pretrained, semiPretrained=semi_pretrained)
-    elif encoder == 'Swin V2':
+    elif encoder == 'SwinV2':
         enc = get_swinl_encoder(pretrained=pretrained, semiPretrained=semi_pretrained)
     elif encoder == 'ConvNeXt':
         enc = get_convnextxl_encoder(pretrained=pretrained, semiPretrained=semi_pretrained)
-    elif encoder == 'EfficientNet V2':
+    elif encoder == 'EfficientNetV2':
         enc = get_efficientnetv2l_encoder(pretrained=pretrained, semiPretrained=semi_pretrained)
     else:
         print(f"[ERROR] no encoder \"{encoder}\" found, use ResNet18")
@@ -873,6 +876,8 @@ def get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset):
         
     train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=1)
+               
+    print(f"successfully loaded model and Dataloader of size {len(train_loader.dataset)} with {len(train_loader)} batches")
     return model, train_loader, val_loader
 
 

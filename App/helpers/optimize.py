@@ -15,21 +15,24 @@ import pickle
 import json
 #from monai.networks.nets import DenseNet121, resnet18
 import torch.nn as nn
-from helpers.classifier_helper import ClassificatorBlobHelper, Hybrid3Dto2D, read_new_blob_folder
 from monai.transforms import (
     Compose, RandRotate90, RandFlip, RandGaussianNoise,
     EnsureType, EnsureChannelFirst
 )
-from helpers.classifier_helper import ObjectPatchDataset, calculate_test_loss
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
-from helpers.classifier_helper import get_loaders, get_model
 #from cellpose import models
 import time
 from collections import Counter
 import argparse
 # helpers/optimize_helper.py
 from itertools import product
+
+from helpers.classifier_helper import get_loaders, get_model
+from helpers.classifier_helper import ClassificatorBlobHelper, Hybrid3Dto2D, read_new_blob_folder
+from helpers.classifier_helper import ObjectPatchDataset, calculate_test_loss
+# 
+# takes: masks, images
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -39,40 +42,87 @@ def run_optimize_job(encoders, decoders, preprocessors, pretrains, in_folder, ou
     out_folder: path where results are written
     """
     read_new_blob_folder(in_folder)
-    read_new_blob_folder(in_folder)
     combos = list(product(encoders, decoders, preprocessors, pretrains))
     total = len(combos)
     results = []
+    best_result = 0
     print("[DEBUG] all combos:")
     for idx, (enc, dec, pre, pretrain) in enumerate(combos, start=1):
         print(enc, dec, pre, pretrain)
     for idx, (enc, dec, pre, pretrain) in enumerate(combos, start=1):
         print("[DEBUG] training:", enc, dec, pre, pretrain)
         res = train(encoder=enc, decoder=dec, preproc=pre, pretrain=pretrain, in_folder=in_folder, out_folder=out_folder)
+        if best_result < res:
+            best_result = res
+            best_combo = (enc, dec, pre, pretrain)
         print(f"[DEBUG] training iteration done, result: {res}")
         results.append(res)
-    best_result = np.max(results)
+    pickle.dump(best_combo, open(os.path.join(BASE_DIR, 'data', out_folder, "best_combo.pkl"), "wb"))
+    
+    best_enc, best_dec, best_pre, best_pretrain = best_combo
+
+    # construct the filename used when saving predictions
+    
+    if best_pretrain == "Kein Vortraining":
+        best_pretrain = "KeinVortraining"
+    best_predictions_path = os.path.join(BASE_DIR, 'data', out_folder, f"predictions_{best_enc}{best_dec}{best_pretrain}{best_pre}.json")
+
+    # read the best predictions
+    with open(best_predictions_path, "r") as f:
+        best_data = json.load(f)
+
+    # save as predictions.json in the output folder
+    output_path = os.path.join(BASE_DIR, 'data', out_folder, "predictions.json")
+    with open(output_path, "w") as f:
+        json.dump(best_data, f)
+    
     return best_result
 
 #def train(encoder, decoder, preproc, pretrain, out_folder):
 #    print(encoder, decoder, preproc, pretrain)
 #    return 0.5
 def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
+    print(f"train thread initiated for {encoder, decoder, preproc, pretrain}")
     pseudo_all_indices = []
     pseudo_all_labels = []
 
-    with open(os.path.join(BASE_DIR, in_folder, 'pseudo_labels','pseudo_labels.json'), "r") as f:
+    with open(os.path.join(BASE_DIR, 'data', 'pseudo_labels','pseudo_labels.json'), "r") as f:
         pseudo_label_json = json.load(f)
+    total_instances = sum(len(instances) for instances in pseudo_label_json.values())
+    print(f"found {total_instances} pseudo instances")
     for img_idx, blobs in pseudo_label_json.items():
         img_idx = int(img_idx)
         for blob_idx, lbl in blobs.items():
             pseudo_all_indices.append((img_idx, int(blob_idx)))
             pseudo_all_labels.append(int(lbl))
+    print(f"found {len(pseudo_all_labels)} pseudo labels")
 
-    with open(os.path.join(BASE_DIR, in_folder, 'image_blob_indices.pkl'), "rb") as f:
-        all_indices = pickle.load(f)
-    with open(os.path.join(BASE_DIR, in_folder, 'labels.pkl'), "rb") as f:
-        all_labels = pickle.load(f)
+    label_path = os.path.join(BASE_DIR, "..", 'output','label_store.json')
+    print(f"looking for labels in Labeling App directory {label_path}")
+    with open(os.path.join(label_path), "r") as f:
+        label_data = json.load(f)
+
+    all_indices = []
+    all_labels = []
+
+    # convert JSON to flat lists
+    for img_name, instances in label_data.items():
+        # assume img_name is like "img0", "img1", etc.
+        img_idx = int(img_name.replace("img", ""))
+        for inst_idx_str, class_label in instances.items():
+            inst_idx = int(inst_idx_str)
+            all_indices.append((img_idx, inst_idx))
+            all_labels.append(class_label)
+
+    print(f"found {len(all_labels)} regular labels")
+    # now you can do your train/test split
+    train_idx, val_idx, train_lbls, val_lbls = train_test_split(
+        all_indices,
+        all_labels,
+        test_size=0.2,
+        random_state=42,
+        stratify=all_labels  # keeps class distribution balanced
+    )
 
     pseudo_train_idx, pseudo_val_idx, pseudo_train_lbls, pseudo_val_lbls = train_test_split(
         pseudo_all_indices,
@@ -82,13 +132,6 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
         stratify=pseudo_all_labels
     )
 
-    train_idx, val_idx, train_lbls, val_lbls = train_test_split(
-        all_indices,
-        all_labels,
-        test_size=0.2,
-        random_state=42,
-        stratify=all_labels  # optional: ensures label distribution is balanced
-    )
     print("[DEBUG] print first few blob - label combos")
     for (img_idx, blob_idx), label in zip(train_idx[:5], train_lbls[:5]):
         print(f"Image {img_idx}, Blob {blob_idx} → Class {label}")
@@ -127,6 +170,7 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
     model, reg_train_loader, reg_val_loader = get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset)
     if pretrain == 'Semi-supervised':
         model, reg_train_loader, reg_val_loader = get_model(encoder, decoder, preproc, 'Kein Vortraining', train_dataset, val_dataset)
+    model = model.to(device)
     print("[DEBUG] combo retreived, strat training")
 
     pseudo_train_loader, pseudo_val_loader = get_loaders(pseudo_train_dataset, pseudo_val_dataset)
@@ -149,7 +193,7 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
 
     criterion = torch.nn.CrossEntropyLoss(weight=class_weights)
 
-    checkpoint_dir = "data/checkpoints"
+    checkpoint_dir = os.path.join(BASE_DIR, 'data', out_folder)
 
     if pretrain == 'Semi-supervised':
         use_pseudo = True
@@ -206,6 +250,8 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
         train_loader = reg_train_loader
         val_loader = reg_val_loader
 
+    
+    
     print(f"Number of learnable parameters: {len([p for p in model.parameters() if p.requires_grad])}")
     print("-"*100)
     print(f"Training version {encoder} {decoder} {pretrain} {preproc} with {len(train_dataset)} training samples and {len(val_dataset)} validation samples. Size of each picture: {train_dataset[0][0].shape}")
@@ -222,13 +268,17 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
             train_loader = reg_train_loader
             val_loader = reg_val_loader 
             use_pseudo = False
+            if pretrain == "KeinVortraining":
+                pretrain = "Kein Vortraining"
             model, _, _, _ = get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset)
+            model = model.to(device)
             if os.path.exists(pseudo_checkpoint_path) and use_pseudo:
                 checkpoint = torch.load(pseudo_checkpoint_path, map_location=device)
                 model.load_state_dict(checkpoint["model_state_dict"])
         
 
         model.train()
+        print("train mode")
         running_loss = 0.0
 
         for batch_idx, (X, y) in enumerate(train_loader):
@@ -239,7 +289,7 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
                 end_time = time.time()
                 elapsed_time = end_time - start_time
                 start_time = time.time()
-                print(f"Epoch {epoch}, Batch {batch_idx} of {len(train_loader)}, time elapsed: {elapsed_time:.2f} seconds")
+            print(f"Epoch {epoch}, Batch {batch_idx} of {len(train_loader)}, time elapsed: {elapsed_time:.2f} seconds")
 
             # Forward
             #print(f"X shape: {X.shape}, y shape: {y.shape}") # X shape: torch.Size([32, 3, 32, 254, 254]), y shape: torch.Size([32])
@@ -269,12 +319,17 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
         #print(f"[Epoch {epoch+1}/{num_epochs}] Loss: {avg_loss:.4f}")
 
         # Save model checkpoint (overwrite to save space)
+        
+        if pretrain == "Kein Vortraining":
+            print("removing space")
+            pretrain = "KeinVortraining"
         if use_pseudo:
             checkpoint_path = os.path.join(checkpoint_dir, f"pseudo_model_{encoder}{decoder}{pretrain}{preproc}.pt")
             history_path = os.path.join(checkpoint_dir, f"pseudo_history_{encoder}{decoder}{pretrain}{preproc}.json")
         else:
             checkpoint_path = os.path.join(checkpoint_dir, f"model_{encoder}{decoder}{pretrain}{preproc}.pt")
             history_path = os.path.join(checkpoint_dir, f"history_{encoder}{decoder}{pretrain}{preproc}.json")
+        print(f"saving checkpoint as {checkpoint_path}")
         torch.save({
             "epoch": epoch + 1,
             "model_state_dict": model.state_dict(),
@@ -286,6 +341,7 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
         print(f"Saved checkpoint: {checkpoint_path}")
 
         if val_acc > best_val_acc:
+            print("new best accuracy!")    
             predicted = [int(x) for x in predicted]
             labels = [int(x) for x in labels]
             best_val_acc = val_acc  
@@ -300,11 +356,15 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
 
             val_acc_json = {"val_loss": val_loss, "val_acc": val_acc}
             
+            print(f"saving best accuracy as {val_acc_path}")
             with open(val_acc_path, "w") as f:
                 json.dump(val_acc_json, f)
+                
+            print(f"saving best predictions as {predictions_path}")
             with open(predictions_path, "w") as f:
                 json.dump({"predicted": predicted, "labels": labels}, f)
 
+            print(f"saving best checkpoint as {best_model_path}")
             torch.save({
                 "epoch": epoch + 1,
                 "model_state_dict": model.state_dict(),
@@ -316,4 +376,5 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
             print(f"New best model saved with val_acc = {val_acc:.4f} at: {best_model_path}")
     return best_val_acc
 if __name__ == "__main__":
-    train()
+    best = train('ResNet18', 'Schichten-Klassifikator', 'Kein Vortraining', 'Distanztransformation', 'Demo/Methodenvergleich', 'Demo/Vis')
+    print(best)

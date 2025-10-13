@@ -44,6 +44,9 @@ import threading, uuid
 from helpers.blob_data_helper import BlobDataHelper, get_next_undef
 from helpers.visualization_helper import normalize_with_cutoffs
 from helpers.optimize import run_optimize_job
+from helpers.segmentation import segment_folder
+from helpers.visualization_helper import visualizer
+from helpers.train import train_combo
 
 # ---- Labeling code ----
 
@@ -95,6 +98,7 @@ app.layout = html.Div([
         dcc.Tab(label='Labeling', value='tab-label'),
         dcc.Tab(label='Methoden Vergleich', value='tab-methods'),
         dcc.Tab(label='Training', value='tab-train'),
+        dcc.Tab(label='Visualisierung', value='tab-vis'),
     ]),
     html.Div(id='tab-content'),
 
@@ -124,7 +128,7 @@ def render_tab(tab):
     if tab == 'tab-seg':
         return html.Div([
             html.H3("1) Segmentierung"),
-            
+
             html.Div([
                 html.Label("Input Folder"),
                 dcc.Input(id="seg-input-folder-path", type="text", value="Demo/Segmentation", style={"width": "70%"}),
@@ -133,16 +137,28 @@ def render_tab(tab):
 
             html.Div([
                 html.Label("Output Folder"),
-                dcc.Input(id="seg-output-folder-path", type="text", value="Demo/Segmentation", style={"width": "70%"}),
+                dcc.Input(id="seg-output-folder-path", type="text", value="Demo/Methodenvergleich", style={"width": "70%"}),
                 html.Button("Select", id="select-output-folder", n_clicks=0)
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
+
             html.Div(id='seg-folders-display', style={'marginTop': '10px', 'fontStyle': 'italic'}),
             html.Br(),
+
             html.Button("Start Segmentation", id='seg-start-btn'),
             html.Button("Abort", id='seg-abort-btn', style={'marginLeft': '10px'}),
             html.Br(), html.Br(),
-            #html.Label("Progress"),
-            #html.Progress(id='seg-progress', value=0, max=100, style={'width': '60%'}),
+
+            # Running state + job id store + polling interval
+            dcc.Store(id="seg-running", data=False),
+            dcc.Store(id="seg-job-id", data=""),
+            dcc.Interval(id="seg-complete-interval", interval=1000, n_intervals=0),
+
+            # Loading spinner + status text + result display
+            dcc.Loading(id="seg-loading", children=[
+                html.Div(id="seg-running-indicator", style={"marginTop":"6px","fontSize":"16px","color":"#333"})
+            ], type="circle"),
+            html.Div(id="seg-results-display", style={"marginTop":"6px","fontSize":"14px","color":"#006600"}),
+
             html.Div(style={'marginTop': '20px', 'color': '#666'}, children=[
                 html.P("HELPER / BACKEND HOOK: call your segmentation helper here when Start pressed.")
             ])
@@ -290,19 +306,19 @@ def render_tab(tab):
             html.Div([
                 html.Label("Input Folder"),
                 dcc.Input(id="methods-input-folder-path", type="text", value="Demo/Methodenvergleich", style={"width": "70%"}),
-                html.Button("Select", id="select-input-folder", n_clicks=0)
+                html.Button("Select", id="methods-select-input-folder", n_clicks=0)
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
             html.Div([
                 html.Label("Output Folder"),
-                dcc.Input(id="methods-output-folder-path", type="text", value="Demo/Methodenvergleich", style={"width": "70%"}),
-                html.Button("Select", id="select-output-folder", n_clicks=0)
+                dcc.Input(id="methods-output-folder-path", type="text", value="Demo/Training", style={"width": "70%"}),
+                html.Button("Select", id="methods-select-output-folder", n_clicks=0)
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
             html.Div(id="methods-folders-display", style={"marginTop": "10px", "fontStyle": "italic"}),
 
             html.Br(),
             html.Label("Methoden Optimierung (Mindestens eine Methode je Gruppe)"),
             html.Div([
-                html.Div([html.B('Encoder'), dcc.Checklist(['CellposeSAM', 'ResNet18', 'ResNet101', 'Swin V2', 'ConvNeXt', 'EfficientNet V2'], id='methods-group-1')]),
+                html.Div([html.B('Encoder'), dcc.Checklist(['CellposeSAM', 'ResNet18', 'ResNet101', 'SwinV2', 'ConvNeXt', 'EfficientNetV2'], id='methods-group-1')]),
                 html.Div([html.B('Decoder'), dcc.Checklist(['Schichten-Klassifikator', 'Volumen-Klassifikator'], id='methods-group-2')]),
                 html.Div([html.B('Vorverarbeitung (Nucleus Kanal)'), dcc.Checklist(['Distanztransformation', 'Segmentierungsmaske'], id='methods-group-3')]),
                 html.Div([html.B('Vortraining'), dcc.Checklist(['Kein Vortraining', 'Semi-supervised', 'Fully-supervised'], id='methods-group-4')]),
@@ -334,26 +350,49 @@ def render_tab(tab):
 
             html.Div([
                 html.Label("Output Folder"),
-                dcc.Input(id="train-output-folder-path", type="text", value="Demo/Training", style={"width": "70%"}),
+                dcc.Input(id="train-output-folder-path", type="text", value="Demo/Vis", style={"width": "70%"}),
                 html.Button("Select", id="train-select-output-folder", n_clicks=0),
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
             html.Div(id="train-selected-folder-display", style={"marginTop": "10px", "fontStyle": "italic"}),
             html.Br(),
-            html.Label("Model / Params"),
-            dcc.Dropdown(['ResNet18','ResNet50','EfficientNetB0'], id='train-arch', value='ResNet18', style={'width': '300px'}),
-            html.Br(),
             html.Button("Start Training", id='train-start-btn'),
-            html.Button("Stop", id='train-stop-btn', style={'marginLeft': '10px'}),
             html.Br(), html.Br(),
-            #html.Label("Progress"),
-            #html.Progress(id='train-progress', value=0, max=100, style={'width': '60%'}),
-            dcc.Store(id="train-running", data=False),
-            html.Div(id="train-running-indicator", style={"marginTop":"6px", "fontSize":"16px", "color":"#333"}),
+
+            # Stores / status / polling
+            dcc.Store(id="train-job-id", data=""),
+            dcc.Interval(id="train-complete-interval", interval=1000, n_intervals=0, disabled=True),
+            html.Div(id="train-running-indicator", style={"marginTop":"6px","fontSize":"16px","color":"#333"}),
+            html.Div(id="train-results-display", style={"marginTop":"6px","fontSize":"14px","color":"#006600"}),
+
             html.Div(style={'marginTop': '20px', 'color': '#666'}, children=[
                 html.P("HELPER / BACKEND HOOK: start training here.")
             ])
         ], style={'padding': '20px'})
+    if tab == 'tab-vis':
+        return html.Div([
+            html.H3("3) Visualization"),
 
+            html.Div([
+                html.Label("Input Folder"),
+                dcc.Input(id="vis-input-folder-path", type="text", value="Demo/Vis", style={"width": "70%"})
+            ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
+            html.Div([
+                html.Label("Input Folder"),
+                dcc.Input(id="vis-output-folder-path", type="text", value="Demo/Vis", style={"width": "70%"})
+            ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
+
+            html.Br(),
+            html.Button("Start Visualization", id='vis-start-btn'),
+
+            html.Br(), html.Br(),
+
+            html.Div([
+                dcc.Graph(id="vis-graph-volumes", style={"width": "32%"}),
+                dcc.Graph(id="vis-graph-classes", style={"width": "32%"}),
+                dcc.Graph(id="vis-graph-mask", style={"width": "32%"})
+            ], style={"display": "flex", "gap": "10px"}),
+
+        ], style={'padding': '20px'})
     return html.Div()
 
 # --- Folder modal open/close & confirming handling --------------------------
@@ -375,6 +414,60 @@ def seg_update_folder_display(input_path, output_path):
         html.Div(f"📁 Output folder: {output_path or '(not set)'}")
     ])
 
+
+# --- control callback for segmentation start/abort/polling ---
+@app.callback(
+    Output("seg-running", "data"),
+    Output("seg-job-id", "data"),
+    Output("seg-running-indicator", "children"),
+    Output("seg-results-display", "children"),
+    Output("seg-complete-interval", "disabled"),   # <--- new output
+    Input("seg-start-btn", "n_clicks"),
+    Input("seg-complete-interval", "n_intervals"),
+    State("seg-input-folder-path", "value"),
+    State("seg-output-folder-path", "value"),
+    State("seg-job-id", "data"),
+    prevent_initial_call=True,
+)
+def seg_control(start_clicks, n_intervals, in_folder, out_folder, job_id):
+    trigger = ctx.triggered_id
+
+    # --- Start segmentation ---
+    if trigger == "seg-start-btn":
+        if not in_folder:
+            return dash.no_update, dash.no_update, "Please set input folder", "", True  # keep interval disabled
+
+        job_id = str(uuid.uuid4())
+
+        def _seg_worker(job_id, in_folder, out_folder):
+            try:
+                number_of_segments = segment_folder(in_folder, out_folder)
+                RESULTS[job_id] = {"count": int(number_of_segments)}
+            except Exception as e:
+                RESULTS[job_id] = {"error": str(e)}
+
+        threading.Thread(target=_seg_worker, args=(job_id, in_folder, out_folder), daemon=True).start()
+        # start polling: enabled = False -> disabled False means interval runs
+        return True, job_id, "Segmentation running…", "", False
+
+    # --- Polling interval checks results ---
+    elif trigger == "seg-complete-interval":
+        if not job_id:
+            return dash.no_update, dash.no_update, None, "", True
+        if job_id in RESULTS:
+            val = RESULTS.pop(job_id)
+            if isinstance(val, dict) and "error" in val:
+                # stop polling (disabled True), clear indicator
+                return False, dash.no_update, None, f"Error: {val['error']}", True
+            count = val.get("count", None)
+            # stop polling and clear spinner (indicator None)
+            return False, dash.no_update, None, f"Segments processed: {count}", True
+        # still running: keep polling enabled, show running text
+        return dash.no_update, dash.no_update, "Segmentation running…", "", False
+
+    return dash.no_update, dash.no_update, None, "", True
+
+
 # --- Methods/Optimization folders ---
 @app.callback(
     Output("methods-folders-display", "children"),
@@ -388,58 +481,49 @@ def methods_update_folder_display(input_path, output_path):
     ])
 
 @app.callback(
-    Output("methods-running", "data"),
-    Output("methods-job-id","data"),
     Output("methods-best-result", "children"),
     Input("methods-start-btn", "n_clicks"),
-    Input("methods-stop-btn", "n_clicks"),
-    Input("methods-complete-interval", "n_intervals"),
     State("methods-group-1", "value"),
     State("methods-group-2", "value"),
     State("methods-group-3", "value"),
     State("methods-group-4", "value"),
     State("methods-input-folder-path", "value"),
     State("methods-output-folder-path", "value"),
-    State("methods-job-id", "data"),
-    prevent_initial_call=True,
+    prevent_initial_call=True
 )
-def methods_control(start_clicks, stop_clicks, n_intervals, g1, g2, g3, g4, in_folder, out_folder, job_id):
-    trigger = ctx.triggered_id
+def methods_control(start_clicks, g1, g2, g3, g4, in_folder, out_folder):
+    if not (g1 and g2 and g3 and g4):
+        return "Please select at least one method per group."
 
-    # --- Start button ---
-    if trigger == "methods-start-btn":
-        if not (g1 and g2 and g3 and g4):
-            return dash.no_update, dash.no_update, dash.no_update
+    try:
+        best = run_optimize_job(g1, g2, g3, g4, in_folder, out_folder)
+        return f"Best result: {best}"
+    except Exception as e:
+        return f"Error during training: {e}"
 
-        job_id = str(uuid.uuid4())
+@app.callback(
+    Output("vis-graph-volumes", "figure"),
+    Output("vis-graph-classes", "figure"),
+    Output("vis-graph-mask", "figure"),
+    Input("vis-start-btn", "n_clicks"),
+    State("vis-input-folder-path", "value"),
+    State("vis-output-folder-path", "value"),
+    prevent_initial_call=True
+)
+def vis_update(n_clicks, in_folder, out_folder):
+    if not in_folder or not out_folder:
+        raise dash.exceptions.PreventUpdate
 
-        def _worker(job_id, g1, g2, g3, g4, in_folder, out_folder):
-            try:
-                best = run_optimize_job(g1, g2, g3, g4, in_folder, out_folder)
-                RESULTS[job_id] = best
-            except Exception as e:
-                RESULTS[job_id] = {"error": str(e)}
+    try:
+        fig1, fig2, fig3 = visualizer(in_folder, out_folder)
+    except Exception as e:
+        # fallback: empty figures with error message
+        import plotly.graph_objects as go
+        fig1 = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
+        fig2 = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
+        fig3 = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
 
-        threading.Thread(target=_worker, args=(job_id, g1, g2, g3, g4, in_folder, out_folder), daemon=True).start()
-        return True, job_id, ""  # spinner on, job_id stored, result empty
-
-    # --- Stop button ---
-    elif trigger == "methods-stop-btn":
-        return False, dash.no_update, ""  # spinner off, keep job_id, result empty
-
-    # --- Polling interval ---
-    elif trigger == "methods-complete-interval":
-        if not job_id:
-            return dash.no_update, dash.no_update, ""
-        if job_id in RESULTS:
-            val = RESULTS.pop(job_id)
-            if isinstance(val, dict) and "error" in val:
-                return False, dash.no_update, f"Error: {val['error']}"
-            return False, dash.no_update, f"Best result: {val}"  # spinner off
-        return dash.no_update, dash.no_update, ""  # still running
-
-    return dash.no_update, dash.no_update, ""
-
+    return fig1, fig2, fig3
 
 # --- Training folders ---
 @app.callback(
@@ -452,6 +536,59 @@ def train_update_folder_display(input_path, output_path):
         html.Div(f"📁 Input folder: {input_path or '(not set)'}"),
         html.Div(f"📁 Output folder: {output_path or '(not set)'}")
     ])
+@app.callback(
+    Output("train-job-id", "data"),                 # 1
+    Output("train-running-indicator", "children"),  # 2
+    Output("train-results-display", "children"),    # 3
+    Output("train-complete-interval", "disabled"),  # 4
+    Input("train-start-btn", "n_clicks"),
+    Input("train-complete-interval", "n_intervals"),
+    State("train-input-folder-path", "value"),
+    State("train-output-folder-path", "value"),
+    State("train-job-id", "data"),
+    prevent_initial_call=True,
+)
+def train_control(start_clicks, n_intervals, in_folder, out_folder, job_id):
+    trigger = ctx.triggered_id
+
+    # --- Start training ---
+    if trigger == "train-start-btn":
+        if not in_folder:
+            # keep job_id unchanged, show message, keep interval disabled
+            return dash.no_update, dash.no_update, "Please set input folder", True
+
+        job_id = str(uuid.uuid4())
+
+        def _train_worker(job_id, in_folder, out_folder):
+            try:
+                best = train_combo(in_folder, out_folder)
+                RESULTS[job_id] = {"best": best}
+            except Exception as e:
+                RESULTS[job_id] = {"error": str(e)}
+
+        threading.Thread(target=_train_worker, args=(job_id, in_folder, out_folder), daemon=True).start()
+        # set job id, show running text, clear results area, enable polling (disabled=False)
+        return job_id, "Training running…", "", False
+
+    # --- Polling interval checks results ---
+    elif trigger == "train-complete-interval":
+        if not job_id:
+            # nothing running: disable interval
+            return dash.no_update, None, "", True
+
+        if job_id in RESULTS:
+            val = RESULTS.pop(job_id)
+            if isinstance(val, dict) and "error" in val:
+                # finished with error: clear job_id, stop polling
+                return "", None, f"Error: {val['error']}", True
+            best = val.get("best", None)
+            # success: clear job_id, stop polling, show result
+            return "", None, f"Best training result: {best}", True
+
+        # still running: no change to job_id, keep indicator and polling enabled
+        return dash.no_update, "Training running…", dash.no_update, False
+
+    return dash.no_update, dash.no_update, dash.no_update, True
 
 # --- Labeling callbacks ---------------------------------------------------
 # We reuse your update_view callback body but register it on the single Dash app.

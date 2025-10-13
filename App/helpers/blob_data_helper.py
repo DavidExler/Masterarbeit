@@ -1,8 +1,7 @@
 import pickle
 import numpy as np
 import os
-#from helpers.visualization_helper import normalize_with_cutoffs
-# load the masks
+# needs (Z,X,Y,C)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 masks3D_20xRenamed = []
@@ -24,6 +23,16 @@ blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
 normalized_channels = []
 with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
     normalized_channels = pickle.load(f)
+
+
+def read_new_blob_folder():
+    with open(os.path.join(BASE_DIR, 'data', 'masks.pkl'), 'rb') as f:
+        masks3D_20xRenamed = pickle.load(f)
+
+    with open(os.path.join(BASE_DIR, 'data', 'images.pkl'), 'rb') as f:
+        normalized_channels = pickle.load(f)
+
+
 
 
 def normalize_channel(data):

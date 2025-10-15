@@ -142,7 +142,7 @@ Der Encoder nutzt beispielsweise Bildfaltungen mit Kernen, deren optimale Gewich
 Dabei verringert der Encoder iterativ die Größe der Eingabe jeder Schicht des Netzes in X, Y und im dreidimensionalen Fall in Z Richtung, erhöht dabei aber die Informationstiefe pro verbleibendem Pixel, bis ein hochdimensionaler Merkmalsvektor übrig bleibt. 
 Der Decoder hebt, meist durch transponierte Bildfaltungen \cite{Zeiler2010, Zeiler2014}, die räumliche Auflösung schrittweise wieder an, indem er die Bilddimensionen vergrößert und die Merkmalskanäle gleichzeitig reduziert \cite{Noh2015}. 
 Über sogenannte Skip-Connections \cite{Ronneberger2015} werden dabei Merkmale aus den entsprechenden Encoder-Schichten mit den Decoder-Stufen verknüpft, sodass sowohl globale Kontextinformationen als auch feine Strukturen für die Segmentierung erhalten bleiben \cite{Mostajabi2015, Gu2018}. \newline
-TODO: 3D bzw 2.5D - Welche Methoden werden speziell für 3D genutzt?
+TODO: 3D-bzw 2.5D - Welche Methoden werden speziell für 3D-genutzt?
 
 %Long2015 - semantische Segmentierung - FCN
 %Ronneberger2015 - U-Net
@@ -193,7 +193,7 @@ Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} 
 Als \textbf{Decoder} wird der zusammenfassende Teil des Klassifikators bezeichnet, er gibt einen Zuversichtlichkeitswert für jede Klasse aus.
 Der State-of-the-Art für den Decoder ist ein neuronales Netz, das auf Basis der abstrakten Merkmale des Encoders eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
 Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger Annotation den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\newline.
-\textit{TODO: 3D bzw 2.5D - Welche Methoden werden speziell für 3D genutzt, gibt es Methoden zur Anpassung?}
+\textit{TODO: 3D-bzw 2.5D - Welche Methoden werden speziell für 3D-genutzt, gibt es Methoden zur Anpassung?}
 \section{Literaturrecherche}
 
 \subsection{Benchmark}\label{sec:bench}
@@ -332,26 +332,36 @@ Dieser Aufbau ist in Abb. \ref{fig:SwinArchitecture} dargestellt.
 
 \section{Offene Probleme}
 Einzelne Myotuben können durch kein Segmentierungsmodell der Literatur instanzsegmentiert werden.
-Das verhindert nicht nur das automatische Auslesen der Eigenschaften von Myotuben, sondern unter umständen auch das manuelle Auslesen.
 Selbst für Experten sind in dichten Strukturen Instanzen von Myotuben nicht immer eindeutig trennbar.
 %Es ist nicht erforscht, welches Segmentierungsmodell für Nuclei das beste ist, im Bezug auf die Eignung der Segmentierungsmasken zur Extraktion von Eigenschaften der Nuclei.
 Nicht viele Segmentierungsmodelle für Nuclei sind erhältlich, besonders für dreidimensionale Daten.
 Die verfügbaren Modelle verhalten sich unterschiedlich bei verschiedenen Datensätzen und ihre Eignung für bestimmte Aufgaben muss für jede Anwendung individuell geprüft werden.
-Außerdem gibt es für die speziefischen Aufnahmebedingungen und Marker der vorliegenden Daten keinen angepassten Klassifikator.
-Aufgrund der Besonderheiten der vorliegenden Daten ist das Verhalten von vortrainierten Encodern und etablierten Methoden unvorhersehbar.
+Außerdem gibt es für die spezifischen Aufnahmebedingungen und Marker der \textbf{TODO Daten kurz Beschreiben} Daten keinen angepassten Klassifikator.
+Der Erfolg von einem Übertrag verschiedener vortrainierter Encoder und etablierter Methoden auf die vorliegenden Daten ist unvorhersehbar, da sich die gelernten Merkmalsräume eventuell nicht für die Klassifikation der neuartigen dreidimensionalen Daten eignen.
 Eine weitere Fragestellung ist deshlab, wie Methoden der Klassifikation mit der Kombination der Marker umgehen. 
 Für jeden Datensatz mit neuen Zellkernklassen und Aufnahmebedingungen muss für optimale Klassifikatorleistung nicht nur ein neues Modell trainiert werden, sondern auch Methoden- und Hyperparameteroptimierung durchgeführt werden.
 Des Weiteren ist der Umgang mit dreidimensionalen Daten, besonders in Umgebungen ohne große Rechenleistung ein offenes Problem.
-Diverse Lösungen existieren, um dreidimensionale Daten mit Expertenwissen zu versehen, diese Lösungen können aber verbessert werden, indem sie weiter an den Arbeitsablauf der Experten und den Datensatz angepasst werden und dabei der Aufwand für die Experten verringert wird.
+Diverse Lösungen existieren, um dreidimensionale Daten mit Expertenwissen zu versehen.
+Diesen Lösungen fehlt bislang, ein Arbeitsablauf der Daten unmittelbar segmentiert und vorbereitet, um relevante Bildausschnitte direkt aus dem Datensatz zu extrahieren, sodass Experten ausschließlich annotieren müssen.
 
 \section{Zielsetzung}
 Im Zuge der vorliegenden Arbeit soll die automatische Extraktion von interpretierbaren Eigenschaften der Myotubenkulturen ermöglicht werden.
-Es soll ein optimales Segmentierungsmodell gefunden werden, das die Eigenschaften der Nuclei in den vorliegenden, dreidimensionalen Daten besonders wenig durch Segmentierungsfehler verfälscht.
-Das Segmentierungsmodell soll dann genutzt werden, um außerdem einen Ablauf zu schaffen, in dem Experten die Klassen der Nuclei besonders zeiteffizient annotieren können, um einen Klassifikator zu trainieren.
-Durch das Anreichern der dreidimensionalen Daten durch die Segmentierungsmasken und durch automatisches Fokusieren einzelner Nuclei soll sowohl die Rechenzeit optimiert werden als auch der Aufwand einzelne Nuclei entlang drei Dimensionen zu suchen eliminiert werden.
-Die enstehenden Annotationen sollen direkt in einen Trainingsablauf für Klassifikatoren eingebunden sein.
-Hierbei müssen Klassifikatoren mit dreidimensionalen Daten von variierender Tiefe umgehen können.
-Nach der Annotation soll ein ausführlicher Methodenvergleich, auch für Nutzer*Innen ohne Programmierkenntnisse, ermöglicht werden.
-Außerdem sollen die entstehenden Klassifikatoren einfach ausführbar sein und die ausgelesenen Eigenschaften leicht zugänglich sein.
-In einer Parameterbestimmung soll das Optimum explizit für die vorliegenden Aufnahmen bestimmt werden.
-Die Positionen und Klassen der Nuclei sollen dann codiert werden, um die Daten damit Anzureichern und dadurch einem Segmentierungsmodell die Instanzsegmentierung der Myotuben zu ermöglichen. 
+Zu diesem Ziel bearbeitet die vorliegende Arbeit Zwischenziele und liefert Folgendes:
+\begin{itemize}
+    \item Es soll ein Segmentierungsmodell gefunden werden, das die Eigenschaften der Nuclei in den vorliegenden, dreidimensionalen Daten besonders wenig durch Segmentierungsfehler verfälscht.
+    Dazu wird ein neues Bewertungskriterium für Instanzsegmentierung eingeführt und auf einige etablierte Modelle angewandt.
+    \item Das Segmentierungsmodell soll dann genutzt werden, um außerdem einen Ablauf zu schaffen, in dem Experten die Klassen der Nuclei besonders zeiteffizient annotieren können, um einen Klassifikator zu trainieren.
+    Durch das Anreichern der dreidimensionalen Daten durch die Segmentierungsmasken und durch automatisches Fokusieren einzelner Nuclei soll sowohl die Rechenzeit optimiert werden als auch der Aufwand einzelne Nuclei entlang drei Dimensionen zu suchen, eliminiert werden.
+    Hierzu wird eine neue Anwendung entwickelt, die 3D-Zelldaten liest und dann eine Oberfläche zum Annotieren bereitstellt.
+    \item Die enstehenden Annotationen sollen direkt in einen Trainingsablauf für Klassifikatoren eingebunden sein.
+    Hierbei müssen Klassifikatoren mit dreidimensionalen Daten von variierender Tiefe umgehen können.
+    Ein ausführlicher Methodenvergleich verschiedener Encoder, Decoder, Vorverarbeitungsmethoden und auch Vortrainingsmethoden soll für Nutzer*Innen ohne Programmierkenntnisse ermöglicht werden.
+    Dazu wird eine neue Anwendung entwickelt, die die zuvor erstellten Annotationen und Segmentierungsmasken nutzt um einen Klassifikator zu trainieren.
+    Nutzer*Innen können in einer grafischen Oberfläche verschiedene Methoden zum Vergleich auswählen und in einem automatischen Prozess werden Klassifikatoren aller Kombinationen trainiert und verglichen.
+    \item Außerdem sollen die ausgelesenen Eigenschaften der eingegebenen Zelldaten leicht zugänglich sein.
+    In einer weiteren neuen Anwendung werden automatisch die Vorhersagen des Klassifikators mit dem besten Ergebnis im Methodenvergleich genutzt, um Nutzer*Innen Graphen mit den Eigenschaften der Zellkultur darzubierten.
+    \item Zuletzt sollen alle neu entwickelten Module zu einer Gesamtanwendung zusammengefasst und getestet werden.
+    In einer Parameterbestimmung wird das Optimum explizit für die vorliegenden Aufnahmen mithilfe der neuen Anwendung bestimmt.
+\end{itemize}
+
+%Die Positionen und Klassen der Nuclei sollen dann codiert werden, um die Daten damit Anzureichern und dadurch einem Segmentierungsmodell die Instanzsegmentierung der Myotuben zu ermöglichen. 

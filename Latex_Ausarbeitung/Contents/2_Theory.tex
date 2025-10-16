@@ -11,50 +11,6 @@ Hierzu werden sowohl die Methoden verwandter Projekte und Studien als auch die L
 Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
 
 \section{Methoden}
-\subsection{Unfertiger Zwischendurch-Text!}
-\textbf{Bilineare Interpolation} ist ein Verfahren zur Bildnachbearbeitung, das die Dimension eines Bilds erhöht, indem Werte für neue Pixel zwischen bestehenden geschätzt werden \cite{Smith1981}.
-Zur Schätzung des neuen Wert wird dabei ein gewichtetes Mittel aus den Vier benachbarten Pixeln genommen:
-\begin{equation}
-\hat{f}(x,y) = (1-p)(1-q)f_{i,j} + p(1-q)f_{i+1,j} + (1-p)q f_{i,j+1} + pq f_{i+1,j+1},
-\end{equation}
-wobei $\hat{f}(x,y)$ der neue Wert, $p, q \in [0, 1]$ die relativen Abstände zu den Nachbarpixeln, $i, j$ die Indizes der Nachbarpixel und $f$ die Intensität der Nachbarpixel sind. \newline
-\textbf{Normierungsmethoden}:\newline
-Batch Normalization normalisiert die Eingaben einer Schicht über eine Mini-Batch, indem für jedes abstrakte Merkmal der Schicht, das bei der Dimensionsreduktion des Bilds entsteht, eine Transformation durchgeführt wird \cite{Ioffe2015}.
-Für die Transformation wird der Mittelwert des Mini-Batches vom Wert abgezogen und durch die Standardabweichung geteilt.
-Layer Normalization verfolgt einen ähnlichen Ansatz, berechnet Mittelwert und Varianz aber pro Schicht von allen Neuronen \cite{Ba2016}.
-Beide stabilisieren das Training tiefer neuronaler Netze und lassen die Normalisierung als Bestandteil der Modellarchitektur lernen, statt sie nur als Preprocessing-Schritt durchzuführen \cite{Santurkar2018, Xu2019}.\newline
-\textbf{Cross-Entropy-Loss}:\newline
-Der Cross-Entropy Loss \cite{Sukhbaatar2014} \newline
-\begin{equation}
-    \mathcal{L}(\theta) = \frac{1}{N} \sum_{n=1}^{N} 
-    - \log p(\tilde{y} = \tilde{y}_n \mid x_n, \theta), 
-%    = \frac{1}{N} \sum_{n=1}^{N} 
-%    - \log \Bigg( \sum_{i=1}^{c} 
-%    p(\tilde{y} = \tilde{y}_n \mid y = i)\, p(y=i \mid x_n, \theta) \Bigg), 
-\end{equation}
-ist die etablierte Loss Funktion für das Training von Klassifikatoren \cite{GordonRodriguez2020, Mao2023}.
-Ein Problem der Cross-Entropy Loss Minimierung ist ihre Anfälligkeit für Rauschen der Annotationen.
-Viele verschiedene Ansätze in der Forschung gehen dieses Problem an \cite{Goldberger2017, Han2018, Hendrycks2018}.
-Eine häufig genutzte Methode ist die Minimierung des Generalized Cross Entropy Loss:
-\begin{equation}
-%    \argmin_{\theta} 
-%    \sum_{i=1}^{n} v_i \mathcal{L}_q(f(x_i; \theta), y_i) - v_i \mathcal{L}_q(k) 
-%    = 
-    \argmin_{\theta,\, w \in [0,1]^n} 
-    \sum_{i=1}^{n} w_i \mathcal{L}_q(f(x_i; \theta), y_i) 
-    - \mathcal{L}_q(k) \sum_{i=1}^{n} w_i ,
-\end{equation}
-für das Klassifikator-Training \cite{Zhang2018}.
-\textbf{Genauigkeit}
-Für den Vergleich der Methoden der Klassifikation wird die Genauigkeit des getesteten Netz auf dem manuell annotierten Testanteil des Zieldatensatz verwendet:
-\begin{equation}
-  \text{Genauigkeit} = \frac{1}{N} \sum_{i=1}^{N} \mathbf{1}\{\hat{y}_i = y_i\},
-\end{equation}
-wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klassifikators und $y_i$ die Annotation ist. 
-Als Genauigkeit eines trainierten Klassifikators wird dann der maximale Wert bezeichnet, den der Klassifikator während des Trainings erreicht.
-Hierzu werden die Modelle nach jeder Epoche evaluiert.
-(\textit{Notiz: Ist das hier richtig platziert?})\newline
-
 \subsection{Benchmark}
 Um die Leistungsfähigkeit der Applikation, die im Rahmen der vorliegenden Thesis erstellt wird, zu prüfen, sind umfangreiche Datensätze notwendig. 
 Für jede isolierbare Aufgabe muss ein Datensatz gewählt werden, der Annotationen entsprechend dieser Aufgabe mitbringt.
@@ -109,7 +65,7 @@ Ghosh et al. definieren Domänenanpassung: "Gegeben Quell- und Ziel-Domänen $D_
 %    \item Welche KI-Lösungen gibt es?
 %    %\item \textit{(Hier oder im nächsten Kapitel)} Welche Foundationmodels bzw Backbone/Pyramid Kombinationen gibt es?
 %\end{itemize}
-Segmentierung ist die Aufgabe, Pixel mit semantischen Labels zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
+Segmentierung ist die Aufgabe, Pixel mit semantischen Annotationen zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
 In Abb. \ref{fig:Segmentation} sind beispielhaft Annotationen der verschiedenen Arten von Segmentierung zu sehen \cite{kirillov2019PQ}. \newline
 \begin{figure}[htbp]
     \centering
@@ -129,11 +85,11 @@ In Abb. \ref{fig:Segmentation} sind beispielhaft Annotationen der verschiedenen 
         \includegraphics[width=\textwidth]{Figures/Panoptic.png}
         \caption{Panoptisch}
     \end{subfigure}
-    \caption{Die verschiedenen Arten der Segmentierung. Links ist das Originalbild zu sehen, rechts folgend sind die zugeordneten pixelweise Labels farblich eingezeichnet. 
-    Gleiche Farben bedeuten gleiche Labels. 
-    In der semantischen Maske sind gleiche Labels mehrerer Objekte von semantisch gleichen Klassen zu finden. 
-    In der Instanz-Maske ist jedem Objekt ein individuelles Label zugeordnet, ungeachtet der Klasse des Objekts. 
-    In der panoptischen Maske sind auch einzelne Objekte getrennt, den Labels verschiedener Klassen werden allerdings noch semantische Klassen zugeordnet \cite{kirillov2019PQ}.}
+    \caption{Die verschiedenen Arten der Segmentierung. Links ist das Originalbild zu sehen, rechts folgend sind die zugeordneten pixelweise Annotationen farblich eingezeichnet. 
+    Gleiche Farben bedeuten gleiche Annotationen. 
+    In der semantischen Maske sind gleiche Annotationen mehrerer Objekte von semantisch gleichen Klassen zu finden. 
+    In der Instanz-Maske ist jedem Objekt eine individuelle Annotation zugeordnet, ungeachtet der Klasse des Objekts. 
+    In der panoptischen Maske sind auch einzelne Objekte getrennt, den Annotationen verschiedener Klassen werden allerdings noch semantische Klassen zugeordnet \cite{kirillov2019PQ}.}
     \label{fig:Segmentation}
 \end{figure}
 Für die verschiedenen Segmentierungsarten werden Architekturen an die Aufgabe angepasst \cite{Arnab2017, Chen2018}. 
@@ -149,6 +105,7 @@ TODO: 3D-bzw 2.5D - Welche Methoden werden speziell für 3D-genutzt?
 %Arnab2017 - Pixelwise instance segmentation with a dynamically instantiated network
 %Chen2018 - Masklab: {Instance} segmentation by refining object detection with semantic and direction features
 %%   Hariharan2014 - Simultaneous detection and segmentation
+
 \subsection{Klassifikation}\label{sec:Klassifikation}
 %\begin{itemize}
 %    \item Was ist Klassifikation generell?
@@ -193,7 +150,48 @@ Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} 
 Als \textbf{Decoder} wird der zusammenfassende Teil des Klassifikators bezeichnet, er gibt einen Zuversichtlichkeitswert für jede Klasse aus.
 Der State-of-the-Art für den Decoder ist ein neuronales Netz, das auf Basis der abstrakten Merkmale des Encoders eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
 Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger Annotation den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\newline.
+
+Für das Training von Klassifikatoren sind ein Loss-Funktion und häufig Vorverarbeitungsmethoden notwendig.
+Der Cross-Entropy Loss \cite{Sukhbaatar2014} \newline
+\begin{equation}
+    \mathcal{L}(\theta) = \frac{1}{N} \sum_{n=1}^{N} 
+    - \log p(\tilde{y} = \tilde{y}_n \mid x_n, \theta)
+\end{equation}
+ist die etablierte Loss Funktion für das Training von Klassifikatoren \cite{GordonRodriguez2020, Mao2023}.
+Hierbei ist Loss $L$ abhängig von der Annotation $\tilde{y}$ und der Vorhersage $\tilde{y}_n$, die von den Eingangsdaten $x_n$ und den Parametern des Modells $\theta$ bestimmt wird.  
+Ein Problem der Cross-Entropy Loss Minimierung ist ihre Anfälligkeit für Rauschen der Annotationen.
+Viele verschiedene Ansätze in der Forschung gehen dieses Problem an \cite{Goldberger2017, Han2018, Hendrycks2018}.
+Eine häufig genutzte Methode ist die Minimierung des Generalized Cross Entropy Loss \cite{Zhang2018}
+\begin{equation} 
+    \argmin_{\theta,\, w \in [0,1]^n} 
+    \sum_{i=1}^{n} w_i \mathcal{L}_q(f(x_i; \theta), y_i) 
+    - \mathcal{L}_q(k) \sum_{i=1}^{n} w_i,
+\end{equation}
+wobei $\mathcal{L}_q$ die generalisierte Form des Cross-Entropy Loss beschreibt, die durch den Parameter $q$ reguliert wird. 
+Dieser kontrolliert den Einfluss fehlerhafter oder unsicherer Trainingsbeispiele.
+Die Gewichte $w_i \in [0,1]$ dienen der Gewichtung einzelner, besonders unsicherer Trainingsinstanzen.
+Das Modell $f(x_i; \theta)$ gibt die Vorhersage für die Eingabe $x_i$ basierend auf den Modellparametern $\theta$ aus, während $y_i$ die entsprechende Zielannotation ist.\newline
+Bilineare Interpolation ist ein Verfahren zur Bildvorverarbeitung, das die Dimension eines Bilds erhöht, indem Werte für neue Pixel zwischen bestehenden geschätzt werden \cite{Smith1981}.
+Zur Schätzung des neuen Wert wird dabei ein gewichtetes Mittel aus den Vier benachbarten Pixeln genommen:
+\begin{equation}
+\hat{f}(x,y) = (1-p)(1-q)f_{i,j} + p(1-q)f_{i+1,j} + (1-p)q f_{i,j+1} + pq f_{i+1,j+1},
+\end{equation}
+wobei $\hat{f}(x,y)$ der neue Wert, $p, q \in [0, 1]$ die relativen Abstände zu den Nachbarpixeln, $i, j$ die Indizes der Nachbarpixel und $f$ die Intensität der Nachbarpixel sind. \newline
+Normierungsmethoden werden während dem Training eingesetzt, um die Daten zu regulieren und Signale nicht unverhältnismäßig groß oder verschwindend klein werden zu lassen.
+Batch Normalization normalisiert die Eingaben einer Schicht über ein Mini-Batch, indem für jedes abstrakte Merkmal der Schicht, das bei der Dimensionsreduktion des Bilds entsteht, eine Transformation durchgeführt wird \cite{Ioffe2015}.
+Für die Transformation wird der Mittelwert des Mini-Batches vom Wert abgezogen und durch die Standardabweichung geteilt.
+Layer Normalization verfolgt einen ähnlichen Ansatz, berechnet Mittelwert und Varianz aber pro Schicht von allen Neuronen \cite{Ba2016}.
+Beide stabilisieren das Training tiefer neuronaler Netze und lassen die Normalisierung als Bestandteil der Modellarchitektur lernen, statt sie nur als Vorverarbeitungsschritt durchzuführen \cite{Santurkar2018, Xu2019}.\newline
+Als Vergleichsmetrik der Klassifikation wird für gewöhnlich die Genauigkeit des getesteten Netz auf dem annotierten Daten verwendet:
+\begin{equation}
+  \text{Genauigkeit} = \frac{1}{N} \sum_{i=1}^{N} \mathbf{1}\{\hat{y}_i = y_i\},
+\end{equation}
+wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klassifikators und $y_i$ die Annotation ist. 
+
 \textit{TODO: 3D-bzw 2.5D - Welche Methoden werden speziell für 3D-genutzt, gibt es Methoden zur Anpassung?}
+
+
+
 \section{Literaturrecherche}
 
 \subsection{Benchmark}\label{sec:bench}

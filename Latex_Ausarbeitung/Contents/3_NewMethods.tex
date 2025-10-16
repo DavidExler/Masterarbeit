@@ -10,10 +10,25 @@
 %\end{itemize}
 Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. 
 Es behandelt die selbstentwickelten Beiträge zu den Methoden. 
-Die Methodik wird in einer Anwendung umgesetzt die 3D-Daten als Eingabe annimmt und interpretierbare Eigenschaften wie die Verteilung der Klassen und Volumen der anwesenden Nuclei ausgibt.
-Die Anwendung kann regulär angewandt (Inferenz) oder optimiert werden (Optimierung).
-\textbf{TODO anpassen!}
-Zuerst wird ein neu entwickeltes Bewertungskriterium für Segmentierungsmodelle beschrieben.
+Die Methodik wird in einer modularen Anwendung umgesetzt die 3D-Daten als Eingabe annimmt und interpretierbare Eigenschaften wie die Verteilung der Klassen und Volumen der anwesenden Nuclei ausgibt.
+In Kapitel \ref{sec:implementationPipeline} ist die praktische Umsetzung dieser modularen Anwendung beschrieben.
+Diese Anwendung kann regulär angewandt (Inferenz) oder optimiert werden (Optimierung).
+Zur Optimierung werden die 3D-Daten einem Ablauf für den Vergleich der Segmentierungsmodelle oder der Klassifikatormethoden zur Verfügung gestellt.
+Zuerst wird dazu das neu eingeführte Bewertungskriterium für Segmentierungsmodelle \ac{ipq} für verschiedene Modelle berechnet (siehe Kapitel \ref{sec:Kriterien}).
+Dieses Bewertungskriterium quantifiziert die Eignung der Segmentierungsmodelle zur Extraktion der gewünschten Eigenschaften.
+Mithilfe der \ac{ipq}-Werte wird das beste Segmentierungsmodell für die Anwendung gewählt.
+Die Architektur und die Parameter des optimalen Model werden in den Inferenzablauf eingesetzt.
+Um die Klassifikatormethoden zu oprimieren werden die Daten und die Segmente in die neu entwickelte Labeling-App eingegeben.
+Die Labeling-App ermöglicht das zeiteffiziente Annotatieren von Nuclei, indem die relevanten Bildausschnitte automatisch anhand der Segmente extrahiert werden.
+In Kapitel \ref{sec:implementationLabel} ist die Umsetzung der Labeling-App beschrieben.
+Mit den erstellten Annotationen und den 3D-Daten werden verschiedene Klassifikatoren trainiert.
+Diese Klassifikatoren ergeben sich aus Kombinationen der verfügbaren Klassifikatormethoden.
+Die Klassifikatormethoden sind beschrieben in Kapitel \ref{sec:MethodsClassifier} und umfassen 1. Encoderarchitekturen, 2. Decoderarchitekturen, 3. Vorverarbeitungsmethoden und 4. Vortrainingsmethoden.
+Unter den Methoden sind sowohl etablierte, als auch neu entwickelte Ansätze.
+Anhand der Genauigkeit der trainierten Klassifikatoren auf einem seperaten Validierungsanteil des Datensatz werden die Methoden verglichen und eine optimale Konfiguration ausgegeben.
+Die Architektur und die Parameter dieser Konfiguration werden dann in den Inferenzablauf der Applikation eingesetzt.
+Am Ende des Ablaufs werden die klassifizierten Segmente genutzt, um verschiedene Grafiken zu erzeugen, die die interpretierbaren Eigenschaften visualisieren.
+
 Dieses Kriterium wird eingeführt, um die Eignung von Segmentierungsmodellen zum Extrahieren interpretierbarer Merkmale, wie Zellkernanzahlen oder -volumina zu bewerten.
 Darauf folgen Beschreibungen von Klassifikatormethoden.
 Die Methoden umfassen Architekturen von Encodern und Decodern, sowie Methoden der Vorverarbeitung und des Vortrainings.
@@ -26,27 +41,16 @@ Verschiedene Kombinationen der eingeführten Methoden werden beispielhaft auf di
   \includegraphics[width=0.99\linewidth]{Figures/graphAbstract_flowchart.pdf}
   \caption{Aufbau der Anwendung der vorliegenden Arbeit.
   Die Anwendung kann regulär angewandt (Inferenz) oder optimiert werden (Optimierung).
-  Bei der Inferenz werden 3D-Daten von der Anwendung als Eingabe angenommmen und interpretierbare Eigenschaften wie die Verteilung der Klassen und Volumen der anwesenden Nuclei werden ausgegeben.
-  Zur Optimierung werden die 3D-Daten in den Ablauf für den Vergleich der Segmentierungsmodelle oder der Klassifikatormethoden eingegeben.
-  Für den Vergleich der Segmentierungsmodelle wird mit verschiedenen Modellen das neu eingeführte Bewertungskriterium \acf{ipq} berechnet.
-  Dieses Bewertungskriterium quantifiziert die Eignung der Segmentierungsmodelle zur Extraktion der gewünschten Eigenschaften.
-  Mithilfe der \ac{ipq}-Werte wird ein optimales Segmentierungsmodell gewählt.
-  Die Architektur und die Parameter des optimalen Model werden in den Ablauf der Anwendung eingesetzt.
-  Um die Klassifikatormethoden zu oprimieren werden die Daten und die Segmente in die neu entwickelte Labeling-App eingegeben.
-  Die Labeling-App ermöglicht das zeiteffiziente Annotatieren von Nuclei, indem die relevanten Bildausschnitte automatisch anhand der Segmente extrahiert werden.
-  Mit den erstellten Annotationen und den 3D-Daten werden verschiedene Klassifikatoren trainiert.
-  Diese Klassifikatoren ergeben sich aus Kombinationen der verfügbaren Klassifikatormethoden.
-  Die Klassifikatormethoden umfassen 1. Encoderarchitekturen, 2. Decoderarchitekturen, 3. Vorverarbeitungsmethoden und 4. Vortrainingsmethoden.
-  Unter den Methoden sind sowohl etablierte, als auch neu entwickelte Ansätze.
-  Anhand der Genauigkeit der trainierten Klassifikatoren auf einem seperaten Validierungsanteil des Datensatz werden die Methoden verglichen und eine optimale Konfiguration ausgegeben.
-  Die Architektur und die Parameter dieser Konfiguration werden dann in den Ablauf der Applikation eingesetzt.
+  Die Optimierung ist zweiteilig.
+  Zur Optimierung der Segmentierungsmodelle wird das neu entwickelte \acf{ipq} Bewertungskriterium eingesetzt.
+  Für den Klassifikator werden Kombinationen verschiedener Encoder, Decoder, Vorverarbeitungsmethoden und Vortrainingsmethoden iterativ trainiert und verglichen. 
   }
   \label{fig:graph_abstract}
 \end{figure}
 
 %Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
 
-\section{Bewertungskriterien}\label{sec:Kriterien}
+\section{Injektive Panoptische Qualität}\label{sec:Kriterien}
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.99\linewidth]{Figures/IPQ_horizontal.pdf}
@@ -127,7 +131,7 @@ wobei:
     \item $\text{IPQ} \in [0,1]$ ein Maß für die panoptische Segmentierungsqualität mit der Voraussetzung von injektiver Abbildung der Segmentierungsmasken-Instanzen auf die Annotationsinstanzen darstellt, wobei höhere Werte bessere Übereinstimmung bedeuten,
 \end{itemize}
 
-\section{Klassifikator}\label{sec:MethodsClassifier}
+\section{Klassifikatormethoden}\label{sec:MethodsClassifier}
 Jedem instanzsegmentierten Nucleus muss eine Klasse zugewiesen werden, um die Ausgabe zur panoptischen Segmentierungsmaske zu erweitern.
 Erst die panoptische Segmentierungsmaske ermöglicht das automatische Extrahieren interpretierbarer Eigenschaften aus den Daten.
 Nuter*Innen der vorgestellten Methoden wird mit dieser panoptischen Maske und den extrahierten Eigenschaften der Kultur ein klarer Überblick über den Status der Zellkultur geboten.\newline 

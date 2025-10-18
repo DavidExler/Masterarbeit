@@ -5,11 +5,9 @@
 
 
 \section{Überblick}
-Im nachfolgenden Kapitel wird die Implementierung aller relevanten Methoden erklärt. 
-Hierbei steht die praktische Anwendung dieser Methoden in Form von Nutzerschnittstellen oder als Entwicklerskript auf ausgewiesener Hardware im Vordergrund.
+Im nachfolgenden Kapitel wird die Implementierung aller relevanten Methoden erklärt mit Fokus auf die praktische Anwendung dieser Methoden in Form von Nutzerschnittstellen oder als Entwicklerskript auf ausgewiesener Hardware.
 Eine neu entwickelte Anwendung, die 3D-Zelldaten-Pipeline, vereint verschiedene Software-Module, die jeweils ein Zwischenziel der vorliegenden Arbeit umsetzen.
 Die Anwendung wird mit einer grafischen Nutzeroberfläche bedient, die auch ohne Programmierkenntnisse genutzt werden kann.
-
 \section{Segmentierungsmodelle}
 Die Segmentierungsmodelle werden zur Evaluation in einfachen Entwicklerskripten ausgeführt.
 Für das nnU-Net-Modell werden die Eingabedaten durch Padding in die geforderte Größe gebracht und zu .nii.gz-Dateien umgeformt.
@@ -42,6 +40,35 @@ Es speichert die Ergebnisse und die Gewichte der neu trainierten Klassifikatoren
 Im vierten Modul werden mithilfe der plotly-Bibliothek Grafiken aus den eingegebenen Ergebnissen erstellt und, mithilfe der Matplotlib-Bilbliothek, seperat als .png gespeichert.
 
 \section{3D-Zelldaten-Pipeline}\label{sec:implementationPipeline}
+In Abb. \ref{fig:Signalfluss} ist die Software Architektur der 3D-Zelldaten-Pipeline als Signalflussdiagramm dargestellt.
+Oben Zentral zu sehen ist die \acf{gui}.
+Von der \ac{gui} gehen Start- und Stop-Signale an die wichtigsten Module aus (Segmentierung, Labeling-App, Visualisierung und Methodenvergleich).
+Diese view Module werden direkt von Nutzer*Innen bedient.
+Das Segmentierung-Modul greift auf Lokale Dateien zu, um Bilder einzulesen und startet dann die Segmentierung für diese Daten mit verschiedenen Modellen.
+Die gefundenen Segmente werden dann an das \ac{ipq}-Modul gegeben, das die \ac{ipq}-Metrik für die gefundenen Segmente zurückgibt, insofern Annotationen zu den Daten existieren (siehe Kapitel \ref{sec:Kriterien}).
+Das Labeling-App-Modul beinhaltet eine Schleife aus einer 'Retreiver-Instanz' und einer Eingabeaufforderung.
+Diese 'Retreiver-Instanz' greift auf lokale Dateien zu, um abhängig von der Nutzereingabe einen Bildausschnitt zu laden.
+Dem Bildausschnitt weisen Nutzer*Innen dann Annotationen zu, die anschließend lokal gespeichert werden. 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.98\linewidth]{Figures/Signalfluss_Implementation.pdf}
+    \caption{Signalflussdiagramm der 3D-Zelldaten-Pipeline.
+    Als Kästen sehen sind die Module die die 3D-Zelldaten-Pipeline bilden.
+    Schwarze Pfeile stellen die Weitergabe von Software Objekten zwischen den Modulen dar.
+    In Orange und Grün sind Zugriffe auf lokale Dateien dargestellt, Orange ist Dateien lesen und Grün Dateien schreiben.
+    Software Schleifen sind als Blaue Kästen dargestellt.
+    Rosa Verbindungen stellen die Signale von und an die \ac{gui} dar.}
+    \label{fig:Signalfluss}
+\end{figure}
+\newpage
+\begin{wrapfigure}{l}{0.2\textwidth}
+    \centering
+    \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Segmentierung_hochkant.png}
+    \caption{Die Abbildung zeigt die 3D-Zellldaten-Pipeline.
+    Oben sind fünf Tabs zu sehen, mit denen die auszuführende Aufgabe gewählt werden kann.
+    Darunter ist der ausgewählte 'Segmentierung' Tab zu sehen.}
+    \label{fig:APP_Segment}
+\end{wrapfigure}
 Die 3D-Zelldaten-Pipeline vereint die verschiedenen Module der vorliegenden Arbeit.
 In den fünf Tabs (Segmentierung, Labeling-App, Methodenvergleich, Training und Visualisierung) werden die Aufgaben der Anwendung ausgeführt.
 Diese fünf Tabs sind in Abb. \ref{fig:APP_Segment} zu sehen
@@ -49,14 +76,6 @@ Als Frontend der App dient eine Dash-Anwendung, die eine einfache HTML-\ac{gui} 
 Das Backend ist mit Python erstellt und die gesammelten Daten werden als JSON gespeichert.
 Zwischenergebnisse wie trainierte Modelle und verarbeitete Daten werden als nicht interpretierbare Python-spezifische Datentypen abgelegt.
 Hierzu ist ein Docker mit Zugriff auf das lokale Dateiensystem versehen und über Kubernetes betrieben.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Segmentierung.png}
-    \caption{Die Abbildung zeigt die 3D-Zellldaten-Pipeline.
-    Oben sind fünf Tabs zu sehen, mit denen die auszuführende Aufgabe gewählt werden kann.
-    Darunter ist der ausgewählte 'Segmentierung' Tab zu sehen.}
-    \label{fig:APP_Segment}
-\end{figure}
 \subsection{Segmentierung}
 Abb. \ref{fig:APP_Segment} zeigt den Tab der 3D-Zelldaten-Pipeline, in dem die Segmentierung der Zellkerne vorgenommen wird.
 Im Eingabefeld 'Eingabe Ordner' wird ein Ordner, relativ zu dem Speicherort der Anwendung, angegeben, aus dem TIF-Bilder gelesen werden.

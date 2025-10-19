@@ -177,7 +177,7 @@ In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die To
   \end{tabular}
 \end{table}
 
-\subsection{Vorverarbeitung}
+\subsection{Vorverarbeitung}\label{sec:Preproc}
 Da in vielen Bildausschnitten Nuclei sehr nah aneinander liegen und dem Klassifikator signalisiert werden muss, welcher der sichtbaren Nuclei klassifiziert werden soll, werden für jeden Klassifikator zwei verschiedene Eingangsdaten-Formate getestet.
 Diese Typen unterscheiden sich in der Art, wie die Segmentierungsmaske des zu klassifizierenden Nucleus dem Klassifikator zugänglich gemacht wird.
 %Für Daten des ersten Typs wird lediglich der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
@@ -245,7 +245,7 @@ Dazu wird einfache bilineare Interpolation verwendet. %\textbf{ *  muss ich das 
 %Ein kleines neuronales Netzwerk vergrößert die Bilder schrittweise. 
 %Dabei lernt eine Faltungsschicht zuerst eine Transformation, bevor das Bild mittels bilinearer Interpolation auf die gewünschte Größe hochskaliert wird.
 
-\subsection{Vortraining}
+\subsection{Vortraining}\label{sec:Pretrain}
 Aus der Literatur sind verschiedene Methoden des Vortraining bekannt.
 Hier werden:
 \begin{itemize}
@@ -314,8 +314,9 @@ Dadurch sind die Beziehungen zwischen Merkmalen und Klassen, die der Decoder ler
 %Das fully-supervised Vortraining der meisten Encoder wird auf dem ImageNet Datensatz \cite{Russakovsky2015} durchgeführt.
 %Außerdem wird der vortrainierte Bildencoder von CellposeSAM herangezogen.
 %Für das Tra
-\subsection{Decoder}
-An die Encoder werden jeweils zwei verschiedene Decoder angehängt.
+\subsection{Decoder}\label{sec:Decoder}
+An die Encoder werden verschiedene Decoder angehängt.
+Hier werden dazu zwei neue Decoderarchitekturen eingeführt. (\textbf{NOTIZ: "nach dem Vorbild vergleichbarer Decoder in der Literatur" oder ähnliches?})
 Abb. \ref{fig:classifiers} zeigt die beiden Architekturen systematisch.
 Der erste Klassifikator wird hier \textit{Volumen-Klassifikator} genannt.
 Er interpretiert die Merkmale, die der Encoder generiert, als Volumen und generiert mithilfe von 3D-Faltungen und Pooling eine Repräsentation daraus.
@@ -344,3 +345,9 @@ Für den textit{Schichten-Klassifikator} ist das Ziel, dass durch die Vereinfach
 Auf einem geringfügigen Datensatz werden alle angeführten Methoden in den möglichen Kombinationen umgesetzt, um Vergleiche zu ermöglichen.
 Dieser geringfügige Datensatz besteht aus Bildern der Zieldomäne und halb automatisch generierten Annotationen. 
 Anschließend werden die besten Methoden ausgewählt und auf den finalen Datensatz trainiert.
+
+\section{Segmentierung}
+\subsection{Nachverarbeitungsmethoden}\label{sec:Seg_Modelle}
+\subsection{Nachverarbeitungsmethoden}\label{sec:Seg_PostProc}
+Hierzu werden pro Label einzelne Pixel betrachtet und davon ausgehend alle Pixel mit direkter Verbindung über die Segmentierungsmaske gesucht.
+Diese verbundenen Pixel werden als neue einzigartige Instanz abgelegt, bis keine Pixel ohne Verbindung übrig sind. 

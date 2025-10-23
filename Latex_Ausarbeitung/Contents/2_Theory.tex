@@ -227,7 +227,7 @@ Beispielsweise können 3D-Trainingsdaten mit realistischer Zellform und -ausrich
 %    \item \cite{ganin2016domain}
 %\end{itemize}
 
-\subsection{Segmentierungsnetz}
+\subsection{Segmentierungsmodelle}
 Foundation-models sind für viele moderne \ac{ki}-Anwendungen unerlässlich \cite{bommasani2021foundationmodels}. 
 Sie werden zunächst für allgemeine Aufgaben vortrainiert und anschließend auf spezifische Anwendungen angepasst (fine-tuning), meist unter Einfrieren von Teilen der Gewichte \cite{Yosinski2014}.
 Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite{dippel2022segmentation}. 
@@ -267,7 +267,7 @@ Abb. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
     \label{fig:CellposeSAM}
 \end{figure}
 Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell} bietet weitere Zellsegmentierungsnetze.
-Das Deepcell-Caliban \cite{moen2019DeepcellCaliban}-Netz nutzt als Encoder eine EfficientNetV2L-Architektur \cite{Tan2021}, an deren Ausgabeschichten (C1\–C5) eine Pyramiden-Struktur zur Merkmalsfusion (P1\–P7) angeschlossen ist. 
+Das Deepcell-Caliban-Modell \cite{moen2019DeepcellCaliban} nutzt als Encoder eine EfficientNetV2L-Architektur \cite{Tan2021}, an deren Ausgabeschichten (C1\–C5) eine Pyramiden-Struktur zur Merkmalsfusion (P1\–P7) angeschlossen ist. 
 Eine Besonderheit des Netzes ist, dass Eingabebildern zusätzlich Koordinatenkarten hinzugefügt werden.
 Als Decoder dienen drei Segmentierungsköpfe, die verschiedene Transformationen der gelabelten Trainingsmasken vorhersagen.\newline
 In der Literatur sehr verbreitet ist außerdem das nnU-Net \cite{isensee2021nnu}, ein Segmentierungsframework, das sich automatisch an neue biomedizinische Aufgaben anpasst.

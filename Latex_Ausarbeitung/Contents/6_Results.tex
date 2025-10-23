@@ -1,11 +1,19 @@
 % !TeX root = ../Thesis.tex
-
+%Abschlussvortrag Termin eintragen
+%
 \chapter{Results} \label{ch:results}
 %In this chapter, the results are shown and discussed. Use an appropriate presentation of the results, e.g., tables, diagrams, plots. Be aware of statements that are too general.
 
 
 \section{Überblick}
+Das nachfolgende Kapitel beschreibt die Ergebnisse der durchgeführten Experimente.
+Die Experimente sind die quantitative Bewertungen, die die 3D-Zelldaten-Pipeline durchführt. 
+Zuerst werden die Bewertungen der Instanzsegmentierungsmasken anhand der \ac{ipq}-Metrik und dann der Klassifikatoren anhand ihrer Genauigkeit betrachtet.
+Die \ac{ipq}-Ergebnisse werden hier auch gegliedert in die drei Faktoren der Metrik betrachtet (siehe Kap. \ref{sec:Kriterien}).
+Daraus wird ersichtlich, dass jedes der Segmentierungsmodelle in einer der Kategorien dominiert, insgesamt aber CellposeSAM den anderen Modellen signifikant überlegen ist. 
+Auch die Ergebnisse der Klassifikation werden unterteilt, um den Einfluss einzelner Methoden auf die Genauigkeit des Klassifikators zu identifizieren.
 
+ 
 \section{Segmentierung}
 Für die Wahl eines Segmentierungsnetzes wird in Kapitel \ref{ch:NewMethods} das Bewertungskriterium \ac{ipq} eingeführt.
 Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518Datensatz vorgestellt.
@@ -130,7 +138,7 @@ ImageNet-Vortraining liefert im Durchschnitt die besten Ergebnisse mit einer Gen
 Außerdem ist die Varianz entlang der Encoder mit dem ImageNet-Vortraining (\num{5.6e-5} ) deutlich geringer als ohne Vortraining (0,016). 
 Dennoch errecht ResNet18 ohne Vortraining die beste Genauigkeit mit 86\%.
 \begin{figure}
-    \centering\includegraphics[width=\linewidth]{Figures/encodersVpretrain.png}
+    \centering\includegraphics[width=\linewidth]{Figures/encoder_v_pretrain.pdf}
     \caption{Die Heatmap zeigt die Genauigkeiten der Klassifikatoren unter Verwendung der verschiedenen Vortrainingsmethoden.
     Auf der Y-Achse sind die verschiedenen Encoder aufgetragen.
     Die X-Achse stellt die getesteten Methoden des Vortrainings dar.

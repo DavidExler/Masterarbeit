@@ -38,3 +38,5 @@ Namen finden:
 Implementierung - Methoden Teil Fragen:
     - Retreiver in Methoden?
     - Pseudo Labler in Methoden?
+
+Screenshots für selbstentwickelte sachen und Übersicht der Tabs nachführen.

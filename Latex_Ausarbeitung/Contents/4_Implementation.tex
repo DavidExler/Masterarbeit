@@ -10,18 +10,14 @@ Eine neu entwickelte Anwendung, die 3D-Zelldaten-Pipeline, vereint verschiedene 
 Die Anwendung wird mit einer grafischen Nutzeroberfläche bedient, die auch ohne Programmierkenntnisse genutzt werden kann.
 Die beschriebenen Funktionen sind im bereitgestellten Repository zu finden.
 
-\section{Hardware}
-Für die Anwendung wurde eine NVIDIA GeForce RTX 3090 Ti mit 24 GB VRAM verwendet.
-Der verwendete Server verfügt über eine 12th Gen Intel(R) Core(TM) i9-12900KF CPU mit 16 Kernen und 64 GB RAM.
-
 \section{Segmentierungsmodelle}\label{sec:IMP_Seg}
 Abb. \ref{fig:Signalfluss_Seg} zeigt den Signalfluss der Anwendung der Segmentierungsmodelle und ihrer Bewertung.
 Die Segmentierungsmodelle werden zur Evaluation in einfachen Entwicklerskripten über die Kommandozeile oder als Jupyter Notebook ausgeführt.
-Für das nnU-Net-Modell (siehe Kap. \ref{sec:Seg_Modelle}) werden die Eingabedaten zuerst in eine Konvertierung eingegeben wo sie durch Padding in die geforderte Größe gebracht und zu .nii.gz-Dateien umgeformt werden.
+Für das nnU-Net-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird auf die Eingabedaten zuerst eine Konvertierung angewandt, die sie durch Padding in die geforderte Größe gebracht und zu .nii.gz-Dateien umgeformt werden.
 Eine Parameterbestimmung für die Anzahl der Wiederholungen, Normalisierungsart und Datensatz-Eigenschaften wird anhand der Parameter Vorlage der Autoren erstellt.
 Das Modell wird direkt mit der Architektur und den Gewichten der Veröffentlichung initialisiert und über die Kommandozeile auf alle Daten angewandt.
 Die entstehenden Instanzen werden in einen Instanztrenner gegeben (siehe Kap. \ref{sec:Seg_PostProc}), um den Instanzen einzigartige Labels zu vergeben.\newline
-Für das Deepcell-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird direkt das bereitgestellte Jupyter-Notebook der Autoren auf die Benchmarkdaten angewandt.
+Für das Deepcell-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird direkt das bereitgestellte Jupyter-Notebook der Deepcell-Veröffentlichung auf die Benchmarkdaten angewandt \cite{moen2019DeepcellCaliban}.
 Die Ergebnisse werden daraufhin mit dem Watershed-Algorithmus der OpenCV-Bibliothek nachbearbeitet (siehe Kap. \ref{sec:Seg_PostProc}).\newline
 Das CellposeSAM-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird als Entwicklerskript weitgehend mit der Architektur, den Gewichten und den vorgeschlagenen Parametern der Autoren angewandt
 In einer Parameterbestimmung wird der durchschnittliche Durchmesser der Nuclei an die eingegebenen Daten angepasst.
@@ -43,10 +39,11 @@ Mithilfe der Pytorch-Bibliothek werden entsprechende Encoder und, abhängig von 
 Außerdem werden neu entwickelte Klassen von PyTorch-Modellen für das Erstellen der Decoder aufgerufen (siehe Kap. \ref{sec:Decoder}).\newline
 In das zweite Modul wird auch eine Methodenauswahl eingegeben und abhängig von der Vortrainings- und Vorverarbeitungsmethode wird ein entsprechender Datensatz zurückgegeben (siehe Kap. \ref{sec:Pretrain} und Kap. \ref{sec:Preproc}).
 Dieser Datensatz wird als Pytorch Dataloader erstellt und mit einer Batch-Größe und mit Augmentierungen der Monai-Bibliothek versehen.
-In diesen Dataloader wird eine neu entwickelte Retreiver-Instanz (siehe Kap. \ref{sec:Preproc}) eingebettet, die es erlaubt, die großen, dreidimensionalen Daten nicht alle auf einmal als Variablen im Datensatz unterzubringen, sondern nur die Indizes von Bildern und Instanzen.
+In diesen Dataloader wird eine neu entwickelte Retreiver-Instanz (siehe Kap. \ref{sec:Preproc}) eingebettet. 
+Der Retreiver ermöglicht es, die großen, dreidimensionalen Daten nicht alle auf einmal als Variablen im Datensatz unterzubringen, sondern nur die Indizes von Bildern und Instanzen.
 Diese Indizes werden dann genutzt, um dynamisch nur die gewünschten Bildausschnitte auf die GPU zu laden. 
-In einem Pseudo-Labler-Modul werden zusätzlich Semi-supervised-Annotationen mithilfe der PCA und der LabelSpreading-Funktion der SciKit-Bibliothek erstellt (siehe Kap. \ref{sec:Pretrain}).\newline
-Das dritte Modul erhählt einen Klassifikator und einen Datensatz und führt einen Trainingsdurchlauf durch.
+In einem Pseudo-Labler-Modul werden zusätzlich Semi-supervised-Annotationen mithilfe der PCA und der Label-Spreading-Funktion der SciKit-Bibliothek erstellt (siehe Kap. \ref{sec:Pretrain}).\newline
+Das dritte Modul erhält einen Klassifikator und einen Datensatz und führt einen Trainingsdurchlauf durch.
 Es speichert die Ergebnisse und die Gewichte der neu trainierten Klassifikatoren in automatisch benannten Dateien.\newline
 Im vierten Modul werden mithilfe der plotly-Bibliothek Grafiken aus den eingegebenen Ergebnissen erstellt und, mithilfe der Matplotlib-Bibliothek, seperat als .png gespeichert.
 \begin{figure}
@@ -54,20 +51,20 @@ Im vierten Modul werden mithilfe der plotly-Bibliothek Grafiken aus den eingegeb
     \includegraphics[width=0.98\linewidth]{Figures/Signalfluss_Klassifikator.pdf}
     \caption{Signalflussdiagramm der praktischen Umsetzung der Klassifikatoren.
     Zu sehen sind die Module, aus denen sich die Anwendung der Klassifikatoren zusammensetzt.
-    Links werden Daten mit zugehörigen Annotationen und eine Kombination von Methoden eingegeben und Rechts gehen Grafiken, die die Ergebnisse visualisieren ab.
+    Links sind als Eingabe Daten mit zugehörigen Annotationen und eine Kombination von Methoden und Rechts Grafiken, die die Ergebnisse visualisieren als Ausgabe zu sehen.
     Verschiedene Python-Bibliotheken werden genutzt (Rosa), aber auch neue Methoden werden eingesetzt (Grün).
-    Der Retreiver, der dynamisch Bildausschnitte lädt und der Klassifikator greifen auf die GPU zu (Orange).
+    Der Klassifikator und der Retreiver, der dynamisch Bildausschnitte lädt, greifen auf die GPU zu (Orange).
     }
     \label{fig:Signalfluss_Klas}
 \end{figure}
 
 \section{3D-Zelldaten-Pipeline}\label{sec:implementationPipeline}
-In Abb. \ref{fig:Signalfluss} ist die Software Architektur der 3D-Zelldaten-Pipeline als Signalflussdiagramm dargestellt.
+In Abb. \ref{fig:Signalfluss} ist die Software-Architektur der 3D-Zelldaten-Pipeline als Signalflussdiagramm dargestellt.
 Die Anwendung vereint die eingeführten Methoden der vorliegenden Arbeit (siehe Kap. \ref{ch:NewMethods}). 
-Oben Zentral zu sehen ist die \acf{gui}, die grafische Schnittstelle mit Bedienelementen und Visualisierungen für Interaktionen mit Nutzer*Innen.
-Von der \ac{gui} gehen Start- und Stop-Signale an die wichtigsten Module aus (Segmentierung, Labeling-App, Visualisierung und Methodenvergleich).
+Oben zentral zu sehen ist das \acf{gui}, die grafische Schnittstelle mit Bedienelementen und Visualisierungen für Interaktionen mit Nutzer*Innen.
+Von der \ac{gui} gehen Start- und Stop-Signale an die wichtigsten Module aus (Segmentierung, \newline Labeling-App, Visualisierung und Methodenvergleich).
 Diese vier Module werden direkt von Nutzer*Innen bedient.
-Das Segmentierung-Modul greift auf Lokale Dateien zu, um Bilder einzulesen und startet dann die Segmentierung für diese Daten mit verschiedenen Modellen (siehe Kap. \ref{sec:IMP_Seg}).
+Das Segmentierung-Modul greift auf lokale Dateien zu, um Bilder einzulesen und startet dann die Segmentierung für diese Daten mit verschiedenen Modellen (siehe Kap. \ref{sec:IMP_Seg}).
 Die gefundenen Segmente werden dann an das \ac{ipq}-Modul gegeben, das die \ac{ipq}-Metrik für die gefundenen Segmente zurückgibt, insofern Annotationen zu den Daten existieren (siehe Kapitel \ref{sec:Kriterien}).
 Das Labeling-App-Modul beinhaltet eine Schleife aus einer Retreiver-Instanz und einer Eingabeaufforderung (siehe Kap. \ref{sec:Preproc}).
 Diese Retreiver-Instanz greift auf lokale Dateien zu, um abhängig von der Nutzereingabe einen Bildausschnitt zu laden.
@@ -81,7 +78,7 @@ Das Visualisierung-Modul liest die Ergebnisse des Klassifikators und stellt dies
 \begin{figure}
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Signalfluss_Implementation.pdf}
-    \caption{Signalflussdiagramm der 3D-Zelldaten-Pipeline.
+    \caption{Übersicht der Architektur der neu entwickelten 3D-Zelldaten-Pipeline.
     Als Kästen sehen sind die Module die die 3D-Zelldaten-Pipeline bilden.
     Schwarze Pfeile stellen die Weitergabe von Software Objekten zwischen den Modulen dar.
     In Orange und Grün sind Zugriffe auf lokale Dateien dargestellt, Orange ist Dateien lesen und Grün Dateien schreiben.
@@ -92,15 +89,16 @@ Das Visualisierung-Modul liest die Ergebnisse des Klassifikators und stellt dies
 Abb. \ref{fig:APP_Segment} zeigt die \ac{gui} der 3D-Zellldaten-Pipeline.
 In den fünf Tabs (Segmentierung, Labeling-App, Methodenvergleich, Training und Visualisierung) werden die Aufgaben der Anwendung ausgeführt.
 Als Frontend der App dient eine Dash-Anwendung, die eine einfache HTML-Seite bereitstellt. 
-Das Backend ist mit Python erstellt und die gesammelten Daten werden als JSON gespeichert.
+Das Backend ist mit Python erstellt, und die gesammelten Daten werden als JSON gespeichert.
 Zwischenergebnisse wie trainierte Modelle und verarbeitete Daten werden als nicht interpretierbare Python-spezifische Datentypen abgelegt.
 Hierzu ist ein Docker mit Zugriff auf das lokale Dateiensystem versehen und über Kubernetes betrieben.
 \begin{figure}
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Segmentierung.png}
-    \caption{Die Abbildung zeigt die 3D-Zellldaten-Pipeline.
+    \caption{Die Abbildung zeigt einen Ausschnitt der 3D-Zellldaten-Pipeline.
     Oben sind fünf Tabs zu sehen, mit denen die auszuführende Aufgabe gewählt werden kann.
-    Darunter ist der ausgewählte 'Segmentierung' Tab zu sehen.}
+    Diese Tabs sind zur besseren Darstellung untereinander statt nebeneinander platziert.
+    Darunter ist ein Ausschnitt des ausgewählten 'Segmentierung' Tab zu sehen.}
     \label{fig:APP_Segment}
 \end{figure}
 \subsection{Segmentierung}
@@ -115,40 +113,43 @@ Um den Klassifikator zu trainieren, werden einigen Zieldaten mithilfe der neu en
 Die Anforderungen an die Labeling-App sind ein nutzerfreundlicher, zeiteffizienter Ablauf und Zugänglichkeit für Nutzer*Innen ohne Programmiererfahrung.
 Funktional muss die Labeling-App imstande sein, die zu klassifizierenden Nuclei zu visualisieren und Eingabemöglichkeiten zu bieten, mit denen die Experten die Klasse des Nucleus eintragen können.
 Diese eingetragenen Annotationen müssen sinnvoll gespeichert werden.   
-Abb. \ref{fig:Labeling_App} zeigt die \ac{gui} der Labeling-App. 
+Abb. \ref{fig:Labeling_App} zeigt die neu entwickelte \ac{gui} der Labeling-App. 
 \begin{figure}
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/GUI_Labeling_App.png}
-    \caption{Die Abbildung zeigt die \ac{gui} der Labeling-App. In der Mitte wird die Zelle angezeigt, die gelabelt werden soll, und links sind Bedienelemente zu sehen. Unter der dargestellten Zelle befindet sich ein Schieberegler, der die Navigation entlang der Z-Achse ermöglicht. Über die Bedienelemente kann der/die Nutzer*In zwischen Bildern und Zellen umschalten, die Klasse der Zelle bestimmen, den gezeigten Ausschnitt mit prozentualen Schwellenwerten normalisieren und die Fenstergröße ändern.}
+    \caption{Die Abbildung zeigt die \ac{gui} der neu entwickelten Labeling-App. 
+    In der Mitte wird die Zelle angezeigt, die gelabelt werden soll, und links sind Bedienelemente zu sehen. Unter der dargestellten Zelle befindet sich ein Schieberegler, der die Navigation entlang der Z-Achse ermöglicht. 
+    Über die Bedienelemente kann der/die Nutzer*In zwischen Bildern und Zellen umschalten, die Klasse der Zelle bestimmen, den gezeigten Ausschnitt mit prozentualen Schwellenwerten normalisieren und die Fenstergröße ändern.}
     \label{fig:Labeling_App}
 \end{figure}
 Mit den Bedienelementen werden die Anforderungen an die Funktionalität umgesetzt.
 Zentral zu sehen sind zwei Fenster, die je einen 2D-Schnitt des ausgewählten Nucleus anzeigen. 
+Diese Schnitte werden von einem neu entwickelten Retreiver dynamisch geladen (siehe Kap. \ref{sec:Pretrain}).
 Das linke Bild zeigt den Nucleus stark vergrößert, das rechte Bild zeigt die Umgebung des Nucleus.
 Auf den Bildern ist jeweils ein Kasten gezeichnet, der den ausgewählten Nucleus umrandet, um Nuclei, die dicht aneinander liegen, zu unterscheiden. 
 Mit dem Schieberegler unter den Fenstern wird ausgewählt, welche der Schichten, in denen der Nucleus anwesend ist, gezeigt werden soll.
 Über dem Fenster ist der Index des aktuell dargestellten Nucleus und des Bilds angegeben.
 Links neben dem Fenster befinden sich Bedienelemente mit den folgenden Funktionen:
 \begin{itemize}
-    \item \textit{Previous picture}: Vorheriges Bild auswählen.
-    \item \textit{Next picture}: Nächstes Bild auswählen.
-    \item \textit{Previous nucleus}: Vorherigen Nucleus auswählen.
-    \item \textit{Next nucleus}: Nächsten Nucleus auswählen.
-    \item \textit{Next undefined}: Nächsten Nucleus ohne eingetragene Annotation auswählen.
-    \item \textit{Image}: Eingabefeld für das auszuwählende Bild.
-    \item \textit{Nucleus}: Eingabefeld für den auszuwählenden Nucleus.
-    \item \textit{go to...}: Bild und Nucleus auswählen, wie in den Eingabefeldern.
-    \item \textit{Myo}: 'Myotuben-Zellkern'-Klasse als Annotation des ausgewählten Nucleus definieren.
-    \item \textit{Debris}: 'Überreste'-Klasse als Annotation des ausgewählten Nucleus definieren.
-    \item \textit{Other}: 'Andere'-Klasse als Annotation des ausgewählten Nucleus definieren.
-    \item \textit{Schwann}: 'Schwannzellen-Zellkern'-Klasse als Annotation des ausgewählten Nucleus definieren.
-    \item \textit{Save}: Speichert manuell die festgelegten Annotations ab. Die Labeling-App speichert außerdem eigenständig periodisch.
-    \item \textit{Overlay Myotubes (Green)}: Mit einem Haken bei 'Enable' wird der Marker, der die Myotuben einfärbt, in Grün eingeblendet.
-    \item \textit{Overlay Marker (Blue)}: Einer oder keiner der restlichen vorhandenen Marker wird in Blau eingeblendet. 
-    \item \textit{Lower Percentile}: Unteren prozentualen Schwellwert wählen, der bei der nächsten Normalisierung angewandt werden soll.
-    \item \textit{Upper Percentile}: Oberen prozentualen Schwellwert wählen, der bei der nächsten Normalisierung angewandt werden soll.
-    \item \textit{Normalize}: Normalisierung lokal auf den Ausschnitt des aktuell ausgewählten Nucleus anwenden. Intensitätswerte, die im beziehungsweise über dem Perzentil der eingetragenen Schwellwerte, werden hierbei zusammengefasst.
-    \item \textit{Zoom In}: Verkleinert den anzuzeigenden Ausschnitt.    
+    \item \textit{Previous picture}: Vorheriges Bild auswählen,
+    \item \textit{Next picture}: Nächstes Bild auswählen,
+    \item \textit{Previous nucleus}: Vorherigen Nucleus auswählen,
+    \item \textit{Next nucleus}: Nächsten Nucleus auswählen,
+    \item \textit{Next undefined}: Nächsten Nucleus ohne eingetragene Annotation auswählen,
+    \item \textit{Image}: Eingabefeld für das auszuwählende Bild,
+    \item \textit{Nucleus}: Eingabefeld für den auszuwählenden Nucleus,
+    \item \textit{go to...}: Bild und Nucleus auswählen, wie in den Eingabefeldern,
+    \item \textit{Myo}: 'Myotuben-Zellkern'-Klasse als Annotation des ausgewählten Nucleus definieren,
+    \item \textit{Debris}: 'Überreste'-Klasse als Annotation des ausgewählten Nucleus definieren,
+    \item \textit{Other}: 'Andere'-Klasse als Annotation des ausgewählten Nucleus definieren,
+    \item \textit{Schwann}: 'Schwannzellen-Zellkern'-Klasse als Annotation des ausgewählten Nucleus definieren,
+    \item \textit{Save}: Manuell die festgelegten Annotations speichern. Die Labeling-App speichert außerdem eigenständig periodisch,
+    \item \textit{Overlay Myotubes (Green)}: Mit einem Haken bei 'Enable' wird der Marker, der die Myotuben einfärbt, in Grün eingeblendet,
+    \item \textit{Overlay Marker (Blue)}: Einer oder keiner der restlichen vorhandenen Marker wird in Blau eingeblendet,
+    \item \textit{Lower Percentile}: Unteren prozentualen Schwellwert wählen, der bei der nächsten Normalisierung angewandt werden soll,
+    \item \textit{Upper Percentile}: Oberen prozentualen Schwellwert wählen, der bei der nächsten Normalisierung angewandt werden soll,
+    \item \textit{Normalize}: Normalisierung lokal auf den Ausschnitt des aktuell ausgewählten Nucleus anwenden. Intensitätswerte, die im beziehungsweise über dem Perzentil der eingetragenen Schwellwerte, werden hierbei zusammengefasst,
+    \item \textit{Zoom In}: Verkleinert den anzuzeigenden Ausschnitt und    
     \item \textit{Zoom Out}: Vergrößert den anzuzeigenden Ausschnitt.    
 \end{itemize}
 Aufgrund der Anforderung einer nutzerfreundlichen, zeiteffizienten Bedienung sind alle Berechnungen, die während der Nutzung der Labeling-App ausgeführt werden, darauf ausgelegt, die Rechenzeit zu minimieren. 
@@ -158,12 +159,12 @@ Erst wenn eine Änderung der Auswahl ausgeführt wird, wird eine neue Zelle oder
 
 \subsection{Methodenvergleich}
 Der Tab 'Methodenvergleich' ist in Abb. \ref{fig:APP_methods} dargestellt.
-Die Eingabefelder 'Eingabe Ordner' und 'Ausgabe Ordner' wählen aus, aus welchem und in welchen Ordner, relativ zum Speicherort der Anwendung, die Daten gelesen oder geschrieben werden.
-Im Eingabe Ordner müssen dreidimensionale Bilder, Segmentierungsmasken und Annotationen anwesend sein.
+Die Eingabefelder 'Eingabe Ordner' und 'Ausgabe Ordner' bestimmen, aus welchem und in welchen Ordner, relativ zum Speicherort der Anwendung, die Daten gelesen oder geschrieben werden.
+Im Eingabe Ordner müssen dreidimensionale Bilder, Segmentierungsmasken und Annotationen vorhanden sein.
 Die vorangegangenen Tabs speichern die Daten direkt im erwarteten Format ab. 
 Unter der Anzeige für die gewählten Ordner sind einige Checkbox-Felder gegeben.
 Diese sind in die vier Gruppen Encoder, Decoder, Vorverarbeitung (Nucleus-Kanal) und Vortraining unterteilt.
-Alle Methoden, die hier gewählt werden, werden nachfolgend genutzt und in jeder Kombination trainiert.
+Alle hier gewählten Methoden werden nachfolgend genutzt und in jeder Kombination trainiert.
 Die verfügbaren Methoden sind in Kapitel \ref{sec:MethodsClassifier} beschrieben.
 Mit dem 'Start'-Knopf wird der Methodenvergleich gestartet und mit dem 'Abbrechen'-Knopf wieder abgebrochen.
 Nach Abschluss des Vergleichs werden die Voraussagen des Modells mit der höchsten Genauigkeit auf dem Validierungsanteil der Eingangsdaten für alle Nuclei im Datensatz abgelegt, auch für die Daten ohne Annotationen.
@@ -171,7 +172,7 @@ Außerdem wird die Kombination von Methoden gespeichert, mit der die höchste Ge
 \begin{figure}
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Methodenauswahl.png}
-    \caption{Die Abbildung zeigt den Tab der 3D-Zelldaten-Pipeline der den Vergleich der Klassifikatormethoden ermöglicht.
+    \caption{Die Abbildung zeigt einen Auschschnitt des Tabs der 3D-Zelldaten-Pipeline der den Vergleich der Klassifikatormethoden ermöglicht.
     Methoden der Kategorien Encoder, Decoder, Vorverarbeitung und Vortraining können ausgewählt werden, um einen Vergleich aller Kombinationen der Methoden zu starten.}
     \label{fig:APP_methods}
 \end{figure}
@@ -181,13 +182,13 @@ Im 'Training'-Tab (Abb. \ref{fig:APP_train}) wird der Klassifikator mit der zuvo
 Dabei können auch mehr Annotationen eingesetzt werden, die während des Methodenvergleichs nachgeliefert wurden.
 Dieser Tab ist optional, das Training während dem Methodenvergleich kann das intensivere Training in diesem Tab ersetzen, wenn die Genauigkeit bereits zufriedenstellend war.
 In den Eingabefeldern 'Eingabe Ordner' und 'Ausgabe Ordner' wird angegeben, welche Ordner genutzt werden sollen.
-Im Eingabe Ordner muss eine Datei abliegen, die die beste Kombination der Methoden auszeichnet.
+Im Eingabe Ordner muss eine Datei vorhanden sein, die die beste Kombination der Methoden auszeichnet.
 Nachdem das Training mit dem 'Starte Training'-Knopf gestartet und vollendet wurde, werden die Vorhersagen für alle Nuclei der Eingabedaten im Ausgabe Ordner abgelegt.
 Sind hier keine Annotationen verfügbar, wird eine einfache Inferenz mit dem trainierten Modell im Eingabe Ordner durchgeführt und die Vorhersagen gespeichert.
 \begin{figure}
     \centering
-    \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Train.png}
-    \caption{Die Abbildung zeigt den Tab der 3D-Zelldaten-Pipeline, der das finale Training des Klassifikators durchführt.
+    \includegraphics[width=0.5\linewidth]{Figures/Screenshot_Train.png}
+    \caption{Die Abbildung zeigt zeigt einen Auschschnitt des Tabs der 3D-Zelldaten-Pipeline, der das finale Training des Klassifikators durchführt.
     Hier wird ein Ordner gewählt, aus dem die beste Kombination von Methoden gelesen werden soll, und anschließend wird ein längeres Training gestartet.}
     \label{fig:APP_train}
 \end{figure}

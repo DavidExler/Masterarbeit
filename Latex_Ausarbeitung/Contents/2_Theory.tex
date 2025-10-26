@@ -266,7 +266,7 @@ Abb. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
     Die Gradienten der Flows werden verfolgt (gradient tracking) und aus dem daraus entstehenden Gradientenfeld werden Segmentierungsinstanzen (ROIs) vorhergesagt \cite{pachitariu2025samcellpose}.}
     \label{fig:CellposeSAM}
 \end{figure}
-Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell} bietet weitere Zellsegmentierungsnetze.
+Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell} bietet weitere Zellsegmentierungsmodelle.
 Das Deepcell-Caliban-Modell \cite{moen2019DeepcellCaliban} nutzt als Encoder eine EfficientNetV2L-Architektur \cite{Tan2021}, an deren Ausgabeschichten (C1\–C5) eine Pyramiden-Struktur zur Merkmalsfusion (P1\–P7) angeschlossen ist. 
 Eine Besonderheit des Netzes ist, dass Eingabebildern zusätzlich Koordinatenkarten hinzugefügt werden.
 Als Decoder dienen drei Segmentierungsköpfe, die verschiedene Transformationen der gelabelten Trainingsmasken vorhersagen.\newline

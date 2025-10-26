@@ -1,7 +1,7 @@
 % !TeX root = ../Thesis.tex
 %Abschlussvortrag Termin eintragen
 %
-\chapter{Results} \label{ch:results}
+\chapter{Ergebnisse} \label{ch:results}
 %In this chapter, the results are shown and discussed. Use an appropriate presentation of the results, e.g., tables, diagrams, plots. Be aware of statements that are too general.
 
 
@@ -13,7 +13,10 @@ Die \ac{ipq}-Ergebnisse werden hier auch gegliedert in die drei Faktoren der Met
 Daraus wird ersichtlich, dass jedes der Segmentierungsmodelle in einer der Kategorien dominiert, insgesamt aber CellposeSAM den anderen Modellen signifikant überlegen ist. 
 Auch die Ergebnisse der Klassifikation werden unterteilt, um den Einfluss einzelner Methoden auf die Genauigkeit des Klassifikators zu identifizieren.
 
- 
+\section{Hardware}
+Für die Anwendung wurde eine NVIDIA GeForce RTX 3090 Ti mit 24 GB VRAM verwendet.
+Der verwendete Server verfügt über eine 12th Gen Intel(R) Core(TM) i9-12900KF CPU mit 16 Kernen und 64 GB RAM.
+
 \section{Segmentierung}
 Für die Wahl eines Segmentierungsnetzes wird in Kapitel \ref{ch:NewMethods} das Bewertungskriterium \ac{ipq} eingeführt.
 Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518Datensatz vorgestellt.

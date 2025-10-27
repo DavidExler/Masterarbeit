@@ -181,12 +181,13 @@ In der Tabelle sind die Namen, Anzahl der Parameter und, falls vorhanden, die To
 Da in vielen Bildausschnitten Nuclei sehr nah aneinander liegen werden zwei Vorverarbeitungsmethoden eingeführt, die dem Klassifikator signalisieren, welcher der sichtbaren Nuclei klassifiziert werden soll.
 Diese Methoden unterscheiden sich darin, wie die Segmentierungsmaske des Nucleus dem Klassifikator zugänglich gemacht wird.
 %Für Daten des ersten Typs wird lediglich der minimale Begrenzungsrahmen des segmentierten Nucleus aus dem originalen Nucleus Kanal ausgeschnitten. 
-Die erste Methode ersetzt den Nucleus-Kanal mit der Segmentierungsmaske des gesuchten Nucleus.
+Die erste Methode, hier Masken-Methode genannt, ersetzt den Nucleus-Kanal mit der Segmentierungsmaske des gesuchten Nucleus.
 Das Ziel ist dabei, das Risiko zu minimieren, dass umliegende Nuclei das Klassifikationsergebnis verfälschen.
 Mit dieser Risikominimierung geht allerdings der Verlust der Oberflächenmerkmale einher.
 Außerdem ist das Klassifikationsergebnis bei dieser Vorverarbeitungsart von der Qualität der Segmentierung abhängig.
 %Alle anderen Kanäle, einschließlich des Nuclei Kanal bleiben unverändert.
-Für die zweite Methode wird der Nucleus-Kanal mit einer Entfernungsmaske skaliert.
+Für die zweite Methode wird hier Distanz-Methode gennant.
+Mit der Distanz-Methode wird der Nucleus-Kanal mit einer Entfernungsmaske skaliert.
 Hierzu wird pixelweise der originale Nucleus-Kanal mit einer Transformation des Abstand aller Pixel außerhalb der Segmentierungsmaske wie folgt multipliziert:
 \begin{equation}
 I'(x) = I(x) \cdot \exp\left( -\frac{1}{\sigma} \min_{y \in \lnot M} \|x - y\|_2 \right),
@@ -200,7 +201,7 @@ wobei:
   \item $\quad M \subseteq \Omega$ die Segmentierungsmaske und $\lnot M = \Omega \setminus M$ deren Komplement im Bildraum sind,
   \item und $\sigma \in \mathbb{R}^+$ ein Parameter zur Steuerung des exponentiellen Abfalls ist.
 \end{itemize}
-Die Verwendung der zweiten Methode hat zum Ziel, dass die Oberflächenmerkmale des Nucleus erhalten bleiben.
+Die Verwendung der Distanz-Methode hat zum Ziel, dass die Oberflächenmerkmale des Nucleus erhalten bleiben.
 Außerdem wird mit der Vorverarbeitungsmethode der Einfluss der eventuell fehlerhaften Segmentierungsmasken durch die kontinuierliche Abstandstransformation minimiert.
 Allerdings ist hierdurch auch das Risiko von Einflussnahme auf das Klassifikationsergebnis durch umliegende Nuclei nicht vollständig eliminiert, sondern nur vermindert.
 In Abb. \ref{fig:preproc_methods} sind die Nuclei-Kanäle der verschiedenen Methoden dargestellt.
@@ -219,19 +220,19 @@ In Abb. \ref{fig:preproc_methods} sind die Nuclei-Kanäle der verschiedenen Meth
   \begin{subfigure}[t]{0.24\textwidth}
       \includegraphics[width=\linewidth]{Figures/VERSION1_CH_2_SLICE_4.png}
       \caption{Segmentierungsmaske des Nucleus.
-      Die erste Methode ersetzt den originalen Nucleus-Kanal mit dieser Maske 
+      Die Masken-Methode ersetzt den originalen Nucleus-Kanal mit dieser Maske.
       Die binäre Maske zeigt keine Oberflächenmerkmale des Nucleus, lediglich die geometrischen Merkmale.}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.24\textwidth}
       \includegraphics[width=\linewidth]{Figures/VERSION2_CH_2_SLICE_4.png}
       \caption{Entfernungsmaske des Nucleus. 
-      Diese wird pixelweise mit dem Nucleus-Kanal multipliziert für die zweite Vorverarbeitungsmethode.}
+      Diese wird pixelweise mit dem Nucleus-Kanal multipliziert für die Distanz-Methode.}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.24\textwidth}
       \includegraphics[width=\linewidth]{Figures/VERSION1_CH_0_SLICE_4.png}
-      \caption{Darstellung der Vorverarbeitungsmethode zwei, die durch die Multiplikation des Nucleus-Kanal mit der Entfernungsmaske entsteht.
+      \caption{Darstellung der Distanz-Methode, die durch die Multiplikation des Nucleus-Kanal mit der Entfernungsmaske entsteht.
       Zu sehen ist, dass der nahegelegene ungewünschte Nucleus noch stellenweise mit hoher Intensität vertreten ist.}
   \end{subfigure}
   \caption{Darstellungen der verschiedenen Vorverarbeitungsmethoden.}

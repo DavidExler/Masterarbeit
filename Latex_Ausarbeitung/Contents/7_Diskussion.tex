@@ -4,6 +4,9 @@
 %Repeat the problem and its relevance, as well as the contribution (plus quantitative results). Look back at what you have written in the introduction. 
 
 \section{Überblick}
+Die nachfolgenden Kapitel diskutieren die Ergebnisse der vorliegenden Arbeit.
+Dabei wird sowohl auf die quantitative Auswertung der durchgeführten Experimente eingegangen, als auch auf die Bewertung der angewandten Methoden.
+Es wird gezeigt, dass die neu entwickelte \ac{ipq}-Metrik geeignet ist um Instanzsegmentierungsmodelle, im Bezug auf ihre Eignung interpretierbare Merkmale zu extrahieren, zu bewerten.
 
 \section{Segmentierung}
 Durch einen Vergleich der Masken mit der \ac{gt} in Abb. \ref{fig:boxplots_ipq} und ihren zugehörigen Ergebnissen der einzelnen Bewertungskriterien sind die Schwächen und Stärken der individuellen Netze ersichtlich.
@@ -13,7 +16,46 @@ Wie auch die gute Recognition Qualität zeigt, findet dafür nnUNet sehr zuverl�
 Deepcell (siehe Abb. \ref{fig:DeepcellMaske}) übersegmentiert die Nuclei, wodurch die Segmentierungsqualität stark abnimmt.
 Das Ergebnis sind Masken, die zu groß sind und oft mehr als einen Nucleus enthalten.
 Das bedeutet auch, dass einige Nuclei nicht von einer eigenen Maske gefunden werden, was sie als \ac{fn}-Instanzen kategorisiert und eine schlechte Recognition Qualität bedingt.
-Durch diese Übersegmentierung wird vermieden, dass Instanzen der \ac{gt} durch die Deepcell-Masken geteilt werden, was zu einer guten Injektiven Qualität führt.
+Durch diese Übersegmentierung wird vermieden, dass Instanzen der \ac{gt} durch die Deepcell-Masken geteilt werden, was zu einer guten Injektiven Qualität führt.\newline
+Anhand der Interpretation der Werte und der exemplarischen Fehler in Abb. \ref{fig:ipq_examples} wird die Effektivität der neu entwickelten \ac{ipq}-Metrik ersichtlich.
+Verschiedene Fehlerarten, die zu unterschiedlichen Verfälschungen der interpretierbaren Merkmale der Daten führen werden gezielt von der Metrik erfasst.
+In der Praxis gehen die Fehler oft mit Fehlern einer anderen Art einher, was daran liegt, dass die Modelle nicht dem selben Denkverhalten folgen wie ein menschlicher Betrachter.
+Abb. \ref{fig:ideal_example_masks} zeigt idealisiert die Fehlerarten, die mit der \ac{ipq}-Metrik erkannt werden.
+Alle Fehler führen für den betrachteten Nucleus zu einem Faktor von 0,5 in ihrer Kategorie und einem optimalen Wert von 1 in den anderen Kategorien.
+Hier wird deutlich, dass die Metrik geeignet ist um: 
+\begin{itemize}
+    \item Fehleinschätzungen der Konzentration von Nuclei durch den neu eingeführten IQ-Wert zu bestrafen,
+    \item Fehleinschätzungen des Volumens der Nuclei durch einen geringen SQ-Wert zu bestrafen und
+    \item Fehleinschätzungen der Anzahl der Nuclei durch einen geringen RQ-Wert zu bestrafen.
+\end{itemize}
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/ideal_gt.pdf}
+        \caption{Annotationsmaske als Kontur.}
+        \label{fig:ideal_gt}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/ideal_IQ.pdf}
+        \caption{Idealer IQ-Fehler. Ein optimal segmentierter Nucleus wird in zwei Segmente gespalten.}
+        \label{fig:ideal_IQ}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/ideal_RQ.pdf}
+        \caption{Idealer RQ-Fehler. Es werden zusätzliche Nuclei halluziniert.}
+        \label{fig:ideal_RQ}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\textwidth}
+        \includegraphics[width=\linewidth]{Figures/ideal_SQ.pdf}
+        \caption{Idealer SQ-Fehler. Der Nucleus wird in doppelter Größe vorhergesagt.}
+        \label{fig:ideal_SQ}
+    \end{subfigure}
+    \caption{Darstellung der Segmentierungsmasken verschiedener idealer Fehler und der Annotation als Kontur.}
+    \label{fig:ideal_example_masks}
+\end{figure}
 
 \section{Klassifikation}
 Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Decodern, Vorverarbeitungsmethoden und Vortrainingsmethoden legt einige Aussagen über Effektivität der Methoden nahe.

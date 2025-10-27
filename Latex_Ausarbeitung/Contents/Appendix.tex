@@ -5,7 +5,7 @@
 \chapter{Appendix}\label{ch:app}
 
 \section{SWINV2 Architektur}
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.75\textwidth]{Figures/SWINV2_Architecture.png}
     \caption{\textbf{Swin Transformer V2} Architektur \cite{Liu2022a}. 
@@ -14,9 +14,8 @@
     Zwei Layer normalization \cite{Ba2016} Schichten, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2} Block.}
     \label{fig:SwinArchitecture}
 \end{figure}
-
+\newpage
 \section{\ac{ipq}-Ergebnisse}\label{supp:ipq}
-
 
 
 \begin{longtable}{rccc @{\hskip 1cm} rccc}
@@ -334,82 +333,64 @@
     \caption{Einzelne ipq-Ergebnisse von jedem Segmentierungsnetz}
 \end{longtable}
 
+
+\section{Einzelne Ergebnisse aller Klassifikator Kombinationen}\label{supp:Klassifikation}
+\begin{table}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lcccc}
+        \toprule
+        Encoder & Decoder & Vortraining & Mask Channel & Best accuracy \\
+        \midrule
+        CellposeSAM & Schichten-Klassifikator & Fully-supervised & Masken-Methode & 72,9\% \\
+        CellposeSAM & Volumen-Klassifikator & Fully-supervised & Masken-Methode & 84,9\% \\
+        ResNet18 & Schichten-Klassifikator & Fully-supervised & Masken-Methode & 79,4\% \\
+        ResNet18 & Volumen-Klassifikator & Fully-supervised & Masken-Methode & 83,6\% \\
+        ResNet101 & Schichten-Klassifikator & Fully-supervised & Masken-Methode & 78,6\% \\
+        ResNet101 & Volumen-Klassifikator & Fully-supervised & Masken-Methode & 81,8\% \\
+        Efficientnet V2 & Schichten-Klassifikator & Fully-supervised & Masken-Methode & 81,8\% \\
+        Efficientnet V2 & Volumen-Klassifikator & Fully-supervised & Masken-Methode & 83,1\% \\
+        ConvNeXt & Schichten-Klassifikator & Fully-supervised & Masken-Methode & 83,6\% \\
+        ConvNeXt & Volumen-Klassifikator & Fully-supervised & Masken-Methode & 82,6\% \\
+        Swin V2 & Schichten-Klassifikator & Fully-supervised & Masken-Methode & 82,3\% \\
+        Swin V2 & Volumen-Klassifikator & Fully-supervised & Masken-Methode & 83,9\% \\
+        CellposeSAM & Schichten-Klassifikator & Fully-supervised & Distanz-Methode & 69,3\% \\
+        CellposeSAM & Volumen-Klassifikator & Fully-supervised & Distanz-Methode & 82,6\% \\
+        ResNet18 & Schichten-Klassifikator & Fully-supervised & Distanz-Methode & 78,4\% \\
+        ResNet18 & Volumen-Klassifikator & Fully-supervised & Distanz-Methode & 81,2\% \\
+        ResNet101 & Schichten-Klassifikator & Fully-supervised & Distanz-Methode & 77,1\% \\
+        ResNet101 & Volumen-Klassifikator & Fully-supervised & Distanz-Methode & 81,0\% \\
+        Efficientnet V2 & Schichten-Klassifikator & Fully-supervised & Distanz-Methode & 71,1\% \\
+        Efficientnet V2 & Volumen-Klassifikator & Fully-supervised & Distanz-Methode & 70,8\% \\
+        ConvNeXt & Schichten-Klassifikator & Fully-supervised & Distanz-Methode & 80,2\% \\
+        ConvNeXt & Volumen-Klassifikator & Fully-supervised & Distanz-Methode & 79,9\% \\
+        Swin V2 & Schichten-Klassifikator & Fully-supervised & Distanz-Methode & 76,6\% \\
+        Swin V2 & Volumen-Klassifikator & Fully-supervised & Distanz-Methode & 77,9\% \\
+        ResNet18 & Volumen-Klassifikator & Kein Vortraining & Masken-Methode & 85,9\% \\
+        ResNet101 & Volumen-Klassifikator & Kein Vortraining & Masken-Methode & 81,8\% \\
+        Efficientnet V2 & Volumen-Klassifikator & Kein Vortraining & Masken-Methode & 78,6\% \\
+        ConvNeXt & Volumen-Klassifikator & Kein Vortraining & Masken-Methode & 75,3\% \\
+        Swin V2 & Volumen-Klassifikator & Kein Vortraining & Masken-Methode & 50,0\% \\
+        ResNet18 & Volumen-Klassifikator & Nur semi-supervised & Masken-Methode & 63,8\% \\
+        ResNet101 & Volumen-Klassifikator & Nur semi-supervised & Masken-Methode & 61,6\% \\
+        Efficientnet V2 & Volumen-Klassifikator & Nur semi-supervised & Masken-Methode & 57,8\% \\
+        ConvNeXt & Volumen-Klassifikator & Nur semi-supervised & Masken-Methode & 42,6\% \\
+        Swin V2 & Volumen-Klassifikator & Nur semi-supervised & Masken-Methode & 38,5\% \\
+        ResNet18 & Volumen-Klassifikator & Semi-supervised und Transfer & Masken-Methode & 81,5\% \\
+        ResNet101 & Volumen-Klassifikator & Semi-supervised und Transfer & Masken-Methode & 79,2\% \\
+        Efficientnet V2 & Volumen-Klassifikator & Semi-supervised und Transfer & Masken-Methode & 63,0\% \\
+        ConvNeXt & Volumen-Klassifikator & Semi-supervised und Transfer & Masken-Methode & 81,8\% \\
+        Swin V2 & Volumen-Klassifikator & Semi-supervised und Transfer & Masken-Methode & 43,0\% \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Ergebnisse der einzelnen Methodenkombinationen der trainierten Klassifikatoren}
+    \label{tab:best_accuracy}
+\end{table}
+
+
 % Bibliography
 \lehead[]{\quad References}
 \rohead[]{References \quad}
 \printbibliography[heading=bibintoc,title={References}] % heading=bibnumbered
 \lehead[]{\quad \headmark}
 \rohead[]{\headmark \quad}
-
-% Nomenclature and Symbols
-%\chapter{Nomenclature and Symbols}\label{App:Nomenclature}
-
-%\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
-%\vect{A},\vect{B}, \vect{C},…& Matrices\\
-%\vect{A}^{\top}& Transpose of matrix $\vect{A}$\\
-%\vect{A}^{-1}& Inverse of matrix $\vect{A}$\\
-%\vect{A}^{+}& Moore–Penrose pseudoinverse of matrix $\vect{A}$\\
-%\vect{a}_{·i}& Column vector containing the $i$-th column of matrix $\vect{A}$\\
-%\vect{a}_{i·}& Column vector containing the $i$-th row of matrix $\vect{A}$\\
-%a_{ij}& Entry in the $i$-th row and $j$-th column of a matrix $\vect{A}$\\
-%\vect{a}, \vect{b}, \vect{c}, …& Column vectors / matrices\\
-%\vect{a}^{\top}& Row vector / matrix, transpose of column vector $\vect{a}$\\
-%a_{i}& $i$-th component of vector $\vect{a}$\\
-%a, b, c, …& Scalars, constants, variables\\
-%α, β, γ, …& Parameters\\
-%α^{*}, x^{*}, … & Optimal parameter, variable, …\\
-%\vect{B}& B-spline basis matrix\\
-%\vect{g}_{ij}& $\begin{pmatrix} p_{ij} & q_{ij} \end{pmatrix}^{\top}$, given discrete gradient field at position $\left(i,j\right)$\\
-%\vect{g}\left(x,y\right)& $\begin{pmatrix} p\left(x,y\right) & q\left(x,y\right) \end{pmatrix}^{\top}$, given gradient field in the continuous domain\\
-%\vect{I}_n& $n$-by-$n$ identity matrix\\
-%\text{LAD}, \text{LS}& Least absolute deviations, least squares\\
-%%\text{LS}& Least squares\\
-%\symup{MSE}, \symup{RMSE}& Mean-squared error, root-mean-squared error\\
-%\vect{P}& $x$-components of a given discrete gradient field\\
-%p_{ij}& $x$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
-%p, p\left(x,y\right)& $x$-component of a given gradient field in the continuous domain\\
-%\vect{Q}& $y$-components of a given discrete gradient field\\
-%q_{ij}& $y$-component of a given discrete gradient field at position $\left(i,j\right)$ \\
-%q, q\left(x,y\right)& $y$-component of a given gradient field in the continuous domain\\
-%\vect{R}\ /\ \vect{r}& Matrix / vector containing residuals or errors\\
-%%\symup{RMSE}& Root-mean-squared error\\
-%S& Cost functional\\
-%σ& Standard deviation of Gaussian noise\\
-%\vect{Z}& Surface / height matrix (discrete)\\
-%z_{ij}& Entries of the surface / height matrix\\
-%z\left(x,y\right)& Surface / height function (continuous) \\
-%\vect{0}, \vect{1}, …& Column vector whose elements are all $0$, $1$, …\\
-%\end{tabu}
-%\vfill
-%
-%%\clearpage
-%%\thispagestyle{plain}
-%\subsubsection{Operators}
-%\begin{tabu} to 1\textwidth {X[1,l,$] X[4,l]}
-%\symcal{C}& Discrete cosine transform\\
-%\symcal{C}^{-1}& Inverse discrete cosine transform\\
-%\vect{D}₁& Matrix operator for first-order differences\\
-%\vect{D}₂& Matrix operator for second-order differences\\
-%\symbfsfup{D}_x& Matrix operator for discrete differentiation with respect to $x$\\
-%\symcal{F}& Fourier transform\\
-%\symcal{F}^{-1}& Inverse Fourier transform\\
-%\symup{tr}& Trace of a square matrix\\
-%\symup{vec}& Vectorization of a matrix, converts a matrix into a column vector\\
-%\times& Cross product / vector product\\
-%\otimes& Kronecker product\\
-%\odot& Hadamard product / Schur product\\
-%\partial_x& Partial derivative with respect to $x$\\
-%\partial_{xy}& $\partial_x \partial_y$ \\
-%f_{x}& $\partial_x f$\\
-%f_{xy}& $\partial_{xy} f$\\
-%\symbf{∇}& Nabla operator\\
-%\symup{Δ}& Laplace operator\\
-%\le, \ge& Less than or equal to, greater than or equal to (scalars)\\
-%\preceq, \succeq& Vector or componentwise inequality\\
-%\| · \|& Norm on a vector space\\
-%\| · \|_1& $L¹$-norm\\
-%\| · \|_2& $L²$-norm / Euclidean norm\\
-%\| · \|_F& Frobenius norm / Hilbert-Schmidt norm\\
-%\| · \|_∞& $L^∞$-norm / maximum norm / uniform norm\\
-%
-%\end{tabu}

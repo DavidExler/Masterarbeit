@@ -41,6 +41,20 @@ Implementierung - Methoden Teil Fragen:
 
 Screenshots für selbstentwickelte Sachen und Übersicht der Tabs nachführen.
 
+Was ich noch schreiben könnte zum länger machen:
+    - Implementierung
+        - Wie funktioniert der Retreiver
+        - Wie funktioniert der Pseudo Labler 
+        - Wie funktioniert die Methodenauswahl-funktioniert
+        - Wie funktionieren die Visualisierungen (Kompliziertere wie Klassen-Kontur, Hover-Effekte und GradCAM)
+    - Methoden
+        - GradCAM
+        - 3D-Anpassung mehr erklären
+    - Ergebnisse/Diskussion:
+        - Pro Klasse Genauigkeit
+        - Mehr GradCAM
+        - Visualisierungen wie z.B. Kontur Overlay mit Klassen-Farbe
+
 FRAGEN:
     - wie stellt man den t-test in der Abbildung dar?
     - Kann ich am Ende der Segmentierungsergebnisse einfach schreiben CellposeSAM wird verwendet?

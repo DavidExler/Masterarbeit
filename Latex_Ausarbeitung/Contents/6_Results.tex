@@ -117,8 +117,8 @@ Im unteren Verlauf ist Overfitting zu erkennen.
 Die Genauigkeit auf dem Test-Anteil des Datensatzes sinkt etwa ab Epoche 30 und hat ihr Maximum in Epoche 32. 
 Dementsprechend wird die Genauigkeit des Klassifikators in Epoche 32 für den Vergleich herangezogen.
 
-\begin{figure}[!h]
-    \centering\includegraphics[width=\linewidth]{Figures/Trainingskurven.pdf}
+\begin{figure}[H]
+    \centering\includegraphics[width=0.8\linewidth]{Figures/Trainingskurven.pdf}
     \caption{Die Diagramme zeigen den Trainingsverlauf eines Klassifikators. 
     Links ist der Verlauf des Loss zu sehen.
     In der Mitte und rechts sind die Verläufe der Validierungsgenauigkeit zu sehen.
@@ -140,7 +140,7 @@ Während CellposeSAM allerdings die zweithöchste maximale Genauigkeit aufweist,
 Besonders auffällig ist Swin V2.
 Mit 64,6\% hat es die niedrigste durchschnittliche Genauigkeit, aber der Maximalwert von 83,9\% ist der dritthöchste.
 \begin{figure}[!h]
-    \centering\includegraphics[width=\linewidth]{Figures/encoders_compare.pdf}
+    \centering\includegraphics[width=0.8\linewidth]{Figures/encoders_compare.pdf}
     \caption{Das Balkendiagramm zeigt an der Y-Achse die Genauigkeit der Klassifikatoren unter Verwendung der verschiedenen Encoder.
     Auf der X-Achse sind die Encoder als Gruppen aufgetragen.
     Jede Gruppe enthält einen Maximalwert (Orange) und einen Durchschnittswert (Blau), da jeder Encoder mit verschiedenen Kombinationen von Methoden getestet wird.
@@ -163,7 +163,7 @@ Die Balken rechts, die je den Durchschnitt aller Modelle mit einem Decoder darst
 Mit einem t-Test wird diese Vermutung bestätigt (p = 0,023).
 
 \begin{figure}[!h]
-    \centering\includegraphics[width=\linewidth]{Figures/encodersVdecoder.pdf}
+    \centering\includegraphics[width=0.8\linewidth]{Figures/encodersVdecoder.pdf}
     \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung eines bestimmten Decoder.
     Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diesen Decoder nutzen, aufgetragen. 
     Die X-Achse zeigt Gruppen von Encodern, jeweils besetzt mit einem Wert für den Schichten- und den Volumen-Klassifikator.
@@ -182,13 +182,30 @@ Außerdem bestätigt ein stark signifikanter t-Test diese Aussage (p = 0,0018).
 Zu sehen ist aber, dass der Einfluss der Vorverarbeitung unterschiedlich stark ist, je nach Encoder.
 Während die Genauigkeit für Modelle mit dem ResNet101 Encoder mit der Masken-Methode um 0,8 Prozentpunkte steigt gegenüber der Verwendung von der Distanz-Methode, macht die Vorverarbeitung beim EfficientNetV2 Encoders 11,5 Prozentpunkte aus.
 
-\begin{figure}[!h]
-    \centering\includegraphics[width=\linewidth]{Figures/encodersVchannel1.pdf}
+\begin{figure}[H]
+    \centering\includegraphics[width=0.8\linewidth]{Figures/encodersVchannel1.pdf}
     \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung einer bestimmten Vorverarbeitungsart.
     Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diese Vorverarbeitungsart nutzen, aufgetragen. 
     Die X-Achse zeigt Gruppen von Encodern, jeweils besetzt mit einem Wert für die Masken-Methode, die den Nucleus-Kanal des Bilds durch die Segmentierungsmaske ersetzt, und die Distanz-Methode, die eine Distanztransformation auf den Nucleus-Kanal anwendet.
     Rechts zu sehen sind Balken, die den Durchschnitt der Werte aller Encoder, abhängig von der Vorverarbeitungsmethode, zeigen.}
     \label{fig:bars_channel1}
+\end{figure}
+
+Mithilfe von GradCAM \cite{Selvaraju2017} wird außerdem das Verhalten der Klassifikatoren exemplarisch visualisiert.
+Abb. \ref{fig:gradCAM} zeigt den Nucleus-Kanal und einen Marker-Kanal von zwei 2D-Schichten.
+Die beiden 2D-Schichten sind aus unterschiedlichen 3D-Stapeln, einer der mit der Masken-Methode, und einer der mit der Distanz-Methode vorverarbeitet wurde.
+Zu sehen ist jeweils eine Heatmap, die, für einen bestimmten Klassifikator, gradientenbasiert die Aktivierungen in einer Schicht des Merkmalsraums zurück auf die Eingangsdaten projeziert.
+Die Heatmaps sind jeweils zur besseren Interpretierbarkeit einer 2D-Schicht der Segmentierungsmaske des Nucleus und einem Marker-Kanal überlagert. 
+Dadurch wird räumlich aufgezeigt, welche Regionen der Eingangsdaten zur Entscheidung für eine bestimmt Klasse besonders beigetragen haben.
+Die beiden Nucleus-Kanal-Ansichten zeigen, dass Regionen direkt um den Nucleus herum für die Klassifikationsentscheidung wichtiger sind als die Oberfläche des Nucleus.
+Selbst unter Verwendung der Distanz-Methode, die zum Ziel hat Oberflächen-Merkmale zu erhalten und dafür klare Kanten und eindeutige Geometrie der Segmentierungsmaske augibt, wird die Oberfläche kaum betrachtet.
+Des Weiteren ist in den Heatmaps der Marker-Kanäle zu sehen, dass auch abseits des Nucleus-Kanals eine intuitiv sinnvolle Lokalisierung der Aufmerksamkeit des Klassifikators geschieht.
+Die Maxima der Heatmaps sind aufsichtbaren Strukturen im Marker-Kanal platziert.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/gradCAM.pdf}
+    \caption{GradCAM-Visualisierung für zwei exemplarische 2D-Schichten jeweils mit einem Nucleus-Kanal und einem Marker-Kanal.}
+    \label{fig:gradCAM}
 \end{figure}
 
 \subsection{Vortraining}\label{subsec:RES_pretrain}
@@ -215,7 +232,7 @@ Vortraining auf dem ImageNet-Datensatz führt im Vergleich dazu bei diesem Encod
 ImageNet-Vortraining liefert im Durchschnitt die besten Ergebnisse mit einer Genauigkeit von 84\%. 
 Außerdem ist die Varianz entlang der Encoder mit dem ImageNet-Vortraining (\num{5.6e-5}) deutlich geringer als ohne Vortraining (0,016). 
 Dennoch erreicht ResNet18 ohne Vortraining die beste Genauigkeit mit 86\%.
-\begin{figure}[!h]
+\begin{figure}[H]
     \centering\includegraphics[width=0.8\linewidth]{Figures/encodersVpretrain.pdf}
     \caption{Die Heatmap zeigt die Genauigkeiten der Klassifikatoren unter Verwendung der verschiedenen Vortrainingsmethoden.
     Auf der Y-Achse sind die verschiedenen Encoder aufgeführt.
@@ -226,12 +243,3 @@ Dennoch erreicht ResNet18 ohne Vortraining die beste Genauigkeit mit 86\%.
 \end{figure}
 
 \subsection{Allgemeines}
-Mithilfe von GradCAM \cite{Selvaraju2017} wird hier das Verhalten der Klassifikatoren exemplarisch visualisiert.
-Abb. \ref{fig:gradCAM} zeigt den Nucleus-Kanal und einen Marker-Kanal von zwei 2D-Schichten.
-Zu sehen ist jeweils eine Heatmap, die Gradienten-basiert die 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{Figures/gradCAM.pdf}
-    \caption{GradCAM-Visualisierung für zwei exemplarische 2D-Schichten jeweils mit einem Nucleus-Kanal und einem Marker-Kanal.}
-    \label{fig_gradCAM}
-\end{figure}

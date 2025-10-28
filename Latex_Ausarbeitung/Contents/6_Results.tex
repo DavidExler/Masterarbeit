@@ -1,16 +1,15 @@
 % !TeX root = ../Thesis.tex
-%Abschlussvortrag Termin eintragen
-%
+
 \chapter{Ergebnisse} \label{ch:results}
-%In this chapter, the results are shown and discussed. Use an appropriate presentation of the results, e.g., tables, diagrams, plots. Be aware of statements that are too general.
 
 
 \section{Überblick}
 Das nachfolgende Kapitel beschreibt die Ergebnisse der durchgeführten Experimente.
-Die Experimente sind die quantitative Bewertungen, die die 3D-Zelldaten-Pipeline durchführt. 
+Die Experimente werden in mehreren Durchläufen der 3D-Zelldaten-Pipeline durchgeführt.
+Mit den Messergebnissen der 3D-Zelldaten-Pipeline wird eine statistische Auswertung vorgenommen. 
 Zuerst werden die Bewertungen der Instanzsegmentierungsmasken anhand der \ac{ipq}-Metrik und dann der Klassifikatoren anhand ihrer Genauigkeit betrachtet.
-Die \ac{ipq}-Ergebnisse werden hier auch in die drei Faktoren der Metrik gegliedert (siehe Kap. \ref{sec:Kriterien}).
-Daraus wird ersichtlich, dass jedes der Segmentierungsmodelle in einer der Kategorien dominiert, insgesamt aber CellposeSAM den anderen Modellen signifikant überlegen ist. 
+Die \ac{ipq}-Ergebnisse werden hier auch in die drei Faktoren: Recognition-Qualität (RQ), Segmentatierungs-Qualität (SQ) und die neu eingeführte Injektive-Qualität gegliedert (siehe Kap. \ref{sec:Kriterien}).
+Daraus wird ersichtlich, dass jedes der Segmentierungsmodelle in einem der Faktoren dominiert, insgesamt aber CellposeSAM den anderen Modellen signifikant überlegen ist. 
 Auch die Ergebnisse der Klassifikation werden unterteilt, um den Einfluss einzelner Methoden auf die Genauigkeit des Klassifikators zu identifizieren.
 
 \section{Hardware}
@@ -20,10 +19,14 @@ Der verwendete Server verfügt über eine 12th-Gen-Intel(R) Core(TM) i9-12900KF-
 \section{Segmentierung}
 Für die Wahl eines Segmentierungsnetzes wird in Kapitel \ref{ch:NewMethods} das Bewertungskriterium \ac{ipq} eingeführt.
 Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518Datensatz vorgestellt.
-Die \ac{ipq} wird auf dem Datensatz mit den Masken von drei vortrainierten Segmentierungsmodellen und, zur Validierung, mit der \ac{gt} ausgeführt.
-Die Masken unterscheiden sich optisch stark (siehe Abb. \ref{fig:example_masks}), was sich auch in deutlichen Unterschieden in der \ac{ipq} widerspiegelt.
-Abb. \ref{fig:example_masks} zeigt exemplarisch einen 2D-Schnitt eines Bildes mit roten Linien als Konturen der Annotation oder der vorhergesagten Segmentierungsmaske je eines Modells.
-\begin{figure}[htbp]
+Die \ac{ipq} wird auf dem Datensatz mit den Masken von drei vortrainierten Segmentierungsmodellen und, zur Validierung mit den Annotationen ausgeführt.
+Die Masken unterscheiden sich optisch stark (siehe Abb. \ref{fig:example_masks}).
+Masken des nnU-Net-Modell sehen kantiger aus als die anderen Masken und sie besitzen oft eine raue Kontur mit hervorstehenden Extremitäten oder Einkerbungen.
+Deepcell-Masken sehen glatt und ausgebreitet aus.
+Durch die Watershed-Nachverarbeitung sind teilweise sichtbare Artefakte entstanden, an Stellen an denen das Trennen der Instanzen für Watershed nicht möglich ist.
+Die CellposeSAM-Masken sehen intuitiv am besten aus, sie haben oft nahezu eliptische Konturen und trennen Instanzen so wie es für das menschliche Auge sinnvoll erscheint. 
+Das spiegelt sich auch in deutlichen Unterschieden in der \ac{ipq} wieder.
+\begin{figure}[H]
     \centering
     \begin{subfigure}[t]{0.24\textwidth}
         \includegraphics[width=\linewidth]{Figures/Deepcell_Mask_Example.png}
@@ -48,10 +51,10 @@ Abb. \ref{fig:example_masks} zeigt exemplarisch einen 2D-Schnitt eines Bildes mi
         \caption{Maske der Annotation.}
         \label{fig:gtMaske}
     \end{subfigure}
-    \caption{Darstellung der Segmentierungsmasken der verschiedenen Segmentierungsmodelle und der Annotation als Konturen auf einem zweidimensionalen Durchschnitt einer Stichprobe des S\_BIAD1518 Datensatzes.}
+    \caption{Darstellung der Segmentierungsmasken der verschiedenen Segmentierungsmodelle und der Annotation als Konturen auf einem zweidimensionalen Durchschnitt einer dreidimensionalen Stichprobe des S\_BIAD1518 Datensatzes.}
     \label{fig:example_masks}
 \end{figure}
-\newline
+Abb. \ref{fig:example_masks} zeigt exemplarisch einen 2D-Schnitt eines 3D-Bildes mit roten Linien als Konturen der Annotation oder der vorhergesagten Segmentierungsmaske je eines Modells.
 Alle Annotationen erreichen einen \ac{ipq}-Wert von genau Eins.
 Die Ergebnisse jedes Segmentierungsnetzes sind einzeln und für jedes Bild im Appendix \ref{supp:ipq} angehängt. 
 Eine Zusammenfassung der Ergebnisse ist in den Boxplots in Abb. \ref{fig:boxplots_ipq} gegeben.
@@ -61,25 +64,36 @@ Dennoch zeigt sich, dass CellposeSAM lediglich in der Kategorie Segmentatierungs
 Die Recognition-Qualität (RQ) der nnUNet-Masken ist signifikant höher als die der CellposeSAM-Masken (p-Wert: \num{3.48e-06}). 
 Ebenso ist die Injektive Qualität (IQ) der Deepcell-Masken signifikant höher als die IQ der CellposeSAM-Maske (p-Wert: \num{6.78e-08}).
 Obwohl nnUNet und Deepcell jeweils eine Metrik dominieren, wird ihr \ac{ipq}-Wert durch die beiden niedrigsten Faktoren stark heruntergezogen, während CellposeSAM in jeder Metrik gut, wenn auch nicht am besten, abschneidet.
-Außerdem zeigen die Boxplots viele Ausreißer in den Daten, was den Unterschieden zwischen den Bildkategorien, die der Datensatz enthält, geschuldet sein könnte.
+Außerdem zeigen die Boxplots viele Ausreißer in den Daten, was den Unterschieden zwischen den Bildkategorien, die der Datensatz enthält, geschuldet sein kann.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{Figures/Segmentation_Boxplots}
-    \caption{Boxplots der Ergebnisse der \ac{ipq}-Berechnungen mit den Faktoren \textit{$k_1$}, \textit{$k_2$} und \textit{$k_3$} jeweils gleich Eins. 
-    Die X-Achse unterteilt die Daten in die Kriterien Segmentatierungs-Qualität (SQ), Recognition-Qualität (RQ), Injektivitäts-Qualität (IQ) und \acf{ipq}, wie in der Formel \ref{eq:ipq} beschrieben. 
+    \includegraphics[width=0.8\linewidth]{Figures/Segmentation_Boxplots}
+    \caption{Boxplots der Ergebnisse der \ac{ipq}-Berechnungen mit den Faktoren $k_i = 1$ (siehe Formel (\ref{eq:ipq})). 
+    Die X-Achse unterteilt die Daten in die Kriterien Segmentierungs-Qualität (SQ), Recognition-Qualität (RQ), Injektivitäts-Qualität (IQ) und \acf{ipq}, wie in der Formel (\ref{eq:ipq}) beschrieben. 
     Für jede Metrik sind drei farbige Boxplots zu sehen, jeweils einer für jedes Segmentierungsmodell.
-    Die Boxplots visualisieren die Verteilung der Metriken.
-    Die Box repräsentiert das Interquartilsintervall (25.–75. Perzentil), wobei der Median als Linie innerhalb der Box dargestellt wird. 
-    Die sogenannten Whiskers reichen bis zum 1,5-fachen des Interquartilsabstands über die Box hinaus. 
-    Darüber hinausgehende Punkte gelten als Ausreißer und werden einzeln dargestellt.}
+    %Die Boxplots visualisieren die Verteilung der Metriken.
+    %Die Box repräsentiert das Interquartilsintervall (25.–75. Perzentil), wobei der Median als Linie innerhalb der Box dargestellt wird. 
+    %Die sogenannten Whiskers reichen bis zum 1,5-fachen des Interquartilsabstands über die Box hinaus. 
+    %Darüber hinausgehende Punkte gelten als Ausreißer und werden einzeln dargestellt.}
+    }
     \label{fig:boxplots_ipq}
 \end{figure}
 In Abb. \ref{fig:ipq_examples} sind Beispiele für die einzelnen Fehlerarten zu sehen.
+\newline\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Figures/IPQ_examples.pdf}
+    \caption{Exemplische Darstellung einzelner Ausprägungen verschiedener Fehlerarten.
+    Hierzu sind jeweils, in dieser Reihenfolge von links nach rechts, ein Ausschnitt eines 2D-Durchschnitts einer Stichprobe, die Annotation als Kontur und die vorhergesagte Maske eines Modells zu sehen.
+    Die erste Zeile zeigt ein Beispiel eines schlechten IQ-Werts anhand einer nnU-Net-Maske.
+    In der zweiten Zeile ist ein RQ-Fehler anhand einer CellposeSAM-Maske zu sehen und unten ist ein Beispiel für einen schlechten SQ-Wert anhand einer Deepcell-Maske zu sehen. 
+    }
+    \label{fig:ipq_examples}
+\end{figure}
 Das IQ-Beispiel zeigt die Verletzung injektiver Abbildung der Nuclei auf die Annotation anhand einer nnU-Net-Maske.
 Zentral zu sehen ist hier ein nicht-eliptischer Nucleus.
 Dieser Nucleus wird vom nnU-Net-Modell in mehrere Segmente unterteilt, wodurch die räumliche Konzentration der Nuclei überschätzt wird.
 Nicht-eliptische Nuclei führen häufig zu dieser Art von Fehlern.\newline
-Mit dem Fehler gehen hier RQ-Fehler einher, weil zwei der Segmente im Vergleich zur Annotation zu klein sind, um als \ac{tp} erkannt zu werden.
+Mit dem Fehler gehen RQ-Fehler einher, weil zwei der Segmente im Vergleich zur Annotation zu klein sind, um als \ac{tp} erkannt zu werden.
 In der zweiten Zeile ist anhand einer CellposeSAM-Maske ein RQ-Beispiel gegeben.
 Das Segmentierungsmodell hat hier einen Nucleus halluziniert. 
 Der Nucleus unten links, direkt unter dem Linken der beiden großen Nuclei, ist nicht in der Annotation zu finden.
@@ -91,21 +105,11 @@ Dadurch ist das Segment, das den sichtbaren Nucleus abbildet, deutlich zu groß,
 Mit diesem Fehler geht auch ein schlechterer RQ-Wert einher, da der Schatten zu mehreren Halluzinationen geführt hat.
 Da diese Halluzinationen nicht mit den Annotationssegmenten überschneiden, ist der IQ-Wert hier nicht betroffen.
 Der Fehler führt zu einer Fehleinschätzung des Nucleivolumens.
-\newline\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\linewidth]{Figures/IPQ_examples.pdf}
-    \caption{Exemplische Darstellung einzelner Ausprägungen verschiedener Fehlerarten.
-    Hierzu sind jeweils, in dieser Reihenfolge, ein Ausschnitt eines 2D-Durchschnitts einer Stichprobe, die Annotation als Kontur und die vorhergesagte Maske eines Modells zu sehen.
-    Die erste Zeile zeigt ein Beispiel eines schlechten IQ-Werts anhand einer nnU-Net-Maske.
-    In der zweiten Zeile ist ein RQ-Fehler anhand einer CellposeSAM-Maske zu sehen und ganz unten ist ein Beispiel für einen schlechten SQ-Wert anhand einer Deepcell-Maske zu sehen. 
-    }
-    \label{fig:ipq_examples}
-\end{figure}
 
 \section{Klassifikation}\label{sec:resultsClassifier}
-Die in Kapitel \ref{ch:NewMethods} vorgestellten, zum Teil neu eingeführten Methoden zur Klassifikation werden durch die neu entwickelte 3D-Zelldaten-Pipeline anhand eines separaten Anteils des manuell gelabelten Datensatzes getestet.
+Die in Kapitel \ref{ch:NewMethods} eingeführten Methoden zur Klassifikation werden durch die neu entwickelte 3D-Zelldaten-Pipeline anhand eines separaten Anteils des manuell gelabelten Datensatzes getestet.
 Die Genauigkeit, also der prozentuale Anteil richtiger Vorhersagen, auf dem Test-Anteil des Zieldatensatzes wird als Kriterium verwendet.
-Da die Modelle während des Trainings rauschbehaftete Verläufe der Genauigkeit aufweisen und es zu Overfitting kommen kann, wird nicht das Modell am Ende des Trainings zur Evaluation eingesetzt, sondern das Modell der Trainingsepoche, in der die Genauigkeit am höchsten ist.
+Da die Modelle während des Trainings rauschbehaftete Verläufe der Genauigkeit aufweisen und es zu Overfitting kommen kann, wird nicht das Modell am Ende des Trainings zur Evaluation eingesetzt, sondern das Modell der Trainingsepoche, in der die Genauigkeit auf dem Test-Anteil des Datensatzes am höchsten ist.
 Abb. \ref{fig:Trainingsverlauf} zeigt exemplarisch zwei Trainingsverläufe, die dieses Phänomen belegen.
 Im oberen Verlauf ist zu sehen, dass die Genauigkeit des Klassifikators tendenziell steigt.
 Der Verlauf ist zwar nicht monoton steigend, aber es liegt nahe, dass bei Fortsetzung des Trainings weitere Verbesserungen zu sehen sind.
@@ -113,7 +117,7 @@ Im unteren Verlauf ist Overfitting zu erkennen.
 Die Genauigkeit auf dem Test-Anteil des Datensatzes sinkt etwa ab Epoche 30 und hat ihr Maximum in Epoche 32. 
 Dementsprechend wird die Genauigkeit des Klassifikators in Epoche 32 für den Vergleich herangezogen.
 
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering\includegraphics[width=\linewidth]{Figures/Trainingskurven.pdf}
     \caption{Die Diagramme zeigen den Trainingsverlauf eines Klassifikators. 
     Links ist der Verlauf des Loss zu sehen.
@@ -131,11 +135,11 @@ Die Klassifikatoren sind nach dem aufsteigenden Maximalwert sortiert.
 Zu sehen ist, dass der beste Wert vom ResNet18-Encoder stammt.
 Mit 85,9\% Genauigkeit auf dem Test-Anteil des Datensatzes ist diese Kombination das gefundene Optimum.
 Auch im Mittelwert haben die Klassifikatoren mit dem ResNet18-Encoder mit 79,1\% die höchste Genauigkeit.
-ResNet101 und CellposeSAM haben als Encoder die dritt- und zweithöchste durchschnittliche Genauigkeit mit 77,3\% und 77,4\%.
+CellposeSAM und ResNet101 haben als Encoder die zweit- und dritthöchste durchschnittliche Genauigkeit mit 77,4\% und 77,3\%.
 Während CellposeSAM allerdings die zweithöchste maximale Genauigkeit aufweist, hat ResNet101 die geringste.
 Besonders auffällig ist Swin V2.
 Mit 64,6\% hat es die niedrigste durchschnittliche Genauigkeit, aber der Maximalwert von 83,9\% ist der dritthöchste.
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering\includegraphics[width=\linewidth]{Figures/encoders_compare.pdf}
     \caption{Das Balkendiagramm zeigt an der Y-Achse die Genauigkeit der Klassifikatoren unter Verwendung der verschiedenen Encoder.
     Auf der X-Achse sind die Encoder als Gruppen aufgetragen.
@@ -144,7 +148,6 @@ Mit 64,6\% hat es die niedrigste durchschnittliche Genauigkeit, aber der Maximal
     }
     \label{fig:bars_encoders}
 \end{figure}
-Um dieses Phänomen zu untersuchen und weitere Auffälligkeiten ausfindig zu machen, werden nachfolgend weitere Vergleiche vorgestellt.
 
 \subsection{Decoder}\label{subsec:RES_decoder}
 Abb. \ref{fig:bars_decoders} zeigt eine Gegenüberstellung der Genauigkeit beider Decoder in einem Balkendiagramm.
@@ -159,7 +162,7 @@ Die Daten zeigen also, dass die Intensität des Unterschieds in der Genauigkeit 
 Die Balken rechts, die je den Durchschnitt aller Modelle mit einem Decoder darstellen, deuten an, dass der Volumen-Klassifikator insgesamt bessere Ergebnisse liefert.
 Mit einem t-Test wird diese Vermutung bestätigt (p = 0,023).
 
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering\includegraphics[width=\linewidth]{Figures/encodersVdecoder.pdf}
     \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung eines bestimmten Decoder.
     Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diesen Decoder nutzen, aufgetragen. 
@@ -179,7 +182,7 @@ Außerdem bestätigt ein stark signifikanter t-Test diese Aussage (p = 0,0018).
 Zu sehen ist aber, dass der Einfluss der Vorverarbeitung unterschiedlich stark ist, je nach Encoder.
 Während die Genauigkeit für Modelle mit dem ResNet101 Encoder mit der Masken-Methode um 0,8 Prozentpunkte steigt gegenüber der Verwendung von der Distanz-Methode, macht die Vorverarbeitung beim EfficientNetV2 Encoders 11,5 Prozentpunkte aus.
 
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering\includegraphics[width=\linewidth]{Figures/encodersVchannel1.pdf}
     \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung einer bestimmten Vorverarbeitungsart.
     Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diese Vorverarbeitungsart nutzen, aufgetragen. 
@@ -212,12 +215,23 @@ Vortraining auf dem ImageNet-Datensatz führt im Vergleich dazu bei diesem Encod
 ImageNet-Vortraining liefert im Durchschnitt die besten Ergebnisse mit einer Genauigkeit von 84\%. 
 Außerdem ist die Varianz entlang der Encoder mit dem ImageNet-Vortraining (\num{5.6e-5}) deutlich geringer als ohne Vortraining (0,016). 
 Dennoch erreicht ResNet18 ohne Vortraining die beste Genauigkeit mit 86\%.
-\begin{figure}[h]
-    \centering\includegraphics[width=\linewidth]{Figures/encodersVpretrain.pdf}
+\begin{figure}[!h]
+    \centering\includegraphics[width=0.8\linewidth]{Figures/encodersVpretrain.pdf}
     \caption{Die Heatmap zeigt die Genauigkeiten der Klassifikatoren unter Verwendung der verschiedenen Vortrainingsmethoden.
     Auf der Y-Achse sind die verschiedenen Encoder aufgeführt.
     Die X-Achse zeigt die getesteten Methoden des Vortrainings an.
     Die Farbe der Felder und der Wert darin zeigen die Durchschnitte der Genauigkeiten aller Klassifikatoren, die die entsprechende Vortrainingsmethode nutzen.
     Die letzte Zeile zeigt den Durchschnitt der Werte aller Encoder, abhängig von der Vortrainingsmethode.}
     \label{fig:heatmap_pretrain}
+\end{figure}
+
+\subsection{Allgemeines}
+Mithilfe von GradCAM \cite{Selvaraju2017} wird hier das Verhalten der Klassifikatoren exemplarisch visualisiert.
+Abb. \ref{fig:gradCAM} zeigt den Nucleus-Kanal und einen Marker-Kanal von zwei 2D-Schichten.
+Zu sehen ist jeweils eine Heatmap, die Gradienten-basiert die 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figures/gradCAM.pdf}
+    \caption{GradCAM-Visualisierung für zwei exemplarische 2D-Schichten jeweils mit einem Nucleus-Kanal und einem Marker-Kanal.}
+    \label{fig_gradCAM}
 \end{figure}

@@ -39,4 +39,13 @@ Implementierung - Methoden Teil Fragen:
     - Retreiver in Methoden?
     - Pseudo Labler in Methoden?
 
-Screenshots für selbstentwickelte sachen und Übersicht der Tabs nachführen.
+Screenshots für selbstentwickelte Sachen und Übersicht der Tabs nachführen.
+
+FRAGEN:
+    - wie stellt man den t-test in der Abbildung dar?
+    - Kann ich am Ende der Segmentierungsergebnisse einfach schreiben CellposeSAM wird verwendet?
+    - Aufwand zeigen: Wo kann das hin bzw wie kann ich das machen? 
+    - 5.4 Klassifikation: Soll der Text in ein 5.4.1 Übersicht?
+    - Decoder - Ist jetzt da als name statt Klassifikations-Kopf, soll das ersetzt werden?
+    - Abbildungen als Übersichts-Bild: wird das nicht zu groß?
+    - Prozentpunkte/Prozent: soll ich das dann auch mathematisch anpassen?

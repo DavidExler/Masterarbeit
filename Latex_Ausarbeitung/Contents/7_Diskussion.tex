@@ -13,22 +13,24 @@ Durch einen Vergleich der Masken mit der Annotationen in Abb. \ref{fig:boxplots_
 Die nnUNet-Masken sind sichtbar kleiner als die Nucleus-Instanzen, was eine schlechte Segmentierungsqualität bedingt.
 Oft zerteilen mehrere nnuNet-Masken eine Nucleus-Instanz, was von der Injektiven Qualität bestraft wird.
 Wie auch die gute Recognition Qualität zeigt, findet dafür nnUNet sehr zuverlässig die anwesenden Nuclei mit mindestens einer Maske.
+Mit dem nnUNet-Modell sind außerdem aufgrund der kleinen Segmente, die das Modell vorhersagt, Überschneidungen zwischen Annotationsmaske und Segmentierungsmaske gering. 
+Ein Weg die Leistung des Modells im Bezug auf die \ac{ipq}-Metrik zu verbessern ist deshalb vermutlich das Modell, beispielsweise durch fine-tuning, auf größere Segmente anzupassen.
+Eingangsdaten, beispielsweise durch einen Mittelwert-Filter, kleiner zu dimensionieren und mehrere Bilder aneinandergereiht einzugeben kann auch zu Verbesserungen führen, dabei besteht allerdings das Risiko, dass der Informationsverlust durch den Filter das Ergebnis negativ beeinflusst. \newline
 Deepcell (siehe Abb. \ref{fig:DeepcellMaske}) übersegmentiert die Nuclei, wodurch die Segmentierungsqualität stark abnimmt.
-Das Ergebnis sind Masken, die zu groß sind und oft mehr als einen Nucleus enthalten.
+Das Ergebnis sind Masken, die intuitiv zu groß sind und oft mehr als einen Nucleus enthalten.
 Das bedeutet auch, dass einige Nuclei nicht von einer eigenen Maske gefunden werden, was sie als \ac{fn}-Instanzen kategorisiert und eine schlechte Recognition Qualität bedingt.
-Durch diese Übersegmentierung wird vermieden, dass Instanzen der \ac{gt} durch die Deepcell-Masken geteilt werden, was zu einer guten Injektiven Qualität führt.\newline
-Anhand der Interpretation der Werte und der exemplarischen Fehler in Abb. \ref{fig:ipq_examples} wird die Effektivität der neu entwickelten \ac{ipq}-Metrik ersichtlich.
-Verschiedene Fehlerarten, die zu unterschiedlichen Verfälschungen der interpretierbaren Merkmale der Daten führen werden gezielt von der Metrik erfasst.
-In der Praxis gehen die Fehler oft mit Fehlern einer anderen Art einher, was daran liegt, dass die Modelle nicht dem selben Denkverhalten folgen wie ein menschlicher Betrachter.
-Abb. \ref{fig:ideal_example_masks} zeigt idealisiert die Fehlerarten, die mit der \ac{ipq}-Metrik erkannt werden.
-Alle Fehler führen für den betrachteten Nucleus zu einem Faktor von 0,5 in ihrer Kategorie und einem optimalen Wert von 1 in den anderen Kategorien.
-Hier wird deutlich, dass die Metrik geeignet ist um: 
-\begin{itemize}
-    \item Fehleinschätzungen der Konzentration von Nuclei durch den neu eingeführten IQ-Wert zu bestrafen,
-    \item Fehleinschätzungen des Volumens der Nuclei durch einen geringen SQ-Wert zu bestrafen und
-    \item Fehleinschätzungen der Anzahl der Nuclei durch einen geringen RQ-Wert zu bestrafen.
-\end{itemize}
-\begin{figure}[htbp]
+Durch diese Übersegmentierung wird vermieden, dass Instanzen der Annotation durch die Deepcell-Masken geteilt werden, was zu einer guten Injektiven Qualität führt.
+Außerdem ist durch die großen Segmente die Segmentierungs-Qualität besonders schlecht, weil die Größe der Segmente den Nenner der \ac{iou} erhöht.
+Die Deepcell-Masken können im Bezug auf die \ac{ipq} von weiterer Nachverarbeitung profitieren.
+Mithilfe eines Erosion-Filter können die Masken kleiner gemacht werden, was auch zu einer besseren Leistung der Watershed-Nachverarbeitung führen kann.
+Umgekehrt kann nach der Erosion die Maske aber auch Kerben an der Kontur einzelner Instanzen aufweisen, die zur Spaltung der Instanz durch die Watershed-Nachverarbeitung führen.
+Auch für das Deepcell-Modell ist fine-tuning zu Anpassung an die Größe der Nuclei vermutlich ein Weg die Qualität zu verbessern.\newline
+Sowohl für das nnUNet-, als auch für das Deepcell-Modell gibt es zwar Vorschläge für Methoden zur Verbesserung der \ac{ipq} auf dem Benchmark-Datensatz, aber der Übertrag der Effektivität dieser Methoden auf die Zieldaten ist fraglich.
+Die Bilddomäne und auch die Eigenschaften wie Größe, Exzentrizität und Rundheit der Zieldaten unterscheiden sich von denen des Benchmark.
+Da keine Annotationen für die Instanzsegmentierung der Zieldaten verfügbar sind wird von der Anwenden der Methoden im Zuge dieser Arbeit abgesehen, um kein Overfitting auf den Benchmark-Datensatz zu riskieren. \newline
+
+
+\begin{figure}[h]
     \centering
     \begin{subfigure}[t]{0.24\textwidth}
         \includegraphics[width=\linewidth]{Figures/ideal_gt.pdf}
@@ -56,23 +58,87 @@ Hier wird deutlich, dass die Metrik geeignet ist um:
     \caption{Darstellung der Segmentierungsmasken verschiedener idealer Fehler und der Annotation als Kontur.}
     \label{fig:ideal_example_masks}
 \end{figure}
-
+Anhand der Interpretation der Werte und der exemplarischen Fehler in Abb. \ref{fig:ipq_examples} wird die Effektivität der neu entwickelten \ac{ipq}-Metrik ersichtlich.
+Verschiedene Fehlerarten, die zu unterschiedlichen Verfälschungen der interpretierbaren Merkmale der Daten führen werden gezielt von der Metrik erfasst.
+In der Praxis gehen die Fehler oft mit Fehlern einer anderen Art einher, was daran liegt, dass die Modelle nicht dem selben Denkverhalten folgen wie ein menschlicher Betrachter.
+Abb. \ref{fig:ideal_example_masks} zeigt idealisiert die Fehlerarten, die mit der \ac{ipq}-Metrik erkannt werden.
+Alle Fehler führen für den betrachteten Nucleus zu einem Faktor von 0,5 in ihrer Kategorie und einem optimalen Wert von 1 in den anderen Kategorien.
+Hier wird deutlich, dass die Metrik geeignet ist um: 
+\begin{itemize}
+    \item Fehleinschätzungen der Konzentration von Nuclei durch den neu eingeführten IQ-Wert zu bestrafen,
+    \item Fehleinschätzungen des Volumens der Nuclei durch einen geringen SQ-Wert zu bestrafen und
+    \item Fehleinschätzungen der Anzahl der Nuclei durch einen geringen RQ-Wert zu bestrafen.
+\end{itemize}
 \section{Klassifikation}
 Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Decodern, Vorverarbeitungsmethoden und Vortrainingsmethoden legt einige Aussagen über Effektivität der Methoden nahe.
+Vor allem aber zeigen die Ergebnisse, dass die Anwendung der optimalen Klassifikator-Methoden einen sehr hoch signifikanten Einfluss auf die Genauigkeit des Klassifikators hat.
+Die 3D-Zelldaten-Pipeline findet diese optimalen Methoden effizient.
+Wie die Ergebnisse zeigen, ermöglicht die Anwendung der 3D-Zelldaten-Pipeline das Training eines Klassifikators, der deutlich leistungsfähiger ist als ein Klassifikator mit zufällig gewählten Methoden – und das ganz ohne Programmierkenntnisse oder Vorerfahrung mit Deep-Learning-Methoden seitens der Anwender*innen\newline
 %Encoder
+...
 \newline 
 %Decodern
 Der Volumen-Klassifikator ist signifikant besser als der Schichten-Klassifikator (siehe Kapitel \ref{sec:resultsClassifier}).
 Dieses Erkenntnis legt nahe, dass die dreidimensionalen Faltungsschichten besser den zusammenhang der Merkmale erfassen können, als der Attention-Mechanismus des Schichten-Klassifikators.
-Das könnte daran liegen, dass die dreidimensionale Faltung räumliche Durchschnittswerte nur mit gelernten Gewichten durchführt, während die Spatial Average Operation großflächig die räumliche Beziehung der Merkmale vernachlässigt.
-Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen nicht ausreichend entlang der Z-Dimension erhalten sind, was zu einer schlechten Leistung des tiefen fokusierten Schichten-Klassifikators führen würde. 
-Stattdessen könnte auch die Kombination räumlicher Merkmale und der Merkmale entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen würde.
+Das kann daran liegen, dass die dreidimensionale Faltung räumliche Mittlungen nur mit gelernten Gewichten durchführt, während die Spatial Average Operation großflächig die räumliche Beziehung der Merkmale vernachlässigt.
+Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen nicht ausreichend entlang der Z-Dimension erhalten sind, was zu einer schlechten Leistung des tiefen fokusierten Schichten-Klassifikators führt. 
+Stattdessen können auch die Kombination räumlicher Merkmale und der Merkmale entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen kann.
 Da der Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
-Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Decoder haben das Potential mit bestimmten Merkmalsräumen besonders gut zu synergieren. \newline 
+Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Decoder haben das Potential mit bestimmten Merkmalsräumen besonders gut zu synergieren. 
+Besonders da die ImageNet-Encoder nicht auf dreidimensionale Eingabedaten vortrainiert werden ist die Abwägung zwischen einem Fokus auf die Merkmale entlang der Z-Achse und räumlichen Merkmalen essenziell.
+Auch für zukünftige Encoder besteht die Möglichkeit, dass sie Beziehungen von Merkmalen innerhalb einer 2D-Schicht der Eingabedaten so effizient und einheitlich zusammenfassen, dass der Attention-Mechanismus des Schichten-Klassifikators die Informationen besser als der Volumen-Klassifikator erhalten kann. 
+\newline 
 %Vorverarbeitungsmethoden
 Auch für Vorverarbeitung ist eine signifikant bessere Methode zu erkennen. 
-Den Nucleus Kanal mit der Segmentierungsmaske zu ersetzen ist signifikant besser als eine Distanztransformation auf den Kanal anzuwenden.
-Kapitel \ref{sec:MethodsClassifier} beschreibt das Risiko der Distanztransformation ist der Fortbestand von Einfluss umliegender Nuclei auf das Klassifikationsergebnis.\newline 
+Die Masken-Methode ist signifikant besser als die Distanz-Methode.
+Kapitel \ref{sec:MethodsClassifier} beschreibt den Vorteil und das Risiko der Methoden.
+Insbesondere der Vorteil der Masken-Methode wird an den Ergebnissen sichtbar. 
+Anhand der GradCAM-Heatmap in Abb. \ref{fig:gradCAM} wird abgeleitet, dass die Oberflächenmerkmale der Nuclei für die Klassifikation keine Rolle spielen.
+Ein Risiko der Masken-Methode ist ein Qualitäts-Verlust aufgrund der Eliminierung der Oberflächenmerkmale, aber selbst mit der Distanz-Methode werden diese Merkmale nicht betrachtet.
+Die Masken-Methode hebt die Geometrie der Nuclei besonders hervor und sowohl die statistische Betrachtung der Ergebnisse als auch die GradCAM-Heatmaps legen nahe, dass diese Geometrie besonders wichtig für die Klassifikation der Nuclei ist.
+Mit der Distanz-Methode wird nicht nur die Geometrie nicht besonders hervorgehoben, unter Umständen wird sie sogar durch direkt umliegende Nuclei beeinträchtigt.
+Da die Segmentierungs-Maske außer in der Distanztransformation nicht in den Daten der Distanz-Methode vorhanden ist, geht die Information über die Kanten vollständig verloren, überall umliegende Nuclei den betrachteten Nucleus direkt berühren.
+Der berührende Nucleus wird in diesem Fall als Teil des betrachteten Objekts interpretiert.
+Für kommende Anwendungen ist dennoch die Überlegung der Auswahl einer Vorverarbeitungsmethode interessant, da die Nuclei von anderen Zieldaten Informationen auf der Oberfläche tragen können, die für die Klassifikation wichtig sind.\newline 
 %Vortrainingsmethoden
-...\newline 
-...
+Der Einfluss der Vortrainingsmethoden ist besonders bedeutsam.
+Mit dem fully-supervised Vortraining ist die durchschnittliche Genauigkeit höher und auch konsistenter als mit anderen Vortrainingsmethoden.
+Das legt nahe, dass das rechenaufwändige Vortraining auf dem ImageNet-Datensatz mit den diversen Klassen und zahlreichen Stichproben für jede Klasse einen stark generalisierten Merkmalsraum erzeugt.
+Obwohl die Bilddomäne biologischer Zelldaten stark von den Bildern des ImageNet-Datensatz abweicht werden bedeutsame Bildmerkmale extrahiert.
+Auch bei der Adaption von 2D-Encodern zu 3D-Encodern bleibt der Merkmalsraum der fully-supervised-vortrainierten Encoder sinnvoll.
+Da die Zieldaten niemals vom Encoder gesehen werden ist Overfitting weitgehend ausgeschlossen, was die geringe Varianz der Genauigkeiten innerhalb der fully-supervised-vortrainierten Klassifikatoren erklärt.\newline
+Auch komplett ohne Vortrainig wird ein sinnvoller Merkmalsraum gelernt und die Klassifikatoren erreichen teilweise hohe Genauigkeitswerte. 
+Der Swin V2-Encoider hat ohne Vortraining nur 50\% Genauigkeit erreicht, was vermutlich daran liegt, dass die aufwändige Transformer-Architektur nicht ausreichen mit dem geringen Trainingsumfang der Zieldaten lernen kann.
+Es wird keine sinnvolle Merkmalsextraktion gelernt, bevor der Encoder mit dem Overfitting beginnt.
+Das legt auch nahe, dass Encoder mit besonders hoher Parameteranzahl nicht ohne ImageNet-Vortraining auskommen.
+Die Beobachtung, dass der kleinste Encoder, der ResNet18-Encoder, ohne Vortraining das beste Ergebnis geliefert hat unterstützt diese Aussage noch.
+Mit dem ResNet18-Encoder ist es möglich das ImageNet-Vortaining auszulassen und die Merkmalsextraktion direkt durch die Zieldaten zu lernen. 
+Insgesamt ergibt sich hierdurch eine geringere Generalisierbarkeit, aber für den angewandten Datensatz wird dafür die Genauigkeit besser.
+Die verbleibenden Encoder sind etwas weniger genau, wenn das ImageNet-Vortraining ausgelassen wird. 
+Das liegt vermutlich daran, dass diese relativ großen Encoder zum einen aus den wenigen Stützvektoren der Repräsentation der Eingangsdaten keinen ausreichenden Merkmalsraum aufspannen können und zum anderen daran, dass der Klassifikator-Kopf daraufhin die Beziehung zwischen Merkmalen und Entscheidung nur schwach generalisiert lernen kann. 
+Dennoch ist die Genauigkeit auch ohne Vortaining annehmbar, vor allem da mithilfe der 3D-Zelldaten-Pipeline auch ein optimaler Encoder, wie hier der ResNet18-Encoder passed zur Vortrainingsmethode gewählt wird.
+Die durchschnittlich geringere Genauigkeit ist deshalb nicht wichtig, da das Optimum besser ist. \newline
+Allerdings ist der Merkmalsraum ohne Vortraining und auch nach dem fully-supervised-Vortraining nicht geeignet um besonders Myotuben-Kerne und Schwannzellen-Kerne zu unterscheiden. 
+Die Unterscheidung dieser Klassen ist für die vorliegenden Daten wichtiger, als die Unterscheidung der "Andere"-Klasse und der Debris-Klasse.
+In Abb. \ref{fig:scatter} sind zwei exemplarische Merkmalsräume als 2D-Projektion zu sehen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figures/scatter.pdf}    
+    \caption{Die Scatterplots zeigen 2D-Projektionen des Merkmalraums von zwei Klassifikatoren durch TSNE.
+    Der linke Scatterplot zeigt den Merkmalsraum eines ImageNet-vortrainierten Klassifikatiors, der rechte eines semi-supervised-vortrainierten Klassifikators.
+    Die Werte der X- und Y-Achse sind arbiträre Aktivierungsintensitäten ohne physische Interpretation. 
+    }
+    \label{fig:scatter}
+\end{figure}
+Durch die Projektion gehen Distanzen zwischen den Stichproben entlang der vielen Dimensionen des Merkmalvektors verloren, aber mithilfe der TSNE ist die Abbildung als Übersicht dennoch geeignet.
+Der linke Merkmalsraum ist aus einem ImageNet-Vortraining entstanden, der rechte durch ein semi-supervised-Vortraining.
+Zu sehen ist, dass im linken Scatterplot die Klassen Eins und Vier, also Myotuben- und Schwannzellen-Nuclei eine besonders starke Überschneidung haben. 
+Für die Klassen Zwei und Drei sind dagegen seperate Cluster erkennbar.
+Im rechten Scatterplot ist das Schwannzellen-Klassen-Cluster zwar immernoch nicht weit entfernt von anderen Clustern, aber wesentlich kompakter, als in der linken Abbildung.\newline
+Für die Unterscheidung der Myotuben- und Schwannzellen-Nuclei ist also das Vortraining mit semi-supervised-Annotationen besonders hilfreich. 
+Vermutlich wird durch das Exzessive Vortraining auf den Zieldaten dem Encoder ein so gut generalisierter Merkmalsraum antrainiert, dass der Decoder die beiden Klassen trotz der Überschneidungen ihrer Merkmale trennen kann.
+In den Zieldaten hingegen sind diese Merkmale häufig vertreten und werden deshalb so hochauflösend extrahiert, dass es zur Trennung der Klassen reicht.Die Auflösung genau der Merkmale die für das Trennen der beiden Klassen nötig sind, ist nach dem ImageNet-Datensatz-Vortraining vermutlich nicht sehr hoch.\newline
+Die durchschnittliche Genauigkeit der semi-supervised-vortrainierten Klassifikatoren ist zwar geringer, als die der anderen Vortrainingsmethoden, dafür ist der entstandene Klassifikator aber besser generalisiert.
+Da im Test-Anteil der annotierten Daten nur acht der 81 Stichproben die Klsse Schwannzellen-Nucleus besitzen ist die Genauigkeit der semi-supervised-vortrainierten Klassifikatoren nicht zwingend repräsentativ für die tatsächliche Leistung.
+Für die Wahl einer Vortrainingsmethode müssen demnach die genauen Ziele der Anwendung feststehen.
+Wenn einzelne Klassen besonders wichtig für die Interpretation der Ergebnisse sind, aber nicht häufig vorkommen lohnt es sich den semi-supervised-Ansatz zu testen, um eventuell durch die hohe Generalisierungsfähigkeit einen besseren Klassifikator zu erhalten.\newline 

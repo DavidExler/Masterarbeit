@@ -186,7 +186,13 @@ Als Vergleichsmetrik der Klassifikation wird für gewöhnlich die Genauigkeit de
 \begin{equation}
   \text{Genauigkeit} = \frac{1}{N} \sum_{i=1}^{N} \mathbf{1}\{\hat{y}_i = y_i\},
 \end{equation}
-wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klassifikators und $y_i$ die Annotation ist. 
+wobei $N$ die Anzahl der Vorhersagen, $\hat{y}_i$ die Vorhersage des Klassifikators und $y_i$ die Annotation ist. \newline
+Um das Verhalten von Klassifikatoren zu visualisieren gibt es verschiedene Methoden.
+Eine dieser Methoden ist Grad-CAM \cite{Selvaraju2017}.
+Grad-CAM steht für Gradient-weighted Class Activation Mapping und ist eine Methode um räumlich aufgelöste Relevanzkarten aus tiefen neuronalen Netzen zu erzeugen. 
+Dabei werden die Gradienten einer bestimmten Klasse in Bezug auf die Aktivierungen einer Schicht des Modells verwendet, um Regionen des Eingabebildes zu finden, die besonders stark zur Vorhersage beitragen. 
+Die resultierende "Wichtigkeits"-Karte wird auf die Eingabe zurückprojiziert und typischerweise als farbige Heatmap dargestellt.
+
 
 \textit{TODO: 3D-bzw 2.5D - Welche Methoden werden speziell für 3D-genutzt, gibt es Methoden zur Anpassung?}
 

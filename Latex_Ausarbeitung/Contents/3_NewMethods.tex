@@ -241,6 +241,8 @@ In Abb. \ref{fig:preproc_methods} sind die Nuclei-Kanäle der verschiedenen Meth
 
 Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bevor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
 Dazu wird einfache bilineare Interpolation verwendet (siehe Kap. \ref{sec:Klassifikation}). 
+Um einen Einfluss auf die Ergebnisse durch ungleiche Verteilung der Annotationen auf die vorhandenen Klassen zu vermeiden, extrahiert der Retreiver außerdem vor dem Training, bei der Initialisierung, die Anzahl der Stichproben pro Klasse.
+Mithilfe dieser Verteilung der Anzahlen werden dann die Gradienten stärker gewichtet, die zu unterrepräsentierten Klassen gehören.
 Weil hier mit Rechenzeit-intensiven dreidimensonalen Daten umgegangen werden muss, ist auch ein dynamisches Speichermanagement Teil der Vorverarbeitungsmethoden. 
 Die Anwendung der beschriebenen Methoden wird dazu zusammengefasst in einem neu entwickelten 'Retreiver'.
 Dieser Retreiver versieht die aktuell gewünschten Bildausschnitte mit der Vorverarbeitungsmethode und verschiebt dann ausschließlich diese Daten auf die GPU.

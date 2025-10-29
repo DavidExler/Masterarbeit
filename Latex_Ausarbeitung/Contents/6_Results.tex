@@ -21,7 +21,7 @@ Für die Wahl eines Segmentierungsnetzes wird in Kapitel \ref{ch:NewMethods} das
 Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518Datensatz vorgestellt.
 Die \ac{ipq} wird auf dem Datensatz mit den Masken von drei vortrainierten Segmentierungsmodellen und, zur Validierung mit den Annotationen ausgeführt.
 Die Masken unterscheiden sich optisch stark (siehe Abb. \ref{fig:example_masks}).
-Masken des nnU-Net-Modell sehen kantiger aus als die anderen Masken und sie besitzen oft eine raue Kontur mit hervorstehenden Extremitäten oder Einkerbungen.
+Masken des nnUNet-Modell sehen kantiger aus als die anderen Masken und sie besitzen oft eine raue Kontur mit hervorstehenden Extremitäten oder Einkerbungen.
 Deepcell-Masken sehen glatt und ausgebreitet aus.
 Durch die Watershed-Nachverarbeitung sind teilweise sichtbare Artefakte entstanden, an Stellen an denen das Trennen der Instanzen für Watershed nicht möglich ist.
 Die CellposeSAM-Masken sehen intuitiv am besten aus, sie haben oft nahezu eliptische Konturen und trennen Instanzen so wie es für das menschliche Auge sinnvoll erscheint. 
@@ -81,17 +81,17 @@ Außerdem zeigen die Boxplots viele Ausreißer in den Daten, was den Unterschied
 In Abb. \ref{fig:ipq_examples} sind Beispiele für die einzelnen Fehlerarten zu sehen.
 \newline\begin{figure}[!h]
     \centering
-    \includegraphics[width=0.75\linewidth]{Figures/IPQ_examples.pdf}
+    \includegraphics[width=0.65\linewidth]{Figures/IPQ_examples.pdf}
     \caption{Exemplische Darstellung einzelner Ausprägungen verschiedener Fehlerarten.
     Hierzu sind jeweils, in dieser Reihenfolge von links nach rechts, ein Ausschnitt eines 2D-Durchschnitts einer Stichprobe, die Annotation als Kontur und die vorhergesagte Maske eines Modells zu sehen.
-    Die erste Zeile zeigt ein Beispiel eines schlechten IQ-Werts anhand einer nnU-Net-Maske.
+    Die erste Zeile zeigt ein Beispiel eines schlechten IQ-Werts anhand einer nnUNet-Maske.
     In der zweiten Zeile ist ein RQ-Fehler anhand einer CellposeSAM-Maske zu sehen und unten ist ein Beispiel für einen schlechten SQ-Wert anhand einer Deepcell-Maske zu sehen. 
     }
     \label{fig:ipq_examples}
 \end{figure}
-Das IQ-Beispiel zeigt die Verletzung injektiver Abbildung der Nuclei auf die Annotation anhand einer nnU-Net-Maske.
+Das IQ-Beispiel zeigt die Verletzung injektiver Abbildung der Nuclei auf die Annotation anhand einer nnUNet-Maske.
 Zentral zu sehen ist hier ein nicht-eliptischer Nucleus.
-Dieser Nucleus wird vom nnU-Net-Modell in mehrere Segmente unterteilt, wodurch die räumliche Konzentration der Nuclei überschätzt wird.
+Dieser Nucleus wird vom nnUNet-Modell in mehrere Segmente unterteilt, wodurch die räumliche Konzentration der Nuclei überschätzt wird.
 Nicht-eliptische Nuclei führen häufig zu dieser Art von Fehlern.\newline
 Mit dem Fehler gehen RQ-Fehler einher, weil zwei der Segmente im Vergleich zur Annotation zu klein sind, um als \ac{tp} erkannt zu werden.
 In der zweiten Zeile ist anhand einer CellposeSAM-Maske ein RQ-Beispiel gegeben.
@@ -107,18 +107,16 @@ Da diese Halluzinationen nicht mit den Annotationssegmenten überschneiden, ist 
 Der Fehler führt zu einer Fehleinschätzung des Nucleivolumens.
 
 \section{Klassifikation}\label{sec:resultsClassifier}
-Die in Kapitel \ref{ch:NewMethods} eingeführten Methoden zur Klassifikation werden durch die neu entwickelte 3D-Zelldaten-Pipeline anhand eines separaten Anteils des manuell gelabelten Datensatzes getestet.
+\subsection{Überblick}
+Die in Kapitel \ref{ch:NewMethods} eingeführten Methoden zur Klassifikation werden durch die neu entwickelte 3D-Zelldaten-Pipeline anhand eines separaten Anteils des manuell annotierten Datensatzes getestet.
+Der manuell annotierte Datensatz enthählt: 125 Stichproben von Myotuben-Zellkernen, 95 Stichproben von der Klasse Debris, 148 Stichproben der Klasse "Sonstiges" und nur 16 Stichproben der Klasse Schwannzellen-Nucleus.
+Um die Genauifkeit der Klassifikatoren anhand des Test-Anteil möglichst repräsentativ zu erhalten werden manuell 50\% statt 20\% der Schwannzellen-Nuclei in den Test-Anteil der Daten eingesetzt.
 Die Genauigkeit, also der prozentuale Anteil richtiger Vorhersagen, auf dem Test-Anteil des Zieldatensatzes wird als Kriterium verwendet.
 Da die Modelle während des Trainings rauschbehaftete Verläufe der Genauigkeit aufweisen und es zu Overfitting kommen kann, wird nicht das Modell am Ende des Trainings zur Evaluation eingesetzt, sondern das Modell der Trainingsepoche, in der die Genauigkeit auf dem Test-Anteil des Datensatzes am höchsten ist.
 Abb. \ref{fig:Trainingsverlauf} zeigt exemplarisch zwei Trainingsverläufe, die dieses Phänomen belegen.
 Im oberen Verlauf ist zu sehen, dass die Genauigkeit des Klassifikators tendenziell steigt.
-Der Verlauf ist zwar nicht monoton steigend, aber es liegt nahe, dass bei Fortsetzung des Trainings weitere Verbesserungen zu sehen sind.
-Im unteren Verlauf ist Overfitting zu erkennen.
-Die Genauigkeit auf dem Test-Anteil des Datensatzes sinkt etwa ab Epoche 30 und hat ihr Maximum in Epoche 32. 
-Dementsprechend wird die Genauigkeit des Klassifikators in Epoche 32 für den Vergleich herangezogen.
-
 \begin{figure}[H]
-    \centering\includegraphics[width=0.8\linewidth]{Figures/Trainingskurven.pdf}
+    \centering\includegraphics[width=0.7\linewidth]{Figures/Trainingskurven.pdf}
     \caption{Die Diagramme zeigen den Trainingsverlauf eines Klassifikators. 
     Links ist der Verlauf des Loss zu sehen.
     In der Mitte und rechts sind die Verläufe der Validierungsgenauigkeit zu sehen.
@@ -127,7 +125,10 @@ Dementsprechend wird die Genauigkeit des Klassifikators in Epoche 32 für den Ve
     }
     \label{fig:Trainingsverlauf}
 \end{figure}
-
+Der Verlauf ist zwar nicht monoton steigend, aber es liegt nahe, dass bei Fortsetzung des Trainings weitere Verbesserungen zu sehen sind.
+Im unteren Verlauf ist Overfitting zu erkennen.
+Die Genauigkeit auf dem Test-Anteil des Datensatzes sinkt etwa ab Epoche 30 und hat ihr Maximum in Epoche 32. 
+Dementsprechend wird die Genauigkeit des Klassifikators in Epoche 32 für den Vergleich herangezogen.
 \subsection{Encoder}\label{subsec:RES_encoder}
 In Abb. \ref{fig:bars_encoders} ist die Genauigkeit der Klassifikatoren pro Encoder gegeben.
 Zu sehen ist sowohl das Maximum, als auch der Durchschnitt der Genauigkeitswerte der verschiedenen Methodenkombinationen jedes Klassifikators.
@@ -193,7 +194,7 @@ Während die Genauigkeit für Modelle mit dem ResNet101 Encoder mit der Masken-M
 
 Mithilfe von GradCAM \cite{Selvaraju2017} wird außerdem das Verhalten der Klassifikatoren exemplarisch visualisiert.
 Abb. \ref{fig:gradCAM} zeigt den Nucleus-Kanal und einen Marker-Kanal von zwei 2D-Schichten.
-Die beiden 2D-Schichten sind aus unterschiedlichen 3D-Stapeln, einer der mit der Masken-Methode, und einer der mit der Distanz-Methode vorverarbeitet wurde.
+Die beiden 2D-Schichten sind aus unterschiedlichen 3D-Stapeln, links einer der mit der Masken-Methode, und rechts einer der mit der Distanz-Methode vorverarbeitet wurde.
 Zu sehen ist jeweils eine Heatmap, die, für einen bestimmten Klassifikator, gradientenbasiert die Aktivierungen in einer Schicht des Merkmalsraums zurück auf die Eingangsdaten projeziert.
 Die Heatmaps sind jeweils zur besseren Interpretierbarkeit einer 2D-Schicht der Segmentierungsmaske des Nucleus und einem Marker-Kanal überlagert. 
 Dadurch wird räumlich aufgezeigt, welche Regionen der Eingangsdaten zur Entscheidung für eine bestimmt Klasse besonders beigetragen haben.
@@ -243,3 +244,44 @@ Dennoch erreicht ResNet18 ohne Vortraining die beste Genauigkeit mit 86\%.
 \end{figure}
 
 \subsection{Allgemeines}
+Eine weitere angestellte Untersuchung ist die Quantifizierung der Wichtigkeiten der verschiedenen Marker-Kanäle. 
+Auch für Expert*innen ist es schwer, eindeutige Beziehungen zwischen den Strukturen, die durch bestimmte Marker gefärbt werden, und den verschiedenen Klassen der Nuclei herzustellen. 
+Zur Abschätzung der globalen Markerrelevanz werden die Gradienten der Modellvorhersage bis auf die Eingangsebene zurückprojiziert und die betragsmäßigen Gradienten über die räumlichen Dimensionen gemittelt. 
+Die Wichtigkeitswerte, die sich ergeben, sind mit  nahezu gleich verteilt. \newline%, was darauf hindeutet, dass das Modell keine einzelnen Marker stark bevorzugt, sondern  kombinierte Informationen mehrerer Kanäle nutzt, um eine Entscheidungen zu treffen.
+Abb. \ref{fig:marker_gradCAM} zeigt exemplarisch Gradientenfelder einer 2D-Schichte von einer Stichprobe der dreidimensionalen Zieldaten.
+In den rohen Gradienten sind die sensitivsten Bereiche des Modells direkt aus den Ableitungen der Vorhersage bezüglich der Eingabe ablesbar.
+Diese Sebsitivitäten sehen rauschig aus, weil die Effekte von punktweise Variationen für jeden Pixel der Eingabedaten dargestellt sind.
+In der rechten Darstellung sind die integrierten Gradienten abgebildet.
+Durch die Integration sind Rauscheffekte deutlich reduziert und eine stabilere, interpretierbarere Verteilung der relevanten Regionen innerhalb des Gradienten-Felds ist sichtbar.
+Zur Beurteilung der Konsistenz des Klassifikators werden die Ähnlichkeiten zwischen den Gradienten-Feldern quantitativ verglichen. 
+Die Felder haben eine Kosinus-Ähnlichkeit von 0.913 und damit eine hohe Übereinstimmung in der Richtung der Wichtigkeitsverteilungen. 
+Der Klassifikator reagiert also auf ähnliche Muster in beiden Feldern. 
+Der hohe Wert spricht für eine stabile und konsistente Aufmerksamkeits-Lokalisierung des Klassifikators, was wiederum auf eine robuste interne Repräsentation der relevanten Merkmale hindeutet.
+\begin{figure}[H]
+    \centering\includegraphics[width=0.8\linewidth]{Figures/gradients.pdf}
+    \caption{Die Abbildung zeigt zwei Gradienten-Felder einer 2D-Schichte einer Stichprobe der dreidimensionalen Zieldaten.
+    Das rechte Gradientenfeld ist integriert, um hochfrequente lokale Unterschiede zu entfernen.
+    }
+    \label{fig:marker_gradCAM}
+\end{figure}
+
+Des Weiteren wird hier die Durchschnittliche Genauigkeit pro Klasse betrachtet.
+Abb. \ref{fig:per_class_acc} zeigt die durchschnittlihce Genauigkeit pro Klasse und Sterne als Hinweise auf signifikante Ergebnisse von paarwerise-t-Tests.
+Die Klassen Eins bis Vier sind hier der Reihe nach Myotuben-Kerne, Debris, Andere und Schwannzellen-Kerne.
+In den Trainingsdaten der vorliegenden Experimente sind 
+Zu sehen ist, dass besonders die Schwannzellen-Kerne schlecht erkannt werden.
+Wie Eingangs beschrieben sind nur 16 Beispiele der Klasse Schwannzellen-Nucleus im Datensatz enthalten, acht hiervon im Trainings- und acht im Test-Anteil.
+Wie in Kap. \ref{sec:Preproc} beschrieben wird dieses Problem der ungleichen Verteilung der Klassen vom Retreiver durch eine Gewichtung der Gradienten unterrepräsentierter Klassen angegangen.
+In der Abbildung ist allerdings zu sehen, dass dieser Ansatz das Problem nicht vollständig gelöst hat. 
+Die unterrepräsentierte Klasse der Schwannzellen-Nuclei wird sehr hoch signifikant schlechter erkannt als alle anderen Klassen.
+Beinahe alle Methoden ergeben isoliert betrachtet eine ähnliche Verteilung der Genauigkeit pro Klassen, nur das Vortraining hat einen Einfluss.
+Vortraining mit semi-supervised-Annotationen und anschließendes Fortsetzen des Trainings mit manuell annotierten Daten bringt Klassifikatoren hervor, die teilweise wesentlich ausgeglichener die Klassen erkennen.
+Mit dem Volumen-Klassifikator und der Masken-Methode zur Vorverarbeitung erreicht der ResNet101-Encoder 83,2\%, der ResNet18-Encoder 73,5\% und der  ConvNeXt-Encoder 56,3\% Genauigkeit für die Klasse der Schwannzellen-Nuclei.
+Das ist im Vergleich zu den 21,7\% durchschnittlicher Genauigkeit für Klasse vier ein starker Gewinn.
+\begin{figure}[H]
+    \centering\includegraphics[width=0.8\linewidth]{Figures/per_class_acc.pdf}
+    \caption{Das Balkendiagramm zeigt die durchschnittliche Genauigkeit pro Klasse über alle Klassifikatoren hinweg.
+    Die Klassen Eins bis Vier sind hier der Reihe nach Myotuben-Kerne, Debris, Andere und Schwannzellen-Kerne. 
+    }
+    \label{fig:per_class_acc}
+\end{figure}

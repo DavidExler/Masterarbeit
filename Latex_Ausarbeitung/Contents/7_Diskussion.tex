@@ -7,7 +7,7 @@
 Die nachfolgenden Kapitel diskutieren die Ergebnisse der vorliegenden Arbeit.
 Dabei wird sowohl auf die quantitative Auswertung der durchgeführten Experimente eingegangen, als auch auf die Bewertung der angewandten Methoden.
 Es wird gezeigt, dass die neu entwickelte \ac{ipq}-Metrik geeignet ist um Instanzsegmentierungsmodelle, im Bezug auf ihre Eignung interpretierbare Merkmale zu extrahieren, zu bewerten.
-
+Außerdem wird gezeigt, dass die neu entwickelte Methode des Vortraining einen positiven Einfluss auf die Klassifikationsgenauigkeit haben kann und, dass die 3D-Zelldaten-Pipeline effizient optimale Deep-Learining-Methoden für neue Bilddomänen identifiziert. 
 \section{Segmentierung}
 Durch einen Vergleich der Masken mit der Annotationen in Abb. \ref{fig:boxplots_ipq} und ihren zugehörigen Ergebnissen der einzelnen Bewertungskriterien sind die Schwächen und Stärken der individuellen Netze ersichtlich.
 Die nnUNet-Masken sind sichtbar kleiner als die Nucleus-Instanzen, was eine schlechte Segmentierungsqualität bedingt.
@@ -75,7 +75,26 @@ Vor allem aber zeigen die Ergebnisse, dass die Anwendung der optimalen Klassifik
 Die 3D-Zelldaten-Pipeline findet diese optimalen Methoden effizient.
 Wie die Ergebnisse zeigen, ermöglicht die Anwendung der 3D-Zelldaten-Pipeline das Training eines Klassifikators, der deutlich leistungsfähiger ist als ein Klassifikator mit zufällig gewählten Methoden – und das ganz ohne Programmierkenntnisse oder Vorerfahrung mit Deep-Learning-Methoden seitens der Anwender*innen\newline
 %Encoder
-...
+Zuerst werden die Ergebnisse abhängig vom Encoder diskutiert.
+Die Ergebnisse haben gezeigt, dass die beiden ResNet-Encoder besonders hohe Genauigkeiten im Durchschnitt haben.
+Da die ResNet-Encoder auch die Encoder mit der geringsten Parameteranzahl sind liegt die Vermutung nahe, dass die gewählten Encoder zu groß sind und schlechte Ergebnisse einem Architektur-bedingtem Overfitting geschuldet sind.
+Abb. \ref{fig:Params_v_acc} zeigt die durchschnittliche Genauigkeit aller Klassifikatoren abhängig von der Parameteranzahl des genutzten Encoders.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/ParametersVAcc.pdf}
+    \caption{Die Abbildung zeigt die durchschnittliche Genauigkeit aller Klassifikatoren abhängig von der Parameteranzahl ihres Encoders.
+    Die X-Achse zeigt die Parameteranzahl, skaliert mit einer Millionen und die Y-Achse die durchschnittliche Genauigkeit.}
+    \label{fig:Params_v_acc}
+\end{figure}
+Intuitiv ist kein Zusammenhang zwischen der Parameteranzahl und der durchschnittlichen Genauigkeit zu erkennen und auch die Spearman-Korrelationsanalyse deutet nicht auch einen Zusammenhang hin.
+Das bedeutet, die Encoder sind nicht einfach nur zu groß.
+Die Architektur und die Gewichte der Encoder bestimmen den Merkmalsraum, den die Encoder mit der internen Repräsentation der Eingangsdaten aufspannen.
+Dieser Merkmalsraum muss für eine genaue Klassifikation relevante Merkmale des klassifizierten Objekts abbilden.
+Der Swin V2-Encoder hat eine Transformer-Architektur und schneidet besonders schlecht im ab im Durchschnitt.
+Vermutlich sind die Ansprüche an den Trainingsumfang für Transformer-Architekturen besonders hoch und in den relativ kurzen Trainingsabläufen wird kein ausreichender Merkmalsraum gelernt.
+Für die \ac{cnn}-Architekturen ist das relativ kurze Training weniger problematisch.
+Bei Betrachtung ausschließlich der \ac{cnn} zeigt sich ein negativer Zusammenhang zwischen Parameteranzahl des Encoders und der durchschnittlichen Genauigkeit, allerings ist die Stichprobenanzahl für eine Korrelationsanalyse sehr gering.
+Zukünftige Forschung kann weitere, kleinere \ac{cnn}-Encoder in Betracht ziehen, um die Hypothese zu prüfen, dass die Encoder zu groß sind um eine sinnvolle Repäsentation der räumlich relativ kleinen Nuclei zu finden. 
 \newline 
 %Decodern
 Der Volumen-Klassifikator ist signifikant besser als der Schichten-Klassifikator (siehe Kapitel \ref{sec:resultsClassifier}).
@@ -107,21 +126,60 @@ Das legt nahe, dass das rechenaufwändige Vortraining auf dem ImageNet-Datensatz
 Obwohl die Bilddomäne biologischer Zelldaten stark von den Bildern des ImageNet-Datensatz abweicht werden bedeutsame Bildmerkmale extrahiert.
 Auch bei der Adaption von 2D-Encodern zu 3D-Encodern bleibt der Merkmalsraum der fully-supervised-vortrainierten Encoder sinnvoll.
 Da die Zieldaten niemals vom Encoder gesehen werden ist Overfitting weitgehend ausgeschlossen, was die geringe Varianz der Genauigkeiten innerhalb der fully-supervised-vortrainierten Klassifikatoren erklärt.\newline
-Auch komplett ohne Vortrainig wird ein sinnvoller Merkmalsraum gelernt und die Klassifikatoren erreichen teilweise hohe Genauigkeitswerte. 
+Auch komplett ohne Vortraining wird ein sinnvoller Merkmalsraum gelernt und die Klassifikatoren erreichen teilweise hohe Genauigkeitswerte. 
 Der Swin V2-Encoider hat ohne Vortraining nur 50\% Genauigkeit erreicht, was vermutlich daran liegt, dass die aufwändige Transformer-Architektur nicht ausreichen mit dem geringen Trainingsumfang der Zieldaten lernen kann.
 Es wird keine sinnvolle Merkmalsextraktion gelernt, bevor der Encoder mit dem Overfitting beginnt.
 Das legt auch nahe, dass Encoder mit besonders hoher Parameteranzahl nicht ohne ImageNet-Vortraining auskommen.
 Die Beobachtung, dass der kleinste Encoder, der ResNet18-Encoder, ohne Vortraining das beste Ergebnis geliefert hat unterstützt diese Aussage noch.
-Mit dem ResNet18-Encoder ist es möglich das ImageNet-Vortaining auszulassen und die Merkmalsextraktion direkt durch die Zieldaten zu lernen. 
-Insgesamt ergibt sich hierdurch eine geringere Generalisierbarkeit, aber für den angewandten Datensatz wird dafür die Genauigkeit besser.
-Die verbleibenden Encoder sind etwas weniger genau, wenn das ImageNet-Vortraining ausgelassen wird. 
-Das liegt vermutlich daran, dass diese relativ großen Encoder zum einen aus den wenigen Stützvektoren der Repräsentation der Eingangsdaten keinen ausreichenden Merkmalsraum aufspannen können und zum anderen daran, dass der Klassifikator-Kopf daraufhin die Beziehung zwischen Merkmalen und Entscheidung nur schwach generalisiert lernen kann. 
-Dennoch ist die Genauigkeit auch ohne Vortaining annehmbar, vor allem da mithilfe der 3D-Zelldaten-Pipeline auch ein optimaler Encoder, wie hier der ResNet18-Encoder passed zur Vortrainingsmethode gewählt wird.
-Die durchschnittlich geringere Genauigkeit ist deshalb nicht wichtig, da das Optimum besser ist. \newline
-Allerdings ist der Merkmalsraum ohne Vortraining und auch nach dem fully-supervised-Vortraining nicht geeignet um besonders Myotuben-Kerne und Schwannzellen-Kerne zu unterscheiden. 
-Die Unterscheidung dieser Klassen ist für die vorliegenden Daten wichtiger, als die Unterscheidung der "Andere"-Klasse und der Debris-Klasse.
-In Abb. \ref{fig:scatter} sind zwei exemplarische Merkmalsräume als 2D-Projektion zu sehen.
+Abb. \ref{fig:Params_v_pretrain} zeigt die Genauigkeiten der verschiedenen Vortrainingsmethoden abhängig von der Parameteranzahl des genutzen Encoders.
 \begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/ParameterVPretrain.pdf}
+    \caption{Die Abbildung zeigt die Genauigkeiten der verschiedenen Vortrainingsmethoden abhängig von der Parameteranzahl des genutzen Encoders.}
+    \label{fig:Params_v_pretrain}
+\end{figure}
+Die Abbildung zeigt, dass der Zusammenhang zwischen der Effizienz der Vortrainingsmethoden und der Parameteranzahl nicht so einfach darzustellen ist.
+Mit den ResNet-Encodern ist es möglich das ImageNet-Vortaining auszulassen und die Merkmalsextraktion direkt durch die Zieldaten zu lernen.
+Sowohl ohne Vortraining, als auch mit dem semi-supervised-Vortraining ist die Genauigkeit der Klassifikatoren vergleichbar zum ImageNet-Vortraining.
+In Anbetracht des hohen Rechenaufwand, den das ImageNet-Vortraining beansprucht, ist dieses Ergebnis besonders interessant.
+Beide Methoden erhöhen den Rechenaufwand für das fine-tuning eines Klassifikators auf eine neue Domäne, machen dafür aber das exzessive Vortraining überflüssig.
+Insgesamt ergibt sich hierdurch vermutlich eine geringere Generalisierbarkeit, aber für den angewandten Datensatz wird dafür die Genauigkeit besser.
+Auch die anderen beiden \ac{cnn}-Encoder können ohne ImageNet-Vortraining genutzt werden.
+Der EfficientNet V2-Encoder ist ohne Vortraining in der Lage ein vergleichbare Genauigkeit zu erzielen wie mit dem fully-supervised-Vortraining.
+Dass das semi-supervised-Vortraining ein schlechtes Ergebnis erzielt ist demnach vermutlich dem kurzen Training geschuldet.
+Da der EfficientNet V2-Encoder ohne Vortraining einen sinnvollen Merkmalsraum direkt auf den Zieldaten lernen kann liegt nahe, 
+dass entweder zu wenige Epochen mit den semi-supervised-Annotationen gelernt wurde um diesen Merkmalsraum zu erfassen oder, dass anschließend der Klassifikator-Kopf zu kurz auf dem neu geschaffenen Merkmalsraum trainiert wurde, um die Klassifikationsentscheidung darin optimal zu lernen.
+Der ConvNeXt-Encoder hingegen hat in den gegebenen Epochen eine sinnvolle Repräsentation gelernt und ist durch das semi-supervised-Vortraining besser, als ohne Vortraining.
+Vermutlich liegt das daran, dass der Encoder im umfangreichen semi-supervised-Vortraining eine besser generalisierte Repräsentation gelernt hat.
+Außerdem liegt es nahe, dass der ConvNeXt-Encoder ohne Vortraining den Merkmalsraum auf die Trainingdaten über-anpasst.
+Der Swin V2-Encoder ist viel weniger genau, wenn das ImageNet-Vortraining ausgelassen wird. 
+Das liegt vermutlich daran, dass der relativ große Encoder mit der kopmlexen \ac{vit}-Architektur aus den wenigen Stützvektoren der Repräsentation der Eingangsdaten keinen ausreichenden Merkmalsraum aufspannen kann.
+Außerdem ist es möglich, dass der Klassifikator-Kopf nur schwach generalisiert die Beziehung zwischen Merkmalen und Entscheidung lernen kann, weil der finale Merkmalsvektor der \ac{vit}-Architektur eine viel höhere Dimension hat. \newline
+Die Genauigkeit der meisten Encoder ist auch ohne ImageNet-Vortaining annehmbar, vor allem da mithilfe der 3D-Zelldaten-Pipeline auch ein optimaler Encoder passed zur Vortrainingsmethode gewählt wird.
+Die durchschnittlich geringere Genauigkeit ist deshalb nicht wichtig, wenn das Optimum besser ist. \newline
+Trotz der hohen durchschnittlichen Genauigkeit des fully-supervised-Vortraining und ohne Vortraining ist der Merkmalsraum nicht geeignet um besonders Myotuben-Kerne und Schwannzellen-Kerne zu unterscheiden. 
+Die Unterscheidung dieser Klassen ist für die vorliegenden Daten wichtiger, als die Unterscheidung der "Andere"-Klasse und der Debris-Klasse.
+Die Myotuben- und Schwannzellen-Klassen sind optisch sehr ähnlich und nur durch Expert*Innen unter Berücksichtigung umliegender Strukturen trennbar.
+Abb. \ref{fig:schwann_myo} zeigt jeweils zwei Beispiele der beiden Klassen.
+Zu sehen sind die Nuclei in Rot und Myotuben in Grün, sowie der S100$\beta$ Marker.
+Die beiden Beispiele aus derselben Reihe sind visuell kaum voneinander zu unterscheiden.
+Durch die Projektion gehen Distanzen zwischen den Stichproben entlang der vielen Dimensionen des Merkmalvektors verloren, aber mithilfe der TSNE ist die Abbildung als Übersicht dennoch geeignet.
+Der linke Merkmalsraum ist aus einem ImageNet-Vortraining entstanden, der rechte durch ein semi-supervised-Vortraining.
+Zu sehen ist, dass im linken Scatterplot die Klassen Eins und Vier, also Myotuben- und Schwannzellen-Nuclei eine besonders starke Überschneidung haben. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\linewidth]{Figures/Schwann_Myo.pdf}    
+    \caption{Die Abbildung zeigt zwei Beispiele von Nuclei der Schwannzellen-Klasse (links) und zwei Beispiele von Nuclei der Myotuben-Klasse (rechts).
+    Die beiden Reihen zeigen Nuclei die visuell besonders ähnlich sind.
+    }
+    \label{fig:schwann_myo}
+\end{figure}
+Die Schwannzellen-Klasse wird mit einer höchst signifikant schlechteren Genauigkeit erkannt (siehe Kap. \ref{subsec:RES_allg}).
+Auch für die Klassifikatoren sind die beiden Klassen also schwer trennbar.
+Das zeigt insbesondere auch die Projektion der Klassenentscheidungen der Klassifikatoren auf einen niederdimensionalen, visualisierbaren Merkmalsraum.
+In Abb. \ref{fig:scatter} sind zwei exemplarische Merkmalsräume als 2D-Projektion zu sehen.
+\begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{Figures/scatter.pdf}    
     \caption{Die Scatterplots zeigen 2D-Projektionen des Merkmalraums von zwei Klassifikatoren durch TSNE.
@@ -130,9 +188,6 @@ In Abb. \ref{fig:scatter} sind zwei exemplarische Merkmalsräume als 2D-Projekti
     }
     \label{fig:scatter}
 \end{figure}
-Durch die Projektion gehen Distanzen zwischen den Stichproben entlang der vielen Dimensionen des Merkmalvektors verloren, aber mithilfe der TSNE ist die Abbildung als Übersicht dennoch geeignet.
-Der linke Merkmalsraum ist aus einem ImageNet-Vortraining entstanden, der rechte durch ein semi-supervised-Vortraining.
-Zu sehen ist, dass im linken Scatterplot die Klassen Eins und Vier, also Myotuben- und Schwannzellen-Nuclei eine besonders starke Überschneidung haben. 
 Für die Klassen Zwei und Drei sind dagegen seperate Cluster erkennbar.
 Im rechten Scatterplot ist das Schwannzellen-Klassen-Cluster zwar immernoch nicht weit entfernt von anderen Clustern, aber wesentlich kompakter, als in der linken Abbildung.\newline
 Für die Unterscheidung der Myotuben- und Schwannzellen-Nuclei ist also das Vortraining mit semi-supervised-Annotationen besonders hilfreich. 

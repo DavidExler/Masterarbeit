@@ -48,8 +48,26 @@ Verschiedene Kombinationen der eingeführten Methoden werden beispielhaft auf di
   \label{fig:graph_abstract}
 \end{figure}
 
-%Mit dem Kapitel sollen alle Verfahren und deren Bewertung klar verständlich sein.
-
+\section{Daten}
+Die zugrunde liegenden Bilddaten der vorliegenden Arbeit stammen aus in-vitro-Kulturen von Myotuben, die aus humanen induzierten pluripotenten Stammzellen (hiPSC) differenziert wurden. 
+Diese Zellen wurden nach dem in Couturier et al., \cite{Couturier2024} beschriebenen Protokoll hergestellt und anschließend mittels Immunfluoreszenzfärbung markiert. 
+Von den Zellen wurden 3D-Bildstapel mit voxelbasierten Intensitätswerten, die jeweils einem Fluoreszenzkanal zugeordnet sind, mit einem Konfokalmikroskop aufgenommen.
+Die Kulturen enthalten Myotuben und deren Nuclei in fünf Fluoreszenzkanälen, die entsprechend mit fünf unterschiedlichen Fluoreszenzmarkern angefärbt wurden:
+\begin{itemize}
+  \item DAPI (Nuclei),
+  \item $\alpha$-Actining (sarcomerisches Strukturprotein),
+  \item Dystrophin (Membran-assoziiertes Muskelprotein),
+  \item $\alpha$-Bungarotoxin (Bindung an nikotinische Acetylcholinrezeptoren, nAChR) und
+  \item S100$\beta$ (Schwannzellmarker).
+\end{itemize}
+Jeder dieser Marker färbt einen anderen Zellbestandteil an, sodass unter dem Mikroskop sichtbar ist, wo sich Kerne, Muskelfasern und synaptische Strukturen befinden.
+Die Bildaufnahme erfolgte mit einem Leica TCS SP8 Konfokalmikroskop, unter Verwendung von 405 nm, 488 nm, 561 nm und 633 nm Lasern und einem 20x-Objektiv. 
+Je Kanal ergibt sich eine räumliche Auflösung von 1024 x 1024 Pixeln mit 568nm pro Pixel.
+Die Anzahl der Z-Schichten beträgt zwischen 24 und 64.
+Die Proben wurden in Matrigel eingebettet und unter physiologisch relevanten Kulturbedingungen (37 °C, 5\% CO₂) im maturierenden Medium kultiviert, das u. a. Wachstums- und Differenzierungsfaktoren wie BDNF, GDNF, IGF-1, CHIR99021, DMH1, SB431542, Retinsäure und Purmorphamin enthielt.
+Das resultierende Material stellt ein menschliches in-vitro-Modell der neuromuskulären Verbindung dar.
+Die eingeführten Methoden werden als Experiment auf diese Daten angewandt, sie sind aber explizit entworfen, um Anpassungen an neue Datensätze nahtlos zu ermöglichen.
+Alle Experimente auf diesen Daten dienen der vorliegenden Arbeit als Fallstudie, um die Effizient der vorgestellten Methoden zu demonstrieren.
 \section{Injektive Panoptische Qualität}\label{sec:Kriterien}
 \begin{figure}[h]
   \centering

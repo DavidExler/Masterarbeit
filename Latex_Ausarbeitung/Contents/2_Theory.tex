@@ -98,22 +98,16 @@ Der Encoder nutzt beispielsweise Bildfaltungen mit Kernen, deren optimale Gewich
 Dabei verringert der Encoder iterativ die Größe der Eingabe jeder Schicht des Netzes in X, Y und im dreidimensionalen Fall in Z Richtung, erhöht dabei aber die Informationstiefe pro verbleibendem Pixel, bis ein hochdimensionaler Merkmalsvektor übrig bleibt. 
 Der Decoder hebt, meist durch transponierte Bildfaltungen \cite{Zeiler2010, Zeiler2014}, die räumliche Auflösung schrittweise wieder an, indem er die Bilddimensionen vergrößert und die Merkmalskanäle gleichzeitig reduziert \cite{Noh2015}. 
 Über sogenannte Skip-Connections \cite{Ronneberger2015} werden dabei Merkmale aus den entsprechenden Encoder-Schichten mit den Decoder-Stufen verknüpft, sodass sowohl globale Kontextinformationen als auch feine Strukturen für die Segmentierung erhalten bleiben \cite{Mostajabi2015, Gu2018}. \newline
-TODO: 3D-bzw 2.5D - Welche Methoden werden speziell für 3D-genutzt?
-
-%Long2015 - semantische Segmentierung - FCN
-%Ronneberger2015 - U-Net
-%Arnab2017 - Pixelwise instance segmentation with a dynamically instantiated network
-%Chen2018 - Masklab: {Instance} segmentation by refining object detection with semantic and direction features
-%%   Hariharan2014 - Simultaneous detection and segmentation
+Biologische und medizinische Bilddaten sind oft dreidimensionale Volumen. 
+Dreidimensionale Daten erhöhen sowohl den Rechenaufwand für die Segmentierung, als auch die Komplexität von Segemntierungsmodellen und stellen damit eine besondere Herausforderung dar \cite{Taha2015, Zhang2022, Avesta2023a}.
+Methoden für zweidimensionale Segmentierung können angepasst werden, um direkt mit dreidimensionalen Daten zu operieren \cite{Yang2021}.
+Es sind auch explizite 3D-Segmentierungsmethoden erforscht \cite{Arnab2021, Wang2025}.
+Da die Auflösung in Z-Richtung oft geringer ist, als die räumliche Auflösung werden stattdessen of 2.5D-Methoden verwendet, die die Beziehungen zwischen Volumenschichten gesondert modellieren \cite{Hung2024}.
+Auch 2D-Methoden werden für 3D-Segmentierung eingesetzt, indem einzelne 2D-Schichten des Volumens segmentiert werden und durch anschließende Nachverarbeitung zusammengefügt werden \cite{Karimi2024} 
+Die besten Ergebnisse liefern in der Regel 3D-Methoden \cite{Avesta2023}.
 
 \subsection{Klassifikation}\label{sec:Klassifikation}
-%\begin{itemize}
-%    \item Was ist Klassifikation generell?
-%    \item Was ist Klassifikation durch panoptische Segmentierung?
-%    \item Welche klassischen Ansätze gibt es? 
-%    \item Welche KI-Lösungen gibt es?
-%    %\item 
-%\end{itemize}
+
 Klassifikation beschreibt das Zuordnen einer Kategorie oder Klasse zu der eine gegebene Stichprobe gehört \cite{Fukunaga1993}.
 Hierzu werden die Merkmale des Objekts, das in der Stichprobe präsentiert wird, durch Beobachtung oder Messung gewonnen \cite{Kulkarni1998}.
 Nach wiederholter Extraktion der Merkmale von Objekten verschiedener Klassen werden Muster in den Merkmalen gesucht, um Regeln für die Zuweisung von Objekten zu Klassen auf Basis der Muster festzulegen \cite{Jain1999, ShalevShwartz2014}.
@@ -192,8 +186,45 @@ Eine dieser Methoden ist Grad-CAM \cite{Selvaraju2017}.
 Grad-CAM steht für Gradient-weighted Class Activation Mapping und ist eine Methode um räumlich aufgelöste Relevanzkarten aus tiefen neuronalen Netzen zu erzeugen. 
 Dabei werden die Gradienten einer bestimmten Klasse in Bezug auf die Aktivierungen einer Schicht des Modells verwendet, um Regionen des Eingabebildes zu finden, die besonders stark zur Vorhersage beitragen. 
 Die resultierende "Wichtigkeits"-Karte wird auf die Eingabe zurückprojiziert und typischerweise als farbige Heatmap dargestellt.
-
-
+Abb. \ref{fig:gradCam_example} zeigt zwei Beispiele einer solchen Heatmap \cite{Selvaraju2017}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Figures/gradCAM_example.pdf}
+    \caption{Die Abbildung zeigt links ein Bild.
+    Daneben sind zwei Heatmaps platziert, die mit Grad-CAM die Wichtigkeit räumlicher Regionen des Bilds für die Klassen 'Katze' und 'Hund' visualisieren.}
+    \label{fig:gradCam_example}
+\end{figure}
+Mithilfe der extrahierten Gradientenkarten lassen sich neben der Wichtigkeit bestimmter räumlicher Regionen der Eingangsdaten auch relative Wichtigkeiten der Eingangskanäle bestimmen.
+Durch Integration des Gradientenfelds werden stabilere und interpretierbarere Aussagen getroffen. 
+Die Integration gleicht lokale Schwankungen der Gradienten aus.
+Mithilfe der Kosinus-Ähnlichkeit, welche den Winkel zwischen zwei Vektoren im Merkmalsraum beschreibt und somit die Übereinstimmung ihrer Richtung quantifiziert, werden die integrierte- und die nicht-integrierte Karte auf Konsitenz geprüft. 
+Eine hohe Kosinus-Ähnlichkeit weist darauf hin, dass beide Karten auf ähnliche Eingabemuster reagieren und das Modell intern konsistente Repräsentationen der relevanten Merkmale gelernt hat.\newline
+Eine weitere Möglichkeit die Effizienz eines Klassifikators zu visualisieren ist ein Scatter-Plot, der den Merkmalsraum, in den der Klassifikator die Eingangsdaten abbildet, niederdimensional darstellt.
+In dem Scatter-Plot werden dann Stichproben von verschiedenen Klassen eingetragen.
+Die Cluster-Bildung in dem Scatterplot visualisiert, wie gut die Klassen im Merkmalsraum getrennt sind und gibt eine Schätzung für die Güte des Klassifikators auf den vorliegenden Daten.
+Um den Merkmalsraum in eine visualisierbar niedrige Dimension zu projezieren wird häufig die \ac{tsne} genutzt \cite{Maaten2008, Cai2022}.
+Die \ac{tsne} ist eine nicht-lineare Methode zu Dimensionsreduktion, speziell für die Visualisierung hoch-dimensionaler Daten in zwei oder drei Dimensionen.
+Die Methode modelliert die Abstände der Datenrepräsentationen im hochdimensionalen Raum als Wahrscheinlichkeitsverteilungen und definiert eine Transformation in eine niederdimensionale Repräsentation mit entsprechenden Wahrscheinlichkeitsverteilungen.
+Mit einem Optimierungsalgorithmus minimiert die \ac{tsne} dann die Kullback-Leibler-Divergenz der beiden Wahrscheinlichkeitsverteilungen, um die Entfernungen der Datenpunkte in beiden Räumen möglichst ähnlich zu machen.
+Abb. \ref{fig:scatter_tsne_example} zeigt exemnplarisch zwei solcher Scatterplots für dem MNIST-Datensatz \cite{Lecun1998}.
+Die Scatterplots visualisieren den Merkmalsraum des selben Klassifikators nach einer Epoche Training (links) und nach 25 Epochen Training (rechts).
+Links sind die Klassen-Cluster schlechter getrennt als rechts. 
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{Figures/scatter_bad.pdf}
+        \caption{Epoche 1}
+    \end{subfigure} \hfill
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{Figures/scatter_good.pdf}
+        \caption{Epoche 25}
+    \end{subfigure}
+    \caption{Die Abbildung zeigt zwei Scatterplots.
+    Beide Scatterplots visualisieren den Merkmalsraum eines Klassifikators, links nach der ersten Epoche des Trainings, rechts nach 25 Epochen.
+    Mithilfe der \ac{tsne} ist die hochdimensionale interne Repräsentation der Merkmale in eine zweidimensionale Ansicht projeziert.
+    Einige Stichproben des MNIST-Datensatz sind in dieser zweidimensionalen Ansicht platziert und ihre Klassen sind farbig markiert.}
+    \label{fig:scatter_tsne_example}
+\end{figure}
 \textit{TODO: 3D-bzw 2.5D - Welche Methoden werden speziell für 3D-genutzt, gibt es Methoden zur Anpassung?}
 
 
@@ -341,6 +372,7 @@ Selbst für Experten sind in dichten Strukturen Instanzen von Myotuben nicht imm
 Nicht viele Segmentierungsmodelle für Nuclei sind erhältlich, besonders für dreidimensionale Daten.
 Die verfügbaren Modelle verhalten sich unterschiedlich bei verschiedenen Datensätzen und ihre Eignung für bestimmte Aufgaben muss für jede Anwendung individuell geprüft werden.
 Außerdem gibt es für die spezifischen Aufnahmebedingungen und Marker der \textbf{TODO Daten kurz Beschreiben} Daten keinen angepassten Klassifikator.
+\cite{Couturier2024}
 Der Erfolg von einem Übertrag verschiedener vortrainierter Encoder und etablierter Methoden auf die vorliegenden Daten ist unvorhersehbar, da sich die gelernten Merkmalsräume eventuell nicht für die Klassifikation der neuartigen dreidimensionalen Daten eignen.
 Eine weitere Fragestellung ist deshlab, wie Methoden der Klassifikation mit der Kombination der Marker umgehen. 
 Für jeden Datensatz mit neuen Zellkernklassen und Aufnahmebedingungen muss für optimale Klassifikatorleistung nicht nur ein neues Modell trainiert werden, sondern auch Methoden- und Hyperparameteroptimierung durchgeführt werden.

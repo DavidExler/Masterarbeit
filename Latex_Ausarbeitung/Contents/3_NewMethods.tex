@@ -1,24 +1,18 @@
 % !TeX root = ../Thesis.tex
 
 \chapter{Neues Konzept} \label{ch:NewMethods}
-%Describe your new methods/procedure (mathematically, conceptually, comprehensibly). Change the title of this chapter if there is a term for your new methods.
-\section{Überblick}
-%\textit{TODO: Graph. Abstract anpassen: Umfang von der Segmentierungsnetz-Komponentenwahl erweitern zur ganzen Arbeit, oder: Neu machen und diese Abbildung verschieben}
-%\begin{itemize}
-%  \item Neuheitswert
-%  \item Problemstellung
-%\end{itemize}
 Das nachfolgende Kapitel beschreibt und diskutiert das angewandte Konzept der vorliegenden Thesis im Detail. 
 Es behandelt die selbstentwickelten Beiträge zu den Methoden. 
 Die Methodik wird in einer modularen Anwendung umgesetzt die 3D-Daten als Eingabe annimmt und interpretierbare Eigenschaften wie die Verteilung der Klassen und Volumen der anwesenden Nuclei ausgibt.
-In Kapitel \ref{sec:implementationPipeline} ist die praktische Umsetzung dieser modularen Anwendung beschrieben.
+Diese Anwendung wird hier 3D-Zelldaten-Pipeline genannt.
+In Kapitel \ref{sec:implementationPipeline} ist die praktische Umsetzung dieser 3D-Zelldaten-Pipeline beschrieben.
 Diese Anwendung kann regulär angewandt (Inferenz) oder optimiert werden (Optimierung).
 Zur Optimierung werden die 3D-Daten einem Ablauf für den Vergleich der Segmentierungsmodelle oder der Klassifikatormethoden zur Verfügung gestellt.
 Zuerst wird dazu das neu eingeführte Bewertungskriterium für Segmentierungsmodelle \ac{ipq} für verschiedene Modelle berechnet (siehe Kapitel \ref{sec:Kriterien}).
 Dieses Bewertungskriterium quantifiziert die Eignung der Segmentierungsmodelle zur Extraktion der gewünschten Eigenschaften.
 Mithilfe der \ac{ipq}-Werte wird das beste Segmentierungsmodell für die Anwendung gewählt.
 Die Architektur und die Parameter des optimalen Model werden in den Inferenzablauf eingesetzt.
-Um die Klassifikatormethoden zu oprimieren werden die Daten und die Segmente in die neu entwickelte Labeling-App eingegeben.
+Um die Klassifikatormethoden zu optimieren werden die Daten und die Segmente in die neu entwickelte Labeling-App eingegeben.
 Die Labeling-App ermöglicht das zeiteffiziente Annotatieren von Nuclei, indem die relevanten Bildausschnitte automatisch anhand der Segmente extrahiert werden.
 In Kapitel \ref{sec:implementationLabel} ist die Umsetzung der Labeling-App beschrieben.
 Mit den erstellten Annotationen und den 3D-Daten werden verschiedene Klassifikatoren trainiert.
@@ -28,7 +22,6 @@ Unter den Methoden sind sowohl etablierte, als auch neu entwickelte Ansätze.
 Anhand der Genauigkeit der trainierten Klassifikatoren auf einem seperaten Validierungsanteil des Datensatz werden die Methoden verglichen und eine optimale Konfiguration ausgegeben.
 Die Architektur und die Parameter dieser Konfiguration werden dann in den Inferenzablauf der Applikation eingesetzt.
 Am Ende des Ablaufs werden die klassifizierten Segmente genutzt, um verschiedene Grafiken zu erzeugen, die die interpretierbaren Eigenschaften visualisieren.
-
 Dieses Kriterium wird eingeführt, um die Eignung von Segmentierungsmodellen zum Extrahieren interpretierbarer Merkmale, wie Zellkernanzahlen oder -volumina zu bewerten.
 Darauf folgen Beschreibungen von Klassifikatormethoden.
 Die Methoden umfassen Architekturen von Encodern und Decodern, sowie Methoden der Vorverarbeitung und des Vortrainings.

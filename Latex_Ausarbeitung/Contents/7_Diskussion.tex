@@ -70,7 +70,7 @@ Hier wird deutlich, dass die Metrik geeignet ist um:
     \item Fehleinschätzungen der Anzahl der Nuclei durch einen geringen RQ-Wert zu bestrafen.
 \end{itemize}
 \section{Klassifikation}
-Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Decodern, Vorverarbeitungsmethoden und Vortrainingsmethoden legt einige Aussagen über Effektivität der Methoden nahe.
+Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Klassifikations-Köpfen, Vorverarbeitungsmethoden und Vortrainingsmethoden legt einige Aussagen über Effektivität der Methoden nahe.
 Vor allem aber zeigen die Ergebnisse, dass die Anwendung der optimalen Klassifikator-Methoden einen sehr hoch signifikanten Einfluss auf die Genauigkeit des Klassifikators hat.
 Die 3D-Zelldaten-Pipeline findet diese optimalen Methoden effizient.
 Wie die Ergebnisse zeigen, ermöglicht die Anwendung der 3D-Zelldaten-Pipeline das Training eines Klassifikators, der deutlich leistungsfähiger ist als ein Klassifikator mit zufällig gewählten Methoden – und das ganz ohne Programmierkenntnisse oder Vorerfahrung mit Deep-Learning-Methoden seitens der Anwender*innen\newline
@@ -103,7 +103,7 @@ Das kann daran liegen, dass die dreidimensionale Faltung räumliche Mittlungen n
 Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen nicht ausreichend entlang der Z-Dimension erhalten sind, was zu einer schlechten Leistung des tiefen fokusierten Schichten-Klassifikators führt. 
 Stattdessen können auch die Kombination räumlicher Merkmale und der Merkmale entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen kann.
 Da der Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
-Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Decoder haben das Potential mit bestimmten Merkmalsräumen besonders gut zu synergieren. 
+Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Klassifikations-Köpfe haben das Potential mit bestimmten Merkmalsräumen besonders gut zu synergieren. 
 Besonders da die ImageNet-Encoder nicht auf dreidimensionale Eingabedaten vortrainiert werden ist die Abwägung zwischen einem Fokus auf die Merkmale entlang der Z-Achse und räumlichen Merkmalen essenziell.
 Auch für zukünftige Encoder besteht die Möglichkeit, dass sie Beziehungen von Merkmalen innerhalb einer 2D-Schicht der Eingabedaten so effizient und einheitlich zusammenfassen, dass der Attention-Mechanismus des Schichten-Klassifikators die Informationen besser als der Volumen-Klassifikator erhalten kann. 
 \newline 
@@ -191,7 +191,7 @@ In Abb. \ref{fig:scatter} sind zwei exemplarische Merkmalsräume als 2D-Projekti
 Für die Klassen Zwei und Drei sind dagegen seperate Cluster erkennbar.
 Im rechten Scatterplot ist das Schwannzellen-Klassen-Cluster zwar immernoch nicht weit entfernt von anderen Clustern, aber wesentlich kompakter, als in der linken Abbildung.\newline
 Für die Unterscheidung der Myotuben- und Schwannzellen-Nuclei ist also das Vortraining mit semi-supervised-Annotationen besonders hilfreich. 
-Vermutlich wird durch das Exzessive Vortraining auf den Zieldaten dem Encoder ein so gut generalisierter Merkmalsraum antrainiert, dass der Decoder die beiden Klassen trotz der Überschneidungen ihrer Merkmale trennen kann.
+Vermutlich wird durch das Exzessive Vortraining auf den Zieldaten dem Encoder ein so gut generalisierter Merkmalsraum antrainiert, dass der Klassifikations-Kopf die beiden Klassen trotz der Überschneidungen ihrer Merkmale trennen kann.
 In den Zieldaten hingegen sind diese Merkmale häufig vertreten und werden deshalb so hochauflösend extrahiert, dass es zur Trennung der Klassen reicht.Die Auflösung genau der Merkmale die für das Trennen der beiden Klassen nötig sind, ist nach dem ImageNet-Datensatz-Vortraining vermutlich nicht sehr hoch.\newline
 Die durchschnittliche Genauigkeit der semi-supervised-vortrainierten Klassifikatoren ist zwar geringer, als die der anderen Vortrainingsmethoden, dafür ist der entstandene Klassifikator aber besser generalisiert.
 Da im Test-Anteil der annotierten Daten nur acht der 81 Stichproben die Klsse Schwannzellen-Nucleus besitzen ist die Genauigkeit der semi-supervised-vortrainierten Klassifikatoren nicht zwingend repräsentativ für die tatsächliche Leistung.

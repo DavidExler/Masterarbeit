@@ -5,12 +5,15 @@
 
 \section{Überblick}
 Das nachfolgende Kapitel beschreibt die Ergebnisse der durchgeführten Experimente.
-Die Experimente werden in mehreren Durchläufen der 3D-Zelldaten-Pipeline durchgeführt.
+Die Experimente werden in mehreren Durchläufen des neu entwickelten Konzepts "3D-Zelldaten-Pipeline" zur Auswertung von 3D-Zelldaten durchgeführt.
 Auf Grundlage der Messergebnisse der 3D-Zelldaten-Pipeline wird eine statistische Auswertung vorgenommen. 
 Zuerst werden die Bewertungen der Instanzsegmentierungsmasken anhand der \ac{ipq}-Metrik und anschließend die der Klassifikatoren anhand ihrer Genauigkeit betrachtet.
-Die \ac{ipq}-Ergebnisse werden hier auch in die drei Faktoren: Recognition-Qualität (RQ), Segmentatierungs-Qualität (SQ) und die neu eingeführte Injektive-Qualität gegliedert (siehe Kap. \ref{sec:Kriterien}).
+Die \ac{ipq}-Ergebnisse werden in die drei Faktoren: Recognition-Qualität (RQ), Segmentierungs-Qualität (SQ) und die neu eingeführte Injektive-Qualität gegliedert (siehe Kap. \ref{sec:Kriterien}).
 Daraus wird ersichtlich, dass jedes der Segmentierungsmodelle in einem der Faktoren dominiert, insgesamt aber CellposeSAM den anderen Modellen signifikant überlegen ist. 
 Auch die Ergebnisse der Klassifikation werden unterteilt, um den Einfluss einzelner Methoden auf die Genauigkeit des Klassifikators zu identifizieren.
+Vergleiche der Ergebnisse verschiedener Methoden zeigen, dass die neu eingeführten Methoden wie der Pseudo-Labler (siehe Kap. \ref{sec:Pretrain}) je nach Anforderung dem Stand der Technik überlegen sind.
+Außerdem zeigen die Ergebnisse, dass das Anwenden der 3D-Zelldaten-Pipeline optimale Methoden für die Segmentierung und Klassifikation von Zelldaten effizient findet und gegenüber nicht-optimalen Methoden einen signifikanten Qualitätsunterschied bringt.
+Mithilfe ausführlicher Analysen sind des Weiteren grundlegende Erkenntnisse über das Verhalten von Klassifikatoren im Umgang mit biologischen 3D-Bildstapeln möglich.
 
 \section{Hardware}
 Für die Anwendung wird eine NVIDIA GeForce RTX 3090 Ti mit 24 GB VRAM verwendet.
@@ -151,30 +154,30 @@ Mit 64,6\% hat es die niedrigste durchschnittliche Genauigkeit, aber der Maximal
     \label{fig:bars_encoders}
 \end{figure}
 
-\subsection{Decoder}\label{subsec:RES_decoder}
-Abb. \ref{fig:bars_decoders} zeigt eine Gegenüberstellung der Genauigkeit beider Decoder in einem Balkendiagramm.
-Dabei werden nur die Klassifikatoren berücksichtigt, bei denen sich die Methodenkombination ausschließlich im verwendeten Decoder unterscheidet.
+\subsection{Klassifikations-Kopf}\label{subsec:RES_decoder}
+Abb. \ref{fig:bars_decoders} zeigt eine Gegenüberstellung der Genauigkeit beider Klassifikations-Köpfe in einem Balkendiagramm.
+Dabei werden nur die Klassifikatoren berücksichtigt, bei denen sich die Methodenkombination ausschließlich im verwendeten Klassifikations-Kopf unterscheidet.
 Das ist notwendig, da nicht alle möglichen Kombinationen trainiert wurden und ein Vergleich mit unvollständigen Kombinationen keine aussagekräftigen Ergebnisse liefert.  
 Die blauen Balken des Balkendiagramms zeigen jeweils die Ergebnisse der Architekturen, die den Schichten-Klassifikator nutzen, die orangenen Balken die Ergebnisse des Volumen-Klassifikators.
-Auf der X-Achse sind als Gruppen zuerst die Encoder und zuletzt der Durchschnitt aufgetragen, und auf der Y-Achse die durchschnittliche Genauigkeit der Modelle mit dem jeweiligen Decoder.
-An den Daten lässt sich erkennen, dass der Einfluss des Decoders nicht homogen ist.
+Auf der X-Achse sind als Gruppen zuerst die Encoder und zuletzt der Durchschnitt aufgetragen, und auf der Y-Achse die durchschnittliche Genauigkeit der Modelle mit dem jeweiligen Klassifikations-Kopf.
+An den Daten lässt sich erkennen, dass der Einfluss des Klassifikations-Kopfes nicht homogen ist.
 Mit dem ConvNeXt-Encoder ist der Schichten-Klassifikator performanter als der Volumen-Klassifikator, während es bei allen anderen Encodern umgekehrt ist.
 Für den CellposeSAM Encoder ist der Genauigkeitsunterschied 12,6 Prozentpunkte groß, für EfficientNetV2 einen halben Prozentpunkt.
-Die Daten zeigen also, dass die Intensität des Unterschieds in der Genauigkeit der beiden Decoder stark vom Encoder abhängt.
-Die Balken rechts, die je den Durchschnitt aller Modelle mit einem Decoder darstellen, zeigen mit einem signifikanten t-Test, dass der Volumen-Klassifikator insgesamt bessere Ergebnisse liefert.
+Die Daten zeigen also, dass die Intensität des Unterschieds in der Genauigkeit der beiden Klassifikations-Köpfe stark vom Encoder abhängt.
+Die Balken rechts, die je den Durchschnitt aller Modelle mit einem Klassifikations-Kopf darstellen, zeigen mit einem signifikanten t-Test, dass der Volumen-Klassifikator insgesamt bessere Ergebnisse liefert.
 
 \begin{figure}[!h]
     \centering\includegraphics[width=0.8\linewidth]{Figures/encodersVdecoder.pdf}
-    \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung eines bestimmten Decoder.
-    Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diesen Decoder nutzen, aufgetragen. 
+    \caption{Das Balkendiagramm zeigt den Genauigkeitswert der Klassifikatoren unter Verwendung eines bestimmten Klassifikations-Kopfes.
+    Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diesen Klassifikations-Kopf nutzen, aufgetragen. 
     Die X-Achse zeigt Gruppen von Encodern, jeweils besetzt mit einem Wert für den Schichten- und den Volumen-Klassifikator.
-    Rechts zu sehen sind Balken, die den Durchschnitt der Werte aller Encoder, abhängig von dem Decoder, zeigen.}
+    Rechts zu sehen sind Balken, die den Durchschnitt der Werte aller Encoder, abhängig von dem Klassifikations-Kopf, zeigen.}
     \label{fig:bars_decoders}
 \end{figure}
 
 \subsection{Vorverarbeitung}\label{subsec:RES_preproc}
 In Abb. \ref{fig:bars_channel1} sind die durchschnittlichen Genauigkeiten der Modelle gezeigt, die jeweils eine der Vorverarbeitungsmethoden nutzen.
-Wie für den Decodervergleich sind auch hier die Klassifikatoren ausgeschlossen, deren Methodenkombination mit nur einer der beiden Vorverarbeitungsmethoden trainiert wurde.
+Wie für den Klassifikations-Kopf-Vergleich sind auch hier die Klassifikatoren ausgeschlossen, deren Methodenkombination mit nur einer der beiden Vorverarbeitungsmethoden trainiert wurde.
 Auf der Y-Achse ist die Genauigkeit aufgetragen, auf der X-Achse sind die Encoder und der Durchschnitt aller Encoder als Gruppen.
 Die Ergebnisse zeigen deutlich, dass die Masken-Methode, also das Ersetzen des Nucleus-Kanals mit der Segmentierungsmaske, zu einer höheren Genauigkeit führt.
 Mit der Distanz-Methode, also dem Anwenden einer Distanztransformation von der Segmentierungsmaske auf den Nucleus-Kanal, beträgt die Genauigkeit durchschnittlich 77,2\%, mit der Masken-Methode sind es 81,5\%.
@@ -210,7 +213,7 @@ Die Maxima der Heatmaps sind auf sichtbare Strukturen im Marker-Kanal platziert.
 
 \subsection{Vortraining}\label{subsec:RES_pretrain}
 Abb. \ref{fig:heatmap_pretrain} zeigt eine Übersicht über die Effektivität der verwendeten Vortrainingsmethoden.
-Um die Ergebnisse möglichst unabhängig von den anderen Klassifikatormethoden zu betrachten, werden hier nur die Klassifikatoren mit der besten Vorverarbeitungsmethode für den Encoder und dem Volumen-Klassifikator als Decoder betrachtet.
+Um die Ergebnisse möglichst unabhängig von den anderen Klassifikatormethoden zu betrachten, werden hier nur die Klassifikatoren mit der besten Vorverarbeitungsmethode für den Encoder und dem Volumen-Klassifikator als Klassifikations-Kopf betrachtet.
 Auf der vertikalen Achse sind die verschiedenen Encoder sowie der Durchschnitt aller Encoder zu sehen.
 Auf der horizontalen Achse sind die vier Vortrainingsmethoden aufgeführt.
 Links ist nur semi-supervised-Training zu sehen.

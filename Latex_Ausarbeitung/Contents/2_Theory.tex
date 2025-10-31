@@ -7,7 +7,11 @@
 
 \section{Überblick}
 Im nachfolgenden Kapitel wird der theoretische Hintergrund der vorliegenden Thesis behandelt. 
-Hierzu werden sowohl die Methoden verwandter Projekte und Studien als auch die Literatur zum aktuellen Stand der Technik beleuchtet. 
+Hierzu werden sowohl für die Arbeit relevante Methoden als auch die Literatur verwandter Projekte und Studien zum aktuellen Stand der Technik beleuchtet. 
+Da die Arbeit im Kern die panoptische Segmentierung von Zelldaten behandelt werden hier Methoden zur Instanzsegmentierung und zu Klassifikation angeführt.
+Die Methoden zu Instanzsegmentierung sind konzentriert auf \ac{ki}-Methoden, von klassischen Ansätzen wird abgesehen.
+Für die Klassifikation wird von grundlegenden Erklärungen von Deep-Learning-Methoden abgesehen und moderne Ansätze sowie relevante Methoden zur Visualisierung oder Optimierung von Klassifikatoren angeführt.
+Um die Methoden in einem vergleichbaren und repoduzierbaren Aufbau zu demonstrieren werden außerdem Benchmark-Methoden beleuchtet.
 Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
 
 \section{Methoden}
@@ -19,8 +23,8 @@ So wird sichergestellt, dass sich die auf den Quelldaten gemessene Qualität der
 Der Begriff \textit{Ähnlichkeit} ist mehrdeutig und das Definieren von Merkmalen in Daten, die das Messen von \textit{Ähnlichkeit} ermöglichen, ist anspruchsvoll.
 Metriken, die als Maß für \textit{Ähnlichkeit} genutzt werden müssen, müssen maßgeschneidert zur Anwendung passen und sind bereits breit erforscht \cite{zhu2020domain_similarity, koohi2018similarity, cai2009similarity}.
 Daten können mithilfe passender Metriken \textit{Ähnlichkeits-}gruppen, sogenannten \textit{Domänen}, zugeordnet werden \cite{yuan2005domainsimilarity}.
-Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind verschiedene Farb-Marker, Aufnahmegeräte oder Zoom-Stufen (siehe Abb. \ref{fig:domains}). 
-Sind verschiedene Darstellungen gleicher Objekte in Bildern wie in Abb. \ref{fig:domains} dargestellt. \newline
+Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind verschiedene Farb-Marker, Aufnahmegeräte oder Zoom-Stufen. 
+In Abb. \ref{fig:domains} sind Zellkerne in verschiedenen Darstellungen angebildet. \newline
 %\newline Altes Bild (Katzen) ersetzt \newline
 %\begin{figure}[htbp]
 %    \centering
@@ -31,31 +35,32 @@ Sind verschiedene Darstellungen gleicher Objekte in Bildern wie in Abb. \ref{fig
 %    \caption{Vier Bilder der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad \cite{jrfarm_katze, Egan_Katzen}.}
 %    \label{fig:domains}
 %\end{figure}
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.24\textwidth}
+    \begin{subfigure}[c]{0.24\textwidth} 
         \includegraphics[width=\textwidth]{Figures/Cell_domain0.jpg}
-        \caption{Zieldaten TODO Aufnahmegeräte usw.}
+        \caption{3D-Bildstapel mit verschiedenen Fluoreszenzmarkern, aufgenommen mit einem Leica TCS SP8 Konfokalmikroskop.}
     \end{subfigure} \hfill
-    \begin{subfigure}[b]{0.24\textwidth}
+    \begin{subfigure}[c]{0.24\textwidth}
         \includegraphics[width=\textwidth]{Figures/Cell_domain1.jpg}
         \caption{3D-SIM Superauflösungsmikroskopie mit DAPI-Färbung \cite{Schermelleh2008}.}
     \end{subfigure} \hfill
-    \begin{subfigure}[b]{0.24\textwidth}
+    \begin{subfigure}[c]{0.24\textwidth}
         \includegraphics[width=\textwidth]{Figures/Cell_domain2.jpg}
         \caption{Konfokale Fluoreszenzmikroskopie mit antikörperbasierten Farbstoffen \cite{Peng2015}.}
     \end{subfigure} \hfill
-    \begin{subfigure}[b]{0.24\textwidth}
+    \begin{subfigure}[c]{0.24\textwidth}
         \includegraphics[width=\textwidth]{Figures/Cell_domain3.jpg}
         \caption{Klassische Hellfeldmikroskopie \cite{Ali2012}.}
     \end{subfigure}
     \caption{Vier Aufnahmen von Zellen. Die Bilddomänen sind durch die verschiedenen Marker und Aufnahmetechniken klar zu unterscheiden \cite{Schermelleh2008, Peng2015, Ali2012}.}
     \label{fig:domains}
 \end{figure}
+
 Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Zellkern}, aber der Stil unterscheidet sich stark. 
 Sie unterscheiden sich also in ihrer Domäne.
 In der Bildverarbeitung ist es essenziell, die Domäne der Quelldaten im Hinblick auf die Aufgabe der Applikation zu beachten \cite{wang2018domain, peng2017domain}. 
-Hierzu kann ein passender Datensatz gewählt werden oder eine Domänenanpassung durchgeführt werden \cite{han2022binsimilarity_domain, pinheiro2018domain, ganin2016domain}. %\textit{NOTIZ: Muss ich Domänenanpassung erklären?}
+Hierzu kann ein Datensatz mit passender Domäne gewählt werden oder eine Domänenanpassung durchgeführt werden \cite{han2022binsimilarity_domain, pinheiro2018domain, ganin2016domain}. \\[0.5\baselineskip]
 Ghosh et al. definieren Domänenanpassung: "Gegeben Quell- und Ziel-Domänen $D_s$ und $D_t$ sowie die Aufgaben $\tau_s$ und $\tau_t$, zielen Domänenadaptations-basierte Verfahren darauf ab, ein Modell mit Parametern $\theta$ zu erlernen, das für die Zielaufgabe geeignet ist, wenn $D_s \neq D_t$ und $\tau_s = \tau_t$." \cite{Ghosh2020}.
 \subsection{Segmentierung}\label{sec:Segmentierung}
 %\textbf{KOMMENTAR} ist das notwendig?
@@ -67,7 +72,9 @@ Ghosh et al. definieren Domänenanpassung: "Gegeben Quell- und Ziel-Domänen $D_
 %\end{itemize}
 Segmentierung ist die Aufgabe, Pixel mit semantischen Annotationen zu klassifizieren (semantische Segmentierung \cite{Hariharan2014}), einzelne Objekte voneinander abzugrenzen (Instanzsegmentierung \cite{Winn2006}) oder beides zu kombinieren (panoptische Segmentierung \cite{kirillov2019PQ}) \cite{Minaee2021}.
 In Abb. \ref{fig:Segmentation} sind beispielhaft Annotationen der verschiedenen Arten von Segmentierung zu sehen \cite{kirillov2019PQ}. \newline
-\begin{figure}[htbp]
+Links zu sehen ist ein exemplarisches Originalbild, daneben sind von links nach rechts Segmentierungsmasken einer semantischen-, Instanz- und panoptischen Segmentierung zu sehen.
+In der semantischen- sowie in der panoptischen Maske sind die Farben der Objekte mit einer interpretierbaren Objektklasse verknüpft. 
+\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.24\textwidth}
         \includegraphics[width=\textwidth]{Figures/SegmentationOriginal.png}
@@ -141,8 +148,8 @@ Moderne Anwendungen nutzen zur Merkmalsextraktion verschiedene Deep-Learning-bas
 %Recurrent Neural Networks \cite{Lecun1998} und vor allem \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} sind in der Lage aus Bildern aussagekräftige, abstrakte Merkmale zu generieren \cite{Plested2022}.
 Vor allem \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} sind in der Lage, aus Bildern aussagekräftige, abstrakte Merkmale zu generieren \cite{Plested2022}.
 Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} bezeichnet.
-Als \textbf{Decoder} wird der zusammenfassende Teil des Klassifikators bezeichnet, er gibt einen Zuversichtlichkeitswert für jede Klasse aus.
-Der State-of-the-Art für den Decoder ist ein neuronales Netz, das auf Basis der abstrakten Merkmale des Encoders eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
+Als \textbf{Klassifikations-Kopf} wird der zusammenfassende Teil des Klassifikators bezeichnet, er gibt einen Zuversichtlichkeitswert für jede Klasse aus.
+Der State-of-the-Art für den Klassifikations-Kopf ist ein neuronales Netz, das auf Basis der abstrakten Merkmale des Encoders eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
 Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger Annotation den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\newline.
 
 Für das Training von Klassifikatoren sind ein Loss-Funktion und häufig Vorverarbeitungsmethoden notwendig.
@@ -313,7 +320,7 @@ Die Leistungsfähigkeit des Ansatzes ergibt sich nicht aus einer neuen Architekt
 
 \subsection{Klassifikator}
 %\textbf{QUELLEN NOCH!}\newline
-Für Klassifikatoren werden in der Regel nur Encoder vortrainiert, der Decoder muss an die Klassen des vorliegenden Problems angepasst werden \cite{Plested2022, Yosinski2014, Dippel2022}.
+Für Klassifikatoren werden in der Regel nur Encoder vortrainiert, der Klassifikations-Kopf muss an die Klassen des vorliegenden Problems angepasst werden \cite{Plested2022, Yosinski2014, Dippel2022}.
 State-of-the-Art für Bild-Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet \cite{Russakovsky2015} Datensatz vortrainiert werden \cite{You2018, Kornblith2019}.
 Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.\newline
 \textbf{ResNet} ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
@@ -371,8 +378,8 @@ Selbst für Experten sind in dichten Strukturen Instanzen von Myotuben nicht imm
 %Es ist nicht erforscht, welches Segmentierungsmodell für Nuclei das beste ist, im Bezug auf die Eignung der Segmentierungsmasken zur Extraktion von Eigenschaften der Nuclei.
 Nicht viele Segmentierungsmodelle für Nuclei sind erhältlich, besonders für dreidimensionale Daten.
 Die verfügbaren Modelle verhalten sich unterschiedlich bei verschiedenen Datensätzen und ihre Eignung für bestimmte Aufgaben muss für jede Anwendung individuell geprüft werden.
-Außerdem gibt es für die spezifischen Aufnahmebedingungen und Marker der \textbf{TODO Daten kurz Beschreiben} Daten keinen angepassten Klassifikator.
-\cite{Couturier2024}
+Die Daten der vorliegenden Arbeit sind nach dem Protokoll in Couturier et al., \cite{Couturier2024} erstellt und umfassen Myotubenkulturen und ihre Nuclei mit insgesamt fünf verschiedenen Fluoreszenzmarkern.
+Für die spezifischen Aufnahmebedingungen und Marker der vorliegenden Daten gibt es keinen angepassten Klassifikator.
 Der Erfolg von einem Übertrag verschiedener vortrainierter Encoder und etablierter Methoden auf die vorliegenden Daten ist unvorhersehbar, da sich die gelernten Merkmalsräume eventuell nicht für die Klassifikation der neuartigen dreidimensionalen Daten eignen.
 Eine weitere Fragestellung ist deshlab, wie Methoden der Klassifikation mit der Kombination der Marker umgehen. 
 Für jeden Datensatz mit neuen Zellkernklassen und Aufnahmebedingungen muss für optimale Klassifikatorleistung nicht nur ein neues Modell trainiert werden, sondern auch Methoden- und Hyperparameteroptimierung durchgeführt werden.
@@ -391,7 +398,7 @@ Zu diesem Ziel bearbeitet die vorliegende Arbeit Zwischenziele und liefert Folge
     Hierzu wird eine neue Anwendung entwickelt, die 3D-Zelldaten liest und dann eine Oberfläche zum Annotieren bereitstellt.
     \item Die enstehenden Annotationen sollen direkt in einen Trainingsablauf für Klassifikatoren eingebunden sein.
     Hierbei müssen Klassifikatoren mit dreidimensionalen Daten von variierender Tiefe umgehen können.
-    Ein ausführlicher Methodenvergleich verschiedener Encoder, Decoder, Vorverarbeitungsmethoden und auch Vortrainingsmethoden soll für Nutzer*Innen ohne Programmierkenntnisse ermöglicht werden.
+    Ein ausführlicher Methodenvergleich verschiedener Encoder, Klassifikations-Köpfe, Vorverarbeitungsmethoden und auch Vortrainingsmethoden soll für Nutzer*Innen ohne Programmierkenntnisse ermöglicht werden.
     Dazu wird eine neue Anwendung entwickelt, die die zuvor erstellten Annotationen und Segmentierungsmasken nutzt um einen Klassifikator zu trainieren.
     Nutzer*Innen können in einer grafischen Oberfläche verschiedene Methoden zum Vergleich auswählen und in einem automatischen Prozess werden Klassifikatoren aller Kombinationen trainiert und verglichen.
     \item Außerdem sollen die ausgelesenen Eigenschaften der eingegebenen Zelldaten leicht zugänglich sein.

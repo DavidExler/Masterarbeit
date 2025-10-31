@@ -17,14 +17,14 @@ Die Labeling-App ermöglicht das zeiteffiziente Annotatieren von Nuclei, indem d
 In Kapitel \ref{sec:implementationLabel} ist die Umsetzung der Labeling-App beschrieben.
 Mit den erstellten Annotationen und den 3D-Daten werden verschiedene Klassifikatoren trainiert.
 Diese Klassifikatoren ergeben sich aus Kombinationen der verfügbaren Klassifikatormethoden.
-Die Klassifikatormethoden sind beschrieben in Kapitel \ref{sec:MethodsClassifier} und umfassen 1. Encoderarchitekturen, 2. Decoderarchitekturen, 3. Vorverarbeitungsmethoden und 4. Vortrainingsmethoden.
+Die Klassifikatormethoden sind beschrieben in Kapitel \ref{sec:MethodsClassifier} und umfassen 1. Encoderarchitekturen, 2. Klassifikations-Kopf-Architekturen, 3. Vorverarbeitungsmethoden und 4. Vortrainingsmethoden.
 Unter den Methoden sind sowohl etablierte, als auch neu entwickelte Ansätze.
 Anhand der Genauigkeit der trainierten Klassifikatoren auf einem seperaten Validierungsanteil des Datensatz werden die Methoden verglichen und eine optimale Konfiguration ausgegeben.
 Die Architektur und die Parameter dieser Konfiguration werden dann in den Inferenzablauf der Applikation eingesetzt.
 Am Ende des Ablaufs werden die klassifizierten Segmente genutzt, um verschiedene Grafiken zu erzeugen, die die interpretierbaren Eigenschaften visualisieren.
 Dieses Kriterium wird eingeführt, um die Eignung von Segmentierungsmodellen zum Extrahieren interpretierbarer Merkmale, wie Zellkernanzahlen oder -volumina zu bewerten.
 Darauf folgen Beschreibungen von Klassifikatormethoden.
-Die Methoden umfassen Architekturen von Encodern und Decodern, sowie Methoden der Vorverarbeitung und des Vortrainings.
+Die Methoden umfassen Architekturen von Encodern und Klassifikations-Köpfen, sowie Methoden der Vorverarbeitung und des Vortrainings.
 Es werden sowohl Anwendungen bestehender Methoden, als auch neu entwickelte Ansätze eingeführt.
 Ziel dieser Methoden ist es, die Optimierung eines Klassifikators für individuelle, dreidimensionale Zelldaten in einem standardisierten Ablauf zu ermöglichen.
 Verschiedene Kombinationen der eingeführten Methoden werden beispielhaft auf die Daten der vorliegenden Arbeit angewandt und die dabei entstehenden Klassifikatoren werden bezüglich ihrer Genauigkeit auf einem seperaten Validierungsanteil des Datensatzes verglichen.
@@ -36,7 +36,7 @@ Verschiedene Kombinationen der eingeführten Methoden werden beispielhaft auf di
   Die Anwendung kann regulär angewandt (Inferenz) oder optimiert werden (Optimierung).
   Die Optimierung ist zweiteilig.
   Zur Optimierung der Segmentierungsmodelle wird das neu entwickelte \acf{ipq} Bewertungskriterium eingesetzt.
-  Für den Klassifikator werden Kombinationen verschiedener Encoder, Decoder, Vorverarbeitungsmethoden und Vortrainingsmethoden iterativ trainiert und verglichen. 
+  Für den Klassifikator werden Kombinationen verschiedener Encoder, Klassifikations-Köpfe, Vorverarbeitungsmethoden und Vortrainingsmethoden iterativ trainiert und verglichen. 
   }
   \label{fig:graph_abstract}
 \end{figure}
@@ -48,8 +48,9 @@ Von den Zellen wurden 3D-Bildstapel mit voxelbasierten Intensitätswerten, die j
 Die Kulturen enthalten Myotuben und deren Nuclei in fünf Fluoreszenzkanälen, die entsprechend mit fünf unterschiedlichen Fluoreszenzmarkern angefärbt wurden:
 \begin{itemize}
   \item DAPI (Nuclei),
-  \item $\alpha$-Actining (sarcomerisches Strukturprotein),
+  \item $\alpha$-Actinin (sarcomerisches Strukturprotein),
   \item Dystrophin (Membran-assoziiertes Muskelprotein),
+  \item Synaptophysin (präsynaptisches Vesikelprotein),
   \item $\alpha$-Bungarotoxin (Bindung an nikotinische Acetylcholinrezeptoren, nAChR) und
   \item S100$\beta$ (Schwannzellmarker).
 \end{itemize}
@@ -59,6 +60,14 @@ Je Kanal ergibt sich eine räumliche Auflösung von 1024 x 1024 Pixeln mit 568nm
 Die Anzahl der Z-Schichten beträgt zwischen 24 und 64.
 Die Proben wurden in Matrigel eingebettet und unter physiologisch relevanten Kulturbedingungen (37 °C, 5\% CO₂) im maturierenden Medium kultiviert, das u. a. Wachstums- und Differenzierungsfaktoren wie BDNF, GDNF, IGF-1, CHIR99021, DMH1, SB431542, Retinsäure und Purmorphamin enthielt.
 Das resultierende Material stellt ein menschliches in-vitro-Modell der neuromuskulären Verbindung dar.
+Abb. \ref{fig:channel_examples} zeigt exemplarisch je eine 2D-Schicht von einem der Marker-Kanäle.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.99\linewidth]{Figures/channel_examples.pdf}
+  \caption{
+  }
+  \label{fig:channel_examples}
+\end{figure}
 Die eingeführten Methoden werden als Experiment auf diese Daten angewandt, sie sind aber explizit entworfen, um Anpassungen an neue Datensätze nahtlos zu ermöglichen.
 Alle Experimente auf diesen Daten dienen der vorliegenden Arbeit als Fallstudie, um die Effizient der vorgestellten Methoden zu demonstrieren.
 \section{Injektive Panoptische Qualität}\label{sec:Kriterien}
@@ -162,7 +171,7 @@ Zur Datenaugmentierung werden die folgenden Methoden eingesetzt:
   \item \textbf{Gaußsches Rauschen:} Mit einer Wahrscheinlichkeit von 20\% wird Rauschen mit einem Mittelwert von 0 und einer Standardabweichung von 0{,}01 hinzugefügt.
 \end{itemize}
 Prominente Encoder aus der Literatur werden vergleichend eingesetzt. 
-Darüber hinaus werden hier verschiedene Methoden der Vorverarbeitung, des Vortraining und der Decoder-architektur eingeführt und verglichen.
+Darüber hinaus werden hier verschiedene Methoden der Vorverarbeitung, des Vortraining und der Klassifikations-Kopf-Architektur eingeführt und verglichen.
 Im Folgenden sind diese Methoden einzeln beschrieben.
 Da jede mögliche Kombination mit jedem Netz zu trainieren einen unausführbar hohen Rechenaufwand bedeutet, wird eine Vorauswahl von Kombinationen getroffen. \newline 
 
@@ -276,12 +285,12 @@ Die Abb. \ref{fig:pretrain} zeigt die hier umgesetzten Methoden.
   \caption{Übersicht über die Vortrainingsmethoden. 
   Links zu sehen sind die beiden verfügbaren Bildermengen, ImageNet und die Zeildaten.
   Rechts von diesen Bildermengen werden diesen Bildern Annotationen hinzugefügt, entweder durch die ImageNet-Datenbank, Experten oder einen Algorithmus.
-  Jeder Encoder (linke Seite eines Netzwerks) und jeder Decoder (rechte Seite eines Netzwerks) wird mit einer dieser drei Label-Mengen trainiert.
+  Jeder Encoder (linke Seite eines Netzwerks) und jeder Klassifikations-Kopf (rechte Seite eines Netzwerks) wird mit einer dieser drei Label-Mengen trainiert.
   Die Farbe der Label und des Netzwerks zeigt dabei die Zuordnung.
-  Mit offenen oder geschlossenen Schlössern über den En- und Decodern ist dargestellt, ob die Gewichte eingefroren werden.
+  Mit offenen oder geschlossenen Schlössern über den Encodern und Klassifikations-Köpfen ist dargestellt, ob die Gewichte eingefroren werden.
   Vier verschiedene Versionen jedes Klassifikators werden hier trainiert.
   Das erste Netzwerk wird auf den ImageNet-Daten vortrainiert. 
-  Anschließend wird mit Experten-Labels der Decoder neu trainiert.
+  Anschließend wird mit Experten-Labels der Klassifikations-Kopf neu trainiert.
   Das Zweite erhält kein Vortraining, es ist komplett mit den Zieldaten trainiert.
   Für das dritte Netzwerk werden lediglich die Label des semi supervised Algorithmus eingesetzt.
   Die letzte Variante wird semi supervised vortrainiert und anschließend mit den Zieldaten fine-tuned. }
@@ -306,11 +315,11 @@ Der Pseudo-Labler normalisiert die Werte des Merkmalsvektoren zu einem Mittelwer
 Das Ziel dabei ist es, einen Mittelweg zwischen Informationserhalt und Overfitting-Gefahr sowie Rechenaufwand zu erzielen.
 Mithilfe des Label-Spreading-Algorithmus \cite{Zhou2003}, mit einer Radial Basis Funktion \cite{Lowe1988} als Kernelfunktion, werden die Experten-Annotationen über die Struktur der Daten auf alle Stichproben ausgebreitet.
 Durch den Pseudo-Labler entstehen Annotationen für die Daten ohne Experten-Annotationen.
-Diese neuen Annotationen werden dann eingesetzt, um in 25 Epochen sowohl die Encoder, als auch die Decoder zu trainieren, mit dem Ziel unter geringem Aufwand für die Experten umfangreiche Klassifikatoren zu trainieren.
+Diese neuen Annotationen werden dann eingesetzt, um in 25 Epochen sowohl die Encoder, als auch die Klassifikations-Köpfe zu trainieren, mit dem Ziel unter geringem Aufwand für die Experten umfangreiche Klassifikatoren zu trainieren.
 Optional werden die Gewichte des Encoder hiernach, bis auf die letzten beiden Schichten eingefroren und nur der Encoder wird in weiteren 35 Epochen mit dem Trainingsdatensatz der Zieldaten trainiert.
 Das Ziel dieses Vorgehens ist es, eine stärkere Generalisierung zu erreichen, indem Overfitting bei der Merkmalsextraktion vermieden wird.
 Da der Encoder mit anderen Daten vortrainiert wird, ist zu erwarten, dass er eine sinnvolle Merkmalsextraktion lernt, ohne auf die expliziten Merkmale der individuellen Stichproben im Trainingsdatensatz angewiesen zu sein.
-Dadurch sind die Beziehungen zwischen Merkmalen und Klassen, die der Decoder lernt, nicht nur auf die Merkmale des Trainingsdatensatzes beschränkt.
+Dadurch sind die Beziehungen zwischen Merkmalen und Klassen, die der Klassifikations-Kopf lernt, nicht nur auf die Merkmale des Trainingsdatensatzes beschränkt.
 %\textit{NOTIZ:} Hier soll stehen:
 %\begin{itemize}
 %  \item Wie werden "pseudo-labels" mit semi-supervision erstellt?
@@ -324,13 +333,13 @@ Das Fully-supervised Vortraining bezieht sich hier auf das initialisieren eines 
 Diese Gewichte sind durch Vortaining auf dem ImageNet-Datensatz entstanden oder stammen aus dem \ac{sam}-Encoder.
 Bis auf die letzten 20 bis 30 Prozent der Schichten werden alle Gewichte des Encoders während dem Training eingefroren.
 \textbf{Kommentar: Ist '20 bis 30' okay? Ich habe alles 3 mal trainiert, mit 20, 25 und 30 und dann das beste genommen.}
-In 50 Epochen wwerden dann die verbleibenden Encoder-Schichten und der Decoder trainiert.
+In 50 Epochen wwerden dann die verbleibenden Encoder-Schichten und der Klassifikations-Kopf trainiert.
 Die Merkmalsextraktion ist aus einem Datensatz einer anderen Domäne gelernt, was Overfitting verhindert.
-Nur der Decoder wird auf Zieldaten trainiert, wobei aufgrund der diversifizierten Merkmale eine hohe Generalisierbarkeit angestrebt wird.
+Nur der Klassifikations-Kopf wird auf Zieldaten trainiert, wobei aufgrund der diversifizierten Merkmale eine hohe Generalisierbarkeit angestrebt wird.
 
-\subsection{Decoder}\label{sec:Decoder}
-An die Encoder werden verschiedene Decoder angehängt.
-Hier werden dazu zwei neue Decoderarchitekturen eingeführt. (\textbf{NOTIZ: "nach dem Vorbild vergleichbarer Decoder in der Literatur" oder ähnliches?})
+\subsection{Klassifikations-Kopf}\label{sec:Decoder}
+An die Encoder werden verschiedene Klassifikations-Köpfe angehängt.
+Hier werden dazu zwei neue Klassifikations-Kopf-Architekturen nach dem Vorbild vergleichbarer Anwendungen in der Literatur eingeführt.
 Abb. \ref{fig:classifiers} zeigt die beiden Architekturen systematisch.
 Der erste Klassifikator wird hier \textit{Volumen-Klassifikator} genannt.
 Er interpretiert die Merkmale, die der Encoder generiert, als Volumen und generiert mithilfe von 3D-Faltungen und Pooling eine Repräsentation daraus.

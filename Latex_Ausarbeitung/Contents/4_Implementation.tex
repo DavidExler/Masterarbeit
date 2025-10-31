@@ -36,7 +36,7 @@ Mithilfe einer neu entwickelten Funktion werden hier die Ergebnisse mit der \ac{
 Für die Klassifikatoren werden vier Software-Module entwickelt, wie in Abb. \ref{fig:Signalfluss_Klas} dargestellt.
 Das erste Modul nimmt als Eingabe eine Methodenauswahl (siehe Kap. \ref{sec:MethodsClassifier}), die verwendet werden sollen, und gibt einen Klassifikator zurück.
 Mithilfe der Pytorch-Bibliothek werden entsprechende Encoder und, abhängig von der Vortrainingsmethode, entsprechende Gewichte geladen.
-Außerdem werden neu entwickelte Klassen von PyTorch-Modellen für das Erstellen der Decoder aufgerufen (siehe Kap. \ref{sec:Decoder}).\newline
+Außerdem werden neu entwickelte Klassen von PyTorch-Modellen für das Erstellen der Klassifikations-Kopf aufgerufen (siehe Kap. \ref{sec:Decoder}).\newline
 In das zweite Modul wird auch eine Methodenauswahl eingegeben und abhängig von der Vortrainings- und Vorverarbeitungsmethode wird ein entsprechender Datensatz zurückgegeben (siehe Kap. \ref{sec:Pretrain} und Kap. \ref{sec:Preproc}).
 Dieser Datensatz wird als Pytorch Dataloader erstellt und mit einer Batch-Größe und mit Augmentierungen der Monai-Bibliothek versehen.
 In diesen Dataloader wird eine neu entwickelte Retreiver-Instanz (siehe Kap. \ref{sec:Preproc}) eingebettet. 
@@ -163,7 +163,7 @@ Die Eingabefelder 'Eingabe Ordner' und 'Ausgabe Ordner' bestimmen, aus welchem u
 Im Eingabe Ordner müssen dreidimensionale Bilder, Segmentierungsmasken und Annotationen vorhanden sein.
 Die vorangegangenen Tabs speichern die Daten direkt im erwarteten Format ab. 
 Unter der Anzeige für die gewählten Ordner sind einige Checkbox-Felder gegeben.
-Diese sind in die vier Gruppen Encoder, Decoder, Vorverarbeitung (Nucleus-Kanal) und Vortraining unterteilt.
+Diese sind in die vier Gruppen Encoder, Klassifikations-Kopf, Vorverarbeitung (Nucleus-Kanal) und Vortraining unterteilt.
 Alle hier gewählten Methoden werden nachfolgend genutzt und in jeder Kombination trainiert.
 Die verfügbaren Methoden sind in Kapitel \ref{sec:MethodsClassifier} beschrieben.
 Mit dem 'Start'-Knopf wird der Methodenvergleich gestartet und mit dem 'Abbrechen'-Knopf wieder abgebrochen.
@@ -173,7 +173,7 @@ Außerdem wird die Kombination von Methoden gespeichert, mit der die höchste Ge
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Methodenauswahl.png}
     \caption{Die Abbildung zeigt einen Auschschnitt des Tabs der 3D-Zelldaten-Pipeline der den Vergleich der Klassifikatormethoden ermöglicht.
-    Methoden der Kategorien Encoder, Decoder, Vorverarbeitung und Vortraining können ausgewählt werden, um einen Vergleich aller Kombinationen der Methoden zu starten.}
+    Methoden der Kategorien Encoder, Klassifikations-Kopf, Vorverarbeitung und Vortraining können ausgewählt werden, um einen Vergleich aller Kombinationen der Methoden zu starten.}
     \label{fig:APP_methods}
 \end{figure}
 

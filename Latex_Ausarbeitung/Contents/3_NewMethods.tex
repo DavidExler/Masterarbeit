@@ -124,14 +124,14 @@ Die nachfolgende Formel zeigt das \ac{ipq} Bewertungskriterium unterteilt in die
 \frac{k_1 \times \displaystyle\sum_{(p, g) \in TP} 
 \text{IoU}\left(\displaystyle\bigcup_{p_i \in p} p_i,\, g\right)
 }{|TP|}
-}_{\text{Segmentatierungs-Qualität (SQ)}}
+}_{\text{Segmentation-Quality (SQ)}}
 \times
 \underbrace{
 \frac{k_2\times|TP|}{|TP| + \frac{1}{2}|FP| + \frac{1}{2}|FN|}
-}_{\text{Recognition Qualität (RQ)}}
+}_{\text{Recognition-Quality (RQ)}}
 \times
 \underbrace{
-\frac{k_3\times\displaystyle |GT|}{\displaystyle\sum_{p \in P} \left( \max(1, n_p - 1) \right)} }_{\text{Injektivitäts-Qualität (IQ) (neu)}},
+\frac{k_3\times\displaystyle |GT|}{\displaystyle\sum_{p \in P} \left( \max(1, n_p - 1) \right)} }_{\text{Injective-Quality (IQ) (neu)}},
 \end{equation}\label{eq:ipq}
 wobei:
 \begin{itemize}
@@ -146,8 +146,8 @@ wobei:
     \item $p \subseteq P$ ein Vektor aller Segmentierungsinstanzen, die der gleichen Annotationsinstanz zugeordnet sind, ist,
     \item $n_p$ die Dimension des Vektors $p$ ist,
     \item $\text{SQ} \in [0,1]$ ein Faktor ist, der die Qualität der Segmentierung anhand der \ac{iou} von der segmentierten und der erwarteten Instanz vergleicht,
-    \item $\text{RQ} \in [0,1]$ ein Faktor ist, der bewertet, wie vollständig und das Segmentierungsnetz die vorhandenen Nuclei gefunden hat und, ob es dabei zu Halluzinationen kam,
-    \item $\text{IQ} \in [0,1]$ ein Faktor ist, der das Unterteilen von Nuclei durch das Segmentierungsnetz zu bestrafen. Wird ein Nucleus durch mehrere Instanzen der Segmentierungsmaske dargestellt, wird $n_p$ größer als eins und der Faktor sinkt,
+    \item $\text{RQ} \in [0,1]$ ein Faktor ist, der bewertet, wie vollständig und fehlerfrei das Segmentierungsmodell die vorhandenen Nuclei findet und, ob es dabei zu Halluzinationen kam,
+    \item $\text{IQ} \in [0,1]$ ein Faktor ist, der das Unterteilen von Nuclei durch das Segmentierungsmodell zu bestrafen. Wird ein Nucleus durch mehrere Instanzen der Segmentierungsmaske dargestellt, wird $n_p$ größer als eins und der Faktor sinkt,
     \item $\text{IPQ} \in [0,1]$ ein Maß für die panoptische Segmentierungsqualität mit der Voraussetzung von injektiver Abbildung der Segmentierungsmasken-Instanzen auf die Annotationsinstanzen darstellt, wobei höhere Werte bessere Übereinstimmung bedeuten,
 \end{itemize}
 
@@ -284,13 +284,13 @@ Die Abb. \ref{fig:pretrain} zeigt die hier umgesetzten Methoden.
   \includegraphics[width=0.8\linewidth]{Figures/PretrainingMethods.png}
   \caption{Übersicht über die Vortrainingsmethoden. 
   Links zu sehen sind die beiden verfügbaren Bildermengen, ImageNet und die Zeildaten.
-  Rechts von diesen Bildermengen werden diesen Bildern Annotationen hinzugefügt, entweder durch die ImageNet-Datenbank, Experten oder einen Algorithmus.
+  Rechts von diesen Bildermengen werden diesen Bildern Annotationen hinzugefügt, entweder durch die ImageNet-Datenbank, Expert*Innen oder einen Algorithmus.
   Jeder Encoder (linke Seite eines Netzwerks) und jeder Klassifikations-Kopf (rechte Seite eines Netzwerks) wird mit einer dieser drei Label-Mengen trainiert.
   Die Farbe der Label und des Netzwerks zeigt dabei die Zuordnung.
   Mit offenen oder geschlossenen Schlössern über den Encodern und Klassifikations-Köpfen ist dargestellt, ob die Gewichte eingefroren werden.
   Vier verschiedene Versionen jedes Klassifikators werden hier trainiert.
   Das erste Netzwerk wird auf den ImageNet-Daten vortrainiert. 
-  Anschließend wird mit Experten-Labels der Klassifikations-Kopf neu trainiert.
+  Anschließend wird mit Expert*Innen-Labels der Klassifikations-Kopf neu trainiert.
   Das Zweite erhält kein Vortraining, es ist komplett mit den Zieldaten trainiert.
   Für das dritte Netzwerk werden lediglich die Label des semi supervised Algorithmus eingesetzt.
   Die letzte Variante wird semi supervised vortrainiert und anschließend mit den Zieldaten fine-tuned. }
@@ -304,7 +304,7 @@ Jedes Modell wird jeweils für 75 Epochen trainiert.
  
 \paragraph{Semi supervised}
 Die semi supervised Annotationen werden mithilfe eines few-shot gestützen Cluster Algorithmus erstellt, der hier 'Pseudo-Labler' genannt wird.
-Ein Experte erstellt hierzu Annotationen von wenigen Nuclei.
+Ein*e Expert*In erstellt hierzu Annotationen von wenigen Nuclei.
 Danach werden aus den restlichen Segmentierungsmasken einige Merkmale generiert und zu einem Vektor zusammengefasst.
 Zuerst werden das Volumen, die Oberfläche und die Achsenlängen jedes Nucleus direkt bestimmt. 
 Außerdem wird die Exzentrizität aus dem Verhältnis der längsten und der kürzesten Achse berechnet.
@@ -313,9 +313,9 @@ Darüber hinaus wird aus der Z-Schicht, in der die Segmentierungsmaske am größ
 Aus dieser Kontur wird eine komplexe Zahlenfolge berechnet und der Absolutwert der ersten zehn Koeffizienten als einzelne, weitere Merkmale dem Merkmalsvektor hinzugefügt. \newline
 Der Pseudo-Labler normalisiert die Werte des Merkmalsvektoren zu einem Mittelwert von Null und einer Varianz von Eins und wendet eine Principal Component Analysis \cite{Pearson1901} an, um redundante Informationen zu entfernen.
 Das Ziel dabei ist es, einen Mittelweg zwischen Informationserhalt und Overfitting-Gefahr sowie Rechenaufwand zu erzielen.
-Mithilfe des Label-Spreading-Algorithmus \cite{Zhou2003}, mit einer Radial Basis Funktion \cite{Lowe1988} als Kernelfunktion, werden die Experten-Annotationen über die Struktur der Daten auf alle Stichproben ausgebreitet.
-Durch den Pseudo-Labler entstehen Annotationen für die Daten ohne Experten-Annotationen.
-Diese neuen Annotationen werden dann eingesetzt, um in 25 Epochen sowohl die Encoder, als auch die Klassifikations-Köpfe zu trainieren, mit dem Ziel unter geringem Aufwand für die Experten umfangreiche Klassifikatoren zu trainieren.
+Mithilfe des Label-Spreading-Algorithmus \cite{Zhou2003}, mit einer Radial Basis Funktion \cite{Lowe1988} als Kernelfunktion, werden die Expert*Innen-Annotationen über die Struktur der Daten auf alle Stichproben ausgebreitet.
+Durch den Pseudo-Labler entstehen Annotationen für die Daten ohne Expert*Innen-Annotationen.
+Diese neuen Annotationen werden dann eingesetzt, um in 25 Epochen sowohl die Encoder, als auch die Klassifikations-Köpfe zu trainieren, mit dem Ziel unter geringem Aufwand für die Expert*Innen umfangreiche Klassifikatoren zu trainieren.
 Optional werden die Gewichte des Encoder hiernach, bis auf die letzten beiden Schichten eingefroren und nur der Encoder wird in weiteren 35 Epochen mit dem Trainingsdatensatz der Zieldaten trainiert.
 Das Ziel dieses Vorgehens ist es, eine stärkere Generalisierung zu erreichen, indem Overfitting bei der Merkmalsextraktion vermieden wird.
 Da der Encoder mit anderen Daten vortrainiert wird, ist zu erwarten, dass er eine sinnvolle Merkmalsextraktion lernt, ohne auf die expliziten Merkmale der individuellen Stichproben im Trainingsdatensatz angewiesen zu sein.

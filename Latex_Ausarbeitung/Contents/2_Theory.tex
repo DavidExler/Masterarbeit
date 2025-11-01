@@ -61,7 +61,7 @@ Intuitiv gehören die sichtbaren Objekte zur Klasse \textit{Zellkern}, aber der 
 Sie unterscheiden sich also in ihrer Domäne.
 In der Bildverarbeitung ist es essenziell, die Domäne der Quelldaten im Hinblick auf die Aufgabe der Applikation zu beachten \cite{wang2018domain, peng2017domain}. 
 Hierzu kann ein Datensatz mit passender Domäne gewählt werden oder eine Domänenanpassung durchgeführt werden \cite{han2022binsimilarity_domain, pinheiro2018domain, ganin2016domain}. \\[0.5\baselineskip]
-Ghosh et al. definieren Domänenanpassung: "Gegeben Quell- und Ziel-Domänen $D_s$ und $D_t$ sowie die Aufgaben $\tau_s$ und $\tau_t$, zielen Domänenadaptations-basierte Verfahren darauf ab, ein Modell mit Parametern $\theta$ zu erlernen, das für die Zielaufgabe geeignet ist, wenn $D_s \neq D_t$ und $\tau_s = \tau_t$." \cite{Ghosh2020}.
+Ghosh et al. definieren Domänenanpassung: \glqq Gegeben Quell- und Ziel-Domänen $D_s$ und $D_t$ sowie die Aufgaben $\tau_s$ und $\tau_t$, zielen Domänenadaptations-basierte Verfahren darauf ab, ein Modell mit Parametern $\theta$ zu erlernen, das für die Zielaufgabe geeignet ist, wenn $D_s \neq D_t$ und $\tau_s = \tau_t$.\grqq \cite{Ghosh2020}.
 \subsection{Segmentierung}\label{sec:Segmentierung}
 %\textbf{KOMMENTAR} ist das notwendig?
 %\begin{itemize}
@@ -192,13 +192,13 @@ Um das Verhalten von Klassifikatoren zu visualisieren gibt es verschiedene Metho
 Eine dieser Methoden ist Grad-CAM \cite{Selvaraju2017}.
 Grad-CAM steht für Gradient-weighted Class Activation Mapping und ist eine Methode um räumlich aufgelöste Relevanzkarten aus tiefen neuronalen Netzen zu erzeugen. 
 Dabei werden die Gradienten einer bestimmten Klasse in Bezug auf die Aktivierungen einer Schicht des Modells verwendet, um Regionen des Eingabebildes zu finden, die besonders stark zur Vorhersage beitragen. 
-Die resultierende "Wichtigkeits"-Karte wird auf die Eingabe zurückprojiziert und typischerweise als farbige Heatmap dargestellt.
+Die resultierende \glqq Wichtigkeits\grqq-Karte wird auf die Eingabe zurückprojiziert und typischerweise als farbige Heatmap dargestellt.
 Abb. \ref{fig:gradCam_example} zeigt zwei Beispiele einer solchen Heatmap \cite{Selvaraju2017}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{Figures/gradCAM_example.pdf}
     \caption{Die Abbildung zeigt links ein Bild.
-    Daneben sind zwei Heatmaps platziert, die mit Grad-CAM die Wichtigkeit räumlicher Regionen des Bilds für die Klassen 'Katze' und 'Hund' visualisieren.}
+    Daneben sind zwei Heatmaps platziert, die mit Grad-CAM die Wichtigkeit räumlicher Regionen des Bilds für die Klassen \glqq Katze\grqq und \glqq Hund\grqq visualisieren.}
     \label{fig:gradCam_example}
 \end{figure}
 Mithilfe der extrahierten Gradientenkarten lassen sich neben der Wichtigkeit bestimmter räumlicher Regionen der Eingangsdaten auch relative Wichtigkeiten der Eingangskanäle bestimmen.
@@ -242,7 +242,7 @@ Links sind die Klassen-Cluster schlechter getrennt als rechts.
 Da das manuelle Erstellen der Annotationen für die Segmentierung von Zelldaten mit erheblichem manuellem Aufwand verbunden ist und zusätzlich Expertenwissen voraussetzt, sind Datensätze hierfür selten. 
 Einige prominente Datensätze mit Annotationen für eine Instanzsegmentierung, deren Domänen zu den Zieldaten der Anwendung dieser Arbeit \textit{ähnlich} sind, sind:  
 \begin{itemize}
-    \item LiveCell \cite{edlund2021livecell}, ein manuell annotierter und Experten-validierter Datensatz aus 5.239 2D-Bildern. 
+    \item LiveCell \cite{edlund2021livecell}, ein manuell annotierter und Expert*Innen-validierter Datensatz aus 5.239 2D-Bildern. 
     Die Daten sind mit Phasenkontrastmikroskopie gesammelt und enthalten 1.686.352 individuelle Zellen von acht verschiedenen Zelltypen.
     \item YeaZ \cite{dietler2020YeaZ}, ein zweiteiliger Datensatz von Hefe-Zellen aus 87 Phasenkontrast-Bildern mit insgesamt 10.422 Zellen und 614 Hellfeld-Bildern mit insgesamt 3.841 Zellen in 6 Beleuchtungsstufen aufgenommen. Die Annotationen sind semi-manuell erstellt, da die Phasenkontrast-Bilder manuell, und die Lichtfeld-Bilder aus den Phasenkonstrast-Segmentierungsmasken annotiert wurden. 
     \item DeepBas \cite{holden2021deepbacs, cspahn2021deepbacs}, ein Datensatz von \textit{B. subtilis strain SH130} Bakterien. Er besteht aus Weitfeldaufnahmen (Fluoreszenz), aufgenommen mit einem inversen Mikroskop, bestehend aus sieben manuell annotierten Bildern mit je zwischen 46 und 335 Zellen.
@@ -374,7 +374,7 @@ Dieser Aufbau ist in Abb. \ref{fig:SwinArchitecture} dargestellt.
 
 \section{Offene Probleme}
 Einzelne Myotuben können durch kein Segmentierungsmodell der Literatur instanzsegmentiert werden.
-Selbst für Experten sind in dichten Strukturen Instanzen von Myotuben nicht immer eindeutig trennbar.
+Selbst für Expert*Innen sind in dichten Strukturen Instanzen von Myotuben nicht immer eindeutig trennbar.
 %Es ist nicht erforscht, welches Segmentierungsmodell für Nuclei das beste ist, im Bezug auf die Eignung der Segmentierungsmasken zur Extraktion von Eigenschaften der Nuclei.
 Nicht viele Segmentierungsmodelle für Nuclei sind erhältlich, besonders für dreidimensionale Daten.
 Die verfügbaren Modelle verhalten sich unterschiedlich bei verschiedenen Datensätzen und ihre Eignung für bestimmte Aufgaben muss für jede Anwendung individuell geprüft werden.
@@ -385,7 +385,7 @@ Eine weitere Fragestellung ist deshlab, wie Methoden der Klassifikation mit der 
 Für jeden Datensatz mit neuen Zellkernklassen und Aufnahmebedingungen muss für optimale Klassifikatorleistung nicht nur ein neues Modell trainiert werden, sondern auch Methoden- und Hyperparameteroptimierung durchgeführt werden.
 Des Weiteren ist der Umgang mit dreidimensionalen Daten, besonders in Umgebungen ohne große Rechenleistung ein offenes Problem.
 Diverse Lösungen existieren, um dreidimensionale Daten mit Expertenwissen zu versehen.
-Diesen Lösungen fehlt bislang, ein Arbeitsablauf der Daten unmittelbar segmentiert und vorbereitet, um relevante Bildausschnitte direkt aus dem Datensatz zu extrahieren, sodass Experten ausschließlich annotieren müssen.
+Diesen Lösungen fehlt bislang, ein Arbeitsablauf der Daten unmittelbar segmentiert und vorbereitet, um relevante Bildausschnitte direkt aus dem Datensatz zu extrahieren, sodass Expert*Innen ausschließlich annotieren müssen.
 
 \section{Zielsetzung}
 Im Zuge der vorliegenden Arbeit soll die automatische Extraktion von interpretierbaren Eigenschaften der Myotubenkulturen ermöglicht werden.
@@ -393,7 +393,7 @@ Zu diesem Ziel bearbeitet die vorliegende Arbeit Zwischenziele und liefert Folge
 \begin{itemize}
     \item Es soll ein Segmentierungsmodell gefunden werden, das die Eigenschaften der Nuclei in den vorliegenden, dreidimensionalen Daten besonders wenig durch Segmentierungsfehler verfälscht.
     Dazu wird ein neues Bewertungskriterium für Instanzsegmentierung eingeführt und auf einige etablierte Modelle angewandt.
-    \item Das Segmentierungsmodell soll dann genutzt werden, um außerdem einen Ablauf zu schaffen, in dem Experten die Klassen der Nuclei besonders zeiteffizient annotieren können, um einen Klassifikator zu trainieren.
+    \item Das Segmentierungsmodell soll dann genutzt werden, um außerdem einen Ablauf zu schaffen, in dem Expert*Innen die Klassen der Nuclei besonders zeiteffizient annotieren können, um einen Klassifikator zu trainieren.
     Durch das Anreichern der dreidimensionalen Daten durch die Segmentierungsmasken und durch automatisches Fokusieren einzelner Nuclei soll sowohl die Rechenzeit optimiert werden als auch der Aufwand einzelne Nuclei entlang drei Dimensionen zu suchen, eliminiert werden.
     Hierzu wird eine neue Anwendung entwickelt, die 3D-Zelldaten liest und dann eine Oberfläche zum Annotieren bereitstellt.
     \item Die enstehenden Annotationen sollen direkt in einen Trainingsablauf für Klassifikatoren eingebunden sein.

@@ -13,15 +13,16 @@ Die beschriebenen Funktionen sind im bereitgestellten Repository zu finden.
 \section{Segmentierungsmodelle}\label{sec:IMP_Seg}
 Abb. \ref{fig:Signalfluss_Seg} zeigt den Signalfluss der Anwendung der Segmentierungsmodelle und ihrer Bewertung.
 Die Segmentierungsmodelle werden zur Evaluation in einfachen Entwicklerskripten über die Kommandozeile oder als Jupyter Notebook ausgeführt.
+Die Eingabedaten werden in einem Python-Entwicklerskript vorab normalisiert.
 Für das nnU-Net-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird auf die Eingabedaten zuerst eine Konvertierung angewandt, die sie durch Padding in die geforderte Größe gebracht und zu .nii.gz-Dateien umgeformt werden.
 Eine Parameterbestimmung für die Anzahl der Wiederholungen, Normalisierungsart und Datensatz-Eigenschaften wird anhand der Parameter Vorlage der Autoren erstellt.
 Das Modell wird direkt mit der Architektur und den Gewichten der Veröffentlichung initialisiert und über die Kommandozeile auf alle Daten angewandt.
-Die entstehenden Instanzen werden in einen Instanztrenner gegeben (siehe Kap. \ref{sec:Seg_PostProc}), um den Instanzen einzigartige Labels zu vergeben.\newline
+Die entstehenden Instanzen werden in einen Instanztrenner gegeben (siehe Kap. \ref{sec:Seg_PostProc}), um den Instanzen einzigartige Labels zu vergeben.\\ [0.5\baselineskip]
 Für das Deepcell-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird direkt das bereitgestellte Jupyter-Notebook der Deepcell-Veröffentlichung auf die Benchmarkdaten angewandt \cite{moen2019DeepcellCaliban}.
-Die Ergebnisse werden daraufhin mit dem Watershed-Algorithmus der OpenCV-Bibliothek nachbearbeitet (siehe Kap. \ref{sec:Seg_PostProc}).\newline
+Die Ergebnisse werden daraufhin mit dem Watershed-Algorithmus der OpenCV-Bibliothek nachbearbeitet (siehe Kap. \ref{sec:Seg_PostProc}).\\ [0.5\baselineskip]
 Das CellposeSAM-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird als Entwicklerskript weitgehend mit der Architektur, den Gewichten und den vorgeschlagenen Parametern der Autoren angewandt
 In einer Parameterbestimmung wird der durchschnittliche Durchmesser der Nuclei an die eingegebenen Daten angepasst.
-Auf die Ergebnisse wird keine Nachbearbeitung angewandt.\newline
+Auf die Ergebnisse wird keine Nachbearbeitung angewandt.\\ [0.5\baselineskip]
 Die Instanzen von jedem der drei Modelle und die Annotationen werden in einem Jupyter Notebook zur Berechnung der \ac{ipq} eingegeben (siehe Kap. \ref{sec:Kriterien}).
 Mithilfe einer neu entwickelten Funktion werden hier die Ergebnisse mit der \ac{ipq}-Metrik bewertet.
 \begin{figure}
@@ -36,15 +37,15 @@ Mithilfe einer neu entwickelten Funktion werden hier die Ergebnisse mit der \ac{
 Für die Klassifikatoren werden vier Software-Module entwickelt, wie in Abb. \ref{fig:Signalfluss_Klas} dargestellt.
 Das erste Modul nimmt als Eingabe eine Methodenauswahl (siehe Kap. \ref{sec:MethodsClassifier}), die verwendet werden sollen, und gibt einen Klassifikator zurück.
 Mithilfe der Pytorch-Bibliothek werden entsprechende Encoder und, abhängig von der Vortrainingsmethode, entsprechende Gewichte geladen.
-Außerdem werden neu entwickelte Klassen von PyTorch-Modellen für das Erstellen der Klassifikations-Kopf aufgerufen (siehe Kap. \ref{sec:Decoder}).\newline
+Außerdem werden neu entwickelte Klassen von PyTorch-Modellen für das Erstellen der Klassifikations-Kopf aufgerufen (siehe Kap. \ref{sec:Decoder}).\\ [0.5\baselineskip]
 In das zweite Modul wird auch eine Methodenauswahl eingegeben und abhängig von der Vortrainings- und Vorverarbeitungsmethode wird ein entsprechender Datensatz zurückgegeben (siehe Kap. \ref{sec:Pretrain} und Kap. \ref{sec:Preproc}).
 Dieser Datensatz wird als Pytorch Dataloader erstellt und mit einer Batch-Größe und mit Augmentierungen der Monai-Bibliothek versehen.
 In diesen Dataloader wird eine neu entwickelte Retreiver-Instanz (siehe Kap. \ref{sec:Preproc}) eingebettet. 
 Der Retreiver ermöglicht es, die großen, dreidimensionalen Daten nicht alle auf einmal als Variablen im Datensatz unterzubringen, sondern nur die Indizes von Bildern und Instanzen.
 Diese Indizes werden dann genutzt, um dynamisch nur die gewünschten Bildausschnitte auf die GPU zu laden. 
-In einem Pseudo-Labler-Modul werden zusätzlich Semi-supervised-Annotationen mithilfe der PCA und der Label-Spreading-Funktion der SciKit-Bibliothek erstellt (siehe Kap. \ref{sec:Pretrain}).\newline
+In einem Pseudo-Labler-Modul werden zusätzlich Semi-supervised-Annotationen mithilfe der PCA und der Label-Spreading-Funktion der SciKit-Bibliothek erstellt (siehe Kap. \ref{sec:Pretrain}).\\ [0.5\baselineskip]
 Das dritte Modul erhält einen Klassifikator und einen Datensatz und führt einen Trainingsdurchlauf durch.
-Es speichert die Ergebnisse und die Gewichte der neu trainierten Klassifikatoren in automatisch benannten Dateien.\newline
+Es speichert die Ergebnisse und die Gewichte der neu trainierten Klassifikatoren in automatisch benannten Dateien.\\ [0.5\baselineskip]
 Im vierten Modul werden mithilfe der plotly-Bibliothek Grafiken aus den eingegebenen Ergebnissen erstellt und, mithilfe der Matplotlib-Bibliothek, seperat als .png gespeichert.
 \begin{figure}
     \centering
@@ -59,6 +60,7 @@ Im vierten Modul werden mithilfe der plotly-Bibliothek Grafiken aus den eingegeb
 \end{figure}
 
 \section{3D-Zelldaten-Pipeline}\label{sec:implementationPipeline}
+\subsection{Übersicht}
 In Abb. \ref{fig:Signalfluss} ist die Software-Architektur der 3D-Zelldaten-Pipeline als Signalflussdiagramm dargestellt.
 Die Anwendung vereint die eingeführten Methoden der vorliegenden Arbeit (siehe Kap. \ref{ch:NewMethods}). 
 Oben zentral zu sehen ist das \acf{gui}, die grafische Schnittstelle mit Bedienelementen und Visualisierungen für Interaktionen mit Nutzer*Innen.
@@ -74,7 +76,7 @@ In einer Schleife werden mit Hilfe eines Klassifikator-Helfer Klassifikatoren au
 Der Datensatz hierzu wird von einem Datensatz-Helfer-Modul erstellt und beinhaltet eine Retreiver Instanz (siehe Kap. \ref{sec:Preproc}).
 Ein Pseudo-Labler-Modul erstellt Semi-supervised-Annotationen für den Datensatz, die je nach Vortrainingsmethode in der Schleife genutzt werden können (siehe Kap. \ref{sec:Pretrain}).
 Die Ergebnisse der verschiedenen Klassifikatoren werden anschließend verglichen und gespeichert.
-Das Visualisierung-Modul liest die Ergebnisse des Klassifikators und stellt diese in Grafiken dar. \newline
+Das Visualisierung-Modul liest die Ergebnisse des Klassifikators und stellt diese in Grafiken dar. \\ [0.5\baselineskip]
 \begin{figure}
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Signalfluss_Implementation.pdf}
@@ -202,12 +204,56 @@ Links wird beispielhaft eine Instanzsegmentierungsmaske von einer Schicht eines 
 In der Mitte wird ein Balkendiagramm dargestellt, das die Anzahl der Nuclei jeder Klasse angibt.
 Das rechte Balkendiagramm zeigt die Verteilung der Nucleus-Volumen in Pixeln hoch drei.
 Um dieses Volumen zu interpretieren, muss die Umrechnung von Pixeln in Micrometer abhängig von der Auflösung des Aufnahmegeräts und der Zoom-Stufe manuell durchgeführt werden.
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Vis.png}
     \caption{Die Abbildung zeigt den 'Visualisierung'-Tab der 3D-Zelldaten-Pipeline.
     Hier werden die Ergebnisse der Anwendung in interpretierbaren Grafiken dargeboten.}
     \label{fig:APP_Vis}
 \end{figure}
+\noindent
 
+\section{Umsetzung}
+Die Tabelle \ref{tab:Umfang} stellt den Umfang des Codes der einzelnen Module dar.
+
+\begin{longtable}{@{} p{0.22\textwidth} p{0.40\textwidth} p{0.10\textwidth} p{0.18\textwidth} @{}}
+\caption{Übersicht der Implementierungskomponenten mit Codeumfang und genutzten Bibliotheken}
+\label{tab:Umfang} \\
+\toprule
+\textbf{Modul} & \textbf{Beschreibung} & \textbf{Zeilen Code} & \textbf{Verwendete Bibliotheken} \\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{Modul} & \textbf{Beschreibung} & \textbf{Zeilen Code} & \textbf{Verwendete Bibliotheken} \\
+\midrule
+\endhead
+
+\bottomrule
+\endfoot
+\textbf{Segmentierung} & & & \\
+Vorverarbeitung & Vorverarbeitung der 3D-Bildstapel & 40 & tqdm, Numpy \\
+Deepcell & Deepcell Segmentierung & 125 & SciKit-Image, Numpy, deepcell, deepcell\_toolbox  \\
+nnU-Net & nnU-Net Segmentierung & 107 & nnunetv2  \\
+CellposeSAM & CellposeSAM Segmentierung & 45 & Numpy, cellpose \\
+Nachbearbeitung und Bewertung & Nachbearbeitung der Segmentierungsmasken, greedy-Algorithmus und \ac{ipq}-Berechnung & 600 & Numpy, OpenCV, SciKit-Image, SciPy \\midrule
+\textbf{Klassifikation} & & & \\
+Retreiver & Dynamisches Laden von Bildausschnitten auf die GPU & 100 & dash, plotly \\
+Pseudo-Labler & Semi-supervised-Annotationen erstellen & 215 & SciKit-Image, Numy \\
+Visualisierungen & Kontur-Bilder, gradCAM, Scatterplots, etc & 650 & SciKit-Image, Numy, Matplotlib, SciPy, Torch \\
+Klassifikator erstellen & Encoder- und Klassifikations-Kopf-Code & 300 & Torch, cellpose  \\
+Datensatz & Vorverarbeitungsmethoden, Datensatz erstellen & 200 & Torch, Numpy \\
+\midrule
+\textbf{3D-Zelldaten-Pipeline} & & & \\
+Frontend & \ac{gui} der 3D-Zelldaten-Pipeline, Webserver, Threading & 800 & dash, plotly \\
+Websever backend & Unterstützende Funktionen für das Frontend-serving & 100 & - \\
+Training & Klassifikator-Training, Management von Modellcheckpoints und aktiven Trainings-Threads & 380 & Monai, tqdm, Pytorch, SciKit-Learn \\
+Methodenauswahl & Auswahl der Methoden & 60 & - \\
+Inferenz & Inferenz mit einem trainierten Klassifikator & 160 & Torch, SciKit-Learn \\
+Labeling-App & Backend für die Labeling-App & 360 &umpy \\
+Visualisierung & Frontend Grafiken erstellen und speichern & 190 & plotly, pandas, Numpy, Matplotlib \\
+\midrule
+\textbf{Gesamt} &  & \textbf{4325} & \\
+\bottomrule
+\end{longtable}
 %In Abb. \ref{} ist der Ablauf kurz systematisch dargestellt.

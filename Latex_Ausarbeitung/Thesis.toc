@@ -1,0 +1,70 @@
+\babel@toc {english}{}\relax 
+\babel@toc {ngerman}{}\relax 
+\babel@toc {ngerman}{}\relax 
+\babel@toc {ngerman}{}\relax 
+\contentsline {chapter}{\numberline {1}Einleitung}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Theorie}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Überblick}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Methoden}{3}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Benchmark}{3}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Segmentierung}{4}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Klassifikation}{5}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Literaturrecherche}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Benchmark}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Segmentierungsmodelle}{11}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Klassifikator}{12}{subsection.2.3.3}%
+\contentsline {section}{\numberline {2.4}Offene Probleme}{14}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Zielsetzung}{14}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Neues Konzept}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Daten}{18}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Injektive Panoptische Qualität}{20}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Klassifikatormethoden}{22}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Übersicht}{22}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Encoder}{23}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Vorverarbeitung}{23}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Vortraining}{25}{subsection.3.3.4}%
+\contentsline {paragraph}{\nonumberline Kein Vortraining}{25}{paragraph*.27}%
+\contentsline {paragraph}{\nonumberline Semi supervised}{26}{paragraph*.29}%
+\contentsline {paragraph}{\nonumberline Fully-supervised}{27}{paragraph*.31}%
+\contentsline {subsection}{\numberline {3.3.5}Klassifikations-Kopf}{27}{subsection.3.3.5}%
+\contentsline {section}{\numberline {3.4}Segmentierung}{28}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Modelle}{28}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Nachverarbeitungsmethoden}{28}{subsection.3.4.2}%
+\contentsline {chapter}{\numberline {4}Implementierung}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Überblick}{31}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Segmentierungsmodelle}{31}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Klassifikatoren}{32}{section.4.3}%
+\contentsline {section}{\numberline {4.4}3D-Zelldaten-Pipeline}{34}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Übersicht}{34}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Segmentierung}{34}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Labeling-App}{37}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Methodenvergleich}{39}{subsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.4.5}Training}{40}{subsection.4.4.5}%
+\contentsline {subsection}{\numberline {4.4.6}Visualisierung}{40}{subsection.4.4.6}%
+\contentsline {section}{\numberline {4.5}Umsetzung}{41}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Ergebnisse}{43}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Überblick}{43}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Hardware}{43}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Segmentierung}{43}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Klassifikation}{47}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Überblick}{47}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Encoder}{49}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Vortraining}{49}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Klassifikations-Kopf}{53}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}Vorverarbeitung}{54}{subsection.5.4.5}%
+\contentsline {subsection}{\numberline {5.4.6}Wichtigkeit der Marker}{56}{subsection.5.4.6}%
+\contentsline {chapter}{\numberline {6}Diskussion}{59}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Überblick}{59}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Segmentierung}{59}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Klassifikation}{61}{section.6.3}%
+\contentsline {chapter}{\numberline {7}Zusammenfassung}{69}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Überblick}{69}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Zusammenfassung}{69}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Ausblick}{70}{section.7.3}%
+\contentsline {chapter}{\numberline {A}Appendix}{73}{appendix.A}%
+\contentsline {section}{\numberline {A.1}SWINV2 Architektur}{73}{section.A.1}%
+\contentsline {section}{\numberline {A.2}\ac {ipq}-Ergebnisse}{74}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Einzelne Ergebnisse aller Klassifikator Kombinationen}{80}{section.A.3}%
+\contentsline {chapter}{\nonumberline References}{83}{chapter*.68}%
+\babel@toc {ngerman}{}\relax 
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

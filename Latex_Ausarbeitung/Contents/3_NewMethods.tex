@@ -43,7 +43,7 @@ Verschiedene Kombinationen der eingeführten Methoden werden beispielhaft auf di
 
 \section{Daten}
 Die zugrunde liegenden Bilddaten der vorliegenden Arbeit stammen aus in-vitro-Kulturen von Myotuben, die aus humanen induzierten pluripotenten Stammzellen (hiPSC) differenziert wurden. 
-Diese Zellen wurden nach dem in Couturier et al., \cite{Couturier2024} beschriebenen Protokoll hergestellt und anschließend mittels Immunfluoreszenzfärbung markiert. 
+Diese Zellen wurden nach dem in Couturier et al. \cite{Couturier2024} beschriebenen Protokoll hergestellt und anschließend mittels Immunfluoreszenzfärbung markiert. 
 Von den Zellen wurden 3D-Bildstapel mit voxelbasierten Intensitätswerten, die jeweils einem Fluoreszenzkanal zugeordnet sind, mit einem Konfokalmikroskop aufgenommen.
 Die Kulturen enthalten Myotuben und deren Nuclei in fünf Fluoreszenzkanälen, die entsprechend mit fünf unterschiedlichen Fluoreszenzmarkern angefärbt wurden:
 \begin{itemize}
@@ -398,7 +398,7 @@ Der Algorithmus trennt überlagerte Instanzen, die das Modell als einzelne Insta
 \STATE $maske_\text{refined} \gets \text{Watershed}(gradient, marker)$
 
 \FOR{Region $r_i$ in $maske_\text{refined}$}
-  \IF{$Fläche(r_i) < \tau$}
+  \IF{$Flaeche(r_i) < \tau$}
     \IF{$r_i$ grenzt an größere Nachberregion $r_n$}
       \STATE Vereinige $r_i$ mit $r_n$
     \ELSE

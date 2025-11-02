@@ -63,3 +63,9 @@ FRAGEN:
     - Decoder - Ist jetzt da als name statt Klassifikations-Kopf, soll das ersetzt werden?
     - Abbildungen als Übersichts-Bild: wird das nicht zu groß?
     - Prozentpunkte/Prozent: soll ich das dann auch mathematisch anpassen?
+
+
+appendix:
+supp:swin
+supp:ipq
+supp:Klassifikation

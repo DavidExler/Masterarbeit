@@ -3,10 +3,37 @@
 \chapter{Zusammenfassung}\label{ch:Conclusion}
 
 \section{Überblick}
-
+Die nachfolgenden Abschnitte fassen die vorliegende Arbeit zusammen und geben einen Ausblick für mögliche kommende Forschung.
 
 \section{Zusammenfassung}
+Die Arbeit befasst sich mit der automatisierten Optimierung von Deep-Learing-Methoden.
+In der theoretischen Grundlage sind etablierte Deep-Learing-Methoden für die Instanzsegmentierung und Klassifikation gegeben.
+Vor allem Methoden die für biologische 3D-Daten geeignet sind werden beleuchtet.
+Zusätzlich sind Methoden zusammengefasst, die für die Anwendung, Auswertung und Visualisierung der vorgestellten Methoden wichtig sind.
+Zu den Methoden aus der Literatur wird außerdem eine Literaturrecherche angestellt, die explizit aktuelle Forschung in dem Bereich darstellt.
+Hiernach wird dargestellt, was bisher die Lücken in der Literatur sind.
+Für dreidimensionale Bilddaten sind zwar sowol Methoden zur Segmentierung als auch zur Klassifikation verfügbar, aber kein umfassendes Framework, dass die Anwendung, den Vergleich und die Optimierung automatisiert.
+Dementsprechend wird das Ziel der vorliegenden Arbeit definiert.
+Durch die Arbeit soll der Aufwand ständig wiederkehrender Überlegungen und Vergleiche eliminiert werden, indem die Methodenauswahl und Evaluation von Deep-Learning-Methoden zur panoptischen Segmentierung von biologischen 3D-Daten automatisiert wird.\\[0.5\baselineskip]
+In der Methodik der Arbeit werden hierzu einige neu entwickelte Methoden eingeführt.
+Die \acf{ipq} ist eine Metrik zur Bewertung von Instanzsegmentierungsmodellen in Bezug auf ihre Eignung interpretierbare Eigenschaften zu extrahieren.
+Durch die Ergebnisse der durchgeführten Experimente wird deutlich, dass die \ac{ipq} effizient die Leistung von Modellen erfasst und interpretierbare Ergebnisse bietet.
+Des Weiteren werden verschiedene Encoder, Klassifikations-Köpfe, Vorverarbeitungsmethoden und Vortrainingsmethoden eingeführt.
+Diese Methoden sind in der 3D-Zelldaten-Pipeline implementiert, einer automatisierten Anwendung zum Vergleich der Leistungen der Methoden.
+Die Anwendung umfasst außerdem die neu eingeführte Labeling-App, eine Methode zur zeiteffizienten Annotation von dreimensionalen Bild-Datensätzen. 
+Mithilfe der 3D-Zelldaten-Pipeline werden Experimente an einem Datensatz von dreidimensionalen Myotuben-Zellkultur-Aufnahmen durchgeführt.
+Die Ergebnisse dieser Experimente belegen die Effizienz der 3D-Zelldaten-Pipeline.
+Außerdem zeigen sie, dass die Anwendung der semi-supervised-Vortrainingsmethode mit dem neu eingeführten Pseudo-Labler zwar zu einer geringeren Durchschnittsgenauigkeit, aber auch zu einer stärkeren Generalisierung des Klassifikators führt.\\[0.5\baselineskip]
+In den Ergebnissen sind des Weiteren grundlegende Erkenntnisse zu den Nuclei von Myotuben-Zellkulturen ersichtlich.
+Oberflächenmerkmale von Nuclei sind nicht hilfreich für die Unterscheidung von Nucleus-Klassen.
+Nur anhand ihrer Geometrie wird eine konsistente Klassenentscheidung gelernt.
+Außerdem sind die Marker-Kanäle für die Klassenentscheidung genauso wichtig wie der Nucleus-Kanal.
 
 \section{Ausblick}
-Zukünftige Forschung kann weitere, kleinere \ac{cnn}-Encoder in Betracht ziehen, um die Hypothese zu prüfen, dass die Encoder zu groß sind um eine sinnvolle Repäsentation der räumlich relativ kleinen Nuclei zu finden. 
-Für kommende Anwendungen ist dennoch die Überlegung der Auswahl einer Vorverarbeitungsmethode interessant, da die Nuclei von anderen Zieldaten Informationen auf der Oberfläche tragen können, die für die Klassifikation wichtig sind.\\[0.5\baselineskip]
+Die Ergebnisse haben hezeigt, dass die Geometrie der Nuclei für die Klassifikation essenziell ist.
+Dementsprechend ist ein mögliches Anliegen kommender Forschung die Erweiterung der \ac{ipq}-Metrik, um Veränderungen der Geometrie durch das Segmentierungsmodell explizit zu bestrafen.
+In Anbetracht der Ergebnisse der Klassifikator-Methoden kann zukünftige Forschung weitere, kleinere \ac{cnn}-Encoder in Betracht ziehen, um die Hypothese zu prüfen, dass die Encoder zu groß sind um eine sinnvolle Repäsentation der räumlich relativ kleinen Nuclei zu finden. 
+Mit neuen Datensätzen kann außerdem die Hypothese geprüft werden, dass die Oberflächenmerkmale von Nuclei egal und die Geometrie ausschlaggebend sind, indem die neu eingeführten Vorverarbeitungsmethoden weiter verglichen werden. 
+Besonders interessant ist für kommende Forschung eine fortgeführte Analyse der vorgestellten Vortrainingsmethoden.
+Das semi-supervised-Vortraining führt zu einer geringeren Durchschnittsgenauigkeit, aber zu einer stärkeren Generalisierungsfähigkeit des Klassifikators.
+Kommende Forschung kann die Methode weiter Optimieren, um die Durchschnittsgenauigkeit möglicherweise zu erhöhen und die Vorteile der Methode so besser anwendbar zu machen.% \\[0.5\baselineskip]

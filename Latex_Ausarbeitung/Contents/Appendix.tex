@@ -391,6 +391,11 @@
 % Bibliography
 \lehead[]{\quad References}
 \rohead[]{References \quad}
-\printbibliography[heading=bibintoc,title={References}] % heading=bibnumbered
+\begingroup
+\sloppy
+\printbibliography[heading=bibintoc,title={References}]
+\endgroup
+
+%\printbibliography[heading=bibintoc,title={References}] % heading=bibnumbered
 \lehead[]{\quad \headmark}
 \rohead[]{\headmark \quad}

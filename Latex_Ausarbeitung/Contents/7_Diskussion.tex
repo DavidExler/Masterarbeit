@@ -13,10 +13,11 @@ Durch einen Vergleich der Masken mit den Annotationen in Abb. \ref{fig:boxplots_
 Die nnUNet-Masken sind sichtbar kleiner als die Nucleus-Instanzen, was eine schlechte \acf{sq} bedingt.
 Oft zerteilen mehrere nnuNet-Masken eine Nucleus-Instanz, was von der \acf{iq} bestraft wird.
 Wie auch die gute \acf{rq} zeigt, findet dafür nnUNet sehr zuverlässig die vorhandenen Nuclei mit mindestens einer Maske.
-Mit dem nnUNet-Modell sind außerdem aufgrund der kleinen Segmente, die das Modell vorhersagt, Überschneidungen zwischen Annotationsmaske und Segmentierungsmaske gering. 
+Mit dem nnUNet-Modell sind außerdem aufgrund der kleinen Segmente die das Modell vorhersagt Überschneidungen zwischen Annotationsmaske und Segmentierungsmaske gering. 
 Ein Weg die Leistung des Modells im Bezug auf die \ac{ipq}-Metrik zu verbessern, ist deshalb vermutlich das Modell, beispielsweise durch fine-tuning, auf größere Segmente anzupassen.
-Eingangsdaten, beispielsweise durch einen Mittelwert-Filter, kleiner zu dimensionieren und mehrere Bilder aneinandergereiht einzugeben kann auch zu Verbesserungen führen, dabei besteht allerdings das Risiko, dass der Informationsverlust durch den Filter das Ergebnis negativ beeinflusst. \\[0.5\baselineskip]
-Die Instanzen können in der Nachbearbeitung auch durch eine Dilatation vergrößert werden, um die \ac{sq} 
+Eingangsdaten, beispielsweise durch einen Mittelwert-Filter, kleiner zu dimensionieren und mehrere Bilder aneinandergereiht einzugeben kann auch zu Verbesserungen führen, dabei besteht allerdings das Risiko, dass der Informationsverlust durch den Filter das Ergebnis negativ beeinflusst.
+Die Instanzen können in der Nachbearbeitung auch durch eine Dilatation vergrößert werden.
+Das erhöht vermutlich die \ac{sq}, ändert aber nicht nichts an der schwachen \ac{iq}.\\ [0.5\baselineskip] 
 Deepcell (siehe Abb. \ref{fig:DeepcellMaske}) überschätzt die Nuclei, wodurch die \ac{sq} stark abnimmt.
 Das Ergebnis sind Masken, die intuitiv zu groß sind und oft mehr als einen Nucleus enthalten.
 Das bedeutet auch, dass einige Nuclei nicht von einer eigenen Maske gefunden werden, was sie als \ac{fn}-Instanzen kategorisiert und eine schlechte \ac{rq} bedingt.
@@ -25,19 +26,19 @@ Außerdem ist durch die großen Segmente die \ac{sq} besonders schlecht, weil di
 Die Deepcell-Masken können in Bezug auf die \ac{ipq} von weiterer Nachverarbeitung profitieren.
 Mithilfe einer Erosion  können die Masken kleiner gemacht werden, was auch zu einer besseren Leistung der Watershed-Nachverarbeitung führen kann.
 Umgekehrt kann nach der Erosion die Maske aber auch Kerben an der Kontur einzelner Instanzen aufweisen, die zur Spaltung der Instanz durch die Watershed-Nachverarbeitung führen.
-Auch für das Deepcell-Modell ist fine-tuning zu Anpassung an die Größe der Nuclei vermutlich ein Weg die Qualität zu verbessern.\\[0.5\baselineskip]
+Auch für das Deepcell-Modell ist fine-tuning zur Anpassung an die Größe der Nuclei vermutlich ein Weg die Qualität zu verbessern.\\[0.5\baselineskip]
 Sowohl für das nnUNet-, als auch für das Deepcell-Modell gibt es zwar Vorschläge für Methoden zur Verbesserung der \ac{ipq} auf dem Benchmark-Datensatz, aber der Übertrag der Effektivität dieser Methoden auf die Zieldaten ist fraglich.
-Die Bilddomäne und auch die Eigenschaften wie Größe, Exzentrizität und Rundheit der Zieldaten unterscheiden sich von denen des Benchmark.
-Da keine Annotationen für die Instanzsegmentierung der Zieldaten verfügbar sind, wird von der Anwenden der Methoden im Zuge dieser Arbeit abgesehen, um kein Overfitting auf den Benchmark-Datensatz zu riskieren. \\[0.5\baselineskip]
+Die Bilddomäne sowie Eigenschaften wie Größe, Exzentrizität und Rundheit der Zieldaten unterscheiden sich von denen des Benchmark.
+Da keine Annotationen für die Instanzsegmentierung der Zieldaten verfügbar sind, wird von der Anwendung der Methoden im Zuge dieser Arbeit abgesehen, um kein Overfitting auf den Benchmark-Datensatz zu riskieren. \\[0.5\baselineskip]
 Anhand der Interpretation der Werte und der exemplarischen Fehler in Abb. \ref{fig:ipq_examples} wird die Effektivität der neu entwickelten \ac{ipq}-Metrik ersichtlich.
-Verschiedene Fehlerarten, die zu unterschiedlichen Verfälschungen der interpretierbaren Merkmale der Daten führen werden gezielt von der Metrik erfasst.
+Verschiedene Fehlerarten, die zu unterschiedlichen Verfälschungen der interpretierbaren Merkmale der Daten führen, werden gezielt von der Metrik erfasst.
 Die adressierten Fehlerarten umfassen:
 \begin{itemize}
     \item Linien auf der Oberfläche eines Nucleus die als Kontur des Nucleus interpretiert werden. Der Nucleus wird geteilt und zwei getrennte Instanzen werden prädiziert,
     \item Schatten von Strukturen in anderen Z-Ebenen des 3D-Volumen oder sonstige Artefakte im Nucleus Kanal, die einem Nucleus überlagert sind, werden als Teil des Nucleus prädiziert und 
     \item Artefakte im Nucleus Kanal, die als ein seperater Nucleus prädiziert werden.
 \end{itemize}
-In der Praxis gehen die Fehler oft mit Fehlern einer anderen Art einher, was daran liegt, dass die Modelle nicht demselben Denkverhalten folgen wie ein menschlicher Betrachter.
+In der Praxis gehen die Fehler oft mit Fehlern einer anderen Art einher, was daran liegt, dass die Modelle nicht demselben Denkverhalten folgen wie menschliche Betrachter*Innen.
 Abb. \ref{fig:ideal_example_masks} zeigt idealisiert die Fehlerarten, die mit der \ac{ipq}-Metrik erkannt werden.
 Alle Fehler führen für den betrachteten Nucleus zu einem Faktor von 0,5 in ihrer Kategorie und einem optimalen Wert von 1 in den anderen Kategorien.
 Hier wird deutlich, dass die Metrik geeignet ist um: 
@@ -76,14 +77,13 @@ Hier wird deutlich, dass die Metrik geeignet ist um:
 \end{figure}
 \noindent
 Von der Metrik wird allerdings nicht erfasst, wie sehr die Geometrie mit der Geometrie der Annotation übereinstimmt.
-Die \ac{sq} erfasst zwar, ob die Fläche der Segmentierungsmaske sich mit der Annotation deckt, aber Veränderung der geometrischen Eigenschaften werden nicht gezielt bestraft.
+Die \ac{sq} erfasst zwar, ob die Fläche der Segmentierungsmaske sich mit der Annotation deckt, aber Veränderungen der geometrischen Eigenschaften werden nicht gezielt bestraft.
 Änderungen der Geometrie sind gegenüber einfachen Änderungen der Fläche besonders zu bestrafen, da der Klassifikator anhand der Segmentierungsmaske im Anschluss die Klasse des Nucleus hervorsagt und bei der Klassifikation ist die Form des Nucleus besonders wichtig. 
 \section{Klassifikation}
 Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Klassifikations-Köpfen, Vorverarbeitungsmethoden und Vortrainingsmethoden zeigt, dass die 3D-Zelldaten-Pipeline effizient optimale Klassifikator-Methoden identifiziert.
-Wie die Ergebnisse zeigen, ermöglicht die Anwendung der 3D-Zelldaten-Pipeline das Training eines Klassifikators, der deutlich leistungsfähiger ist als ein Klassifikator mit zufällig gewählten Methoden – und das ganz ohne Programmierkenntnisse oder Vorerfahrung mit Deep-Learning-Methoden seitens der Anwender*innen\newline
-\\[0.5\baselineskip]%Encoder
+Wie die Ergebnisse zeigen, ermöglicht die Anwendung der 3D-Zelldaten-Pipeline das Training eines Klassifikators, der deutlich leistungsfähiger ist als ein Klassifikator mit zufällig gewählten Methoden – und das ganz ohne Programmierkenntnisse oder Vorerfahrung mit Deep-Learning-Methoden seitens der Anwender*Innen.\\[0.5\baselineskip]%Encoder
 Die Ergebnisse haben gezeigt, dass die beiden ResNet-Encoder besonders hohe Genauigkeiten im Durchschnitt haben.
-Da die ResNet-Encoder auch die Encoder mit der geringsten Parameteranzahl sind liegt die Vermutung nahe, dass die gewählten Encoder zu groß sind und schlechte Ergebnisse einem Architektur-bedingtem Overfitting geschuldet sind.
+Da die ResNet-Encoder auch die Encoder mit der geringsten Parameteranzahl sind, liegt die Vermutung nahe, dass die gewählten Encoder zu groß sind und schlechte Ergebnisse einem Architektur-bedingten Overfitting geschuldet sind.
 Abb. \ref{fig:Params_v_acc} zeigt die durchschnittliche Genauigkeit aller Klassifikatoren abhängig von der Parameteranzahl des genutzten Encoders.
 \begin{figure}[H]
     \centering
@@ -96,23 +96,23 @@ Abb. \ref{fig:Params_v_acc} zeigt die durchschnittliche Genauigkeit aller Klassi
 Große Modelle sind anfälliger für Overfitting.
 Intuitiv ist aber kein Zusammenhang zwischen der Parameteranzahl und der durchschnittlichen Genauigkeit zu erkennen und auch die Spearman-Korrelationsanalyse deutet nicht auf einen Zusammenhang hin.
 Das bedeutet, der Hauptgrund warum Swin V2, EfficientNet V2 und ConvNeXt unter dem Durchschnitt abschneiden ist nicht, dass der Umfang der Daten zu gering ist, um die Parameter ausreichend zu trainieren.
-Da ResNet18 der genauste Encoder ist, liegt dennoch die Vermutung nahe, dass noch kleinere Encoder die Genauigkeit noch erhöhen können.\\[0.5\baselineskip]
+Da ResNet18 der genauste Encoder ist, liegt dennoch die Vermutung nahe, dass noch kleinere Encoder die Genauigkeit weiter erhöhen können.\\[0.5\baselineskip]
 Die Architektur und die Gewichte der Encoder bestimmen den Merkmalsraum, den die Encoder mit der internen Repräsentation der Eingangsdaten aufspannen.
 Dieser Merkmalsraum muss für eine genaue Klassifikation relevante Merkmale des klassifizierten Objekts abbilden.
 Der Swin V2-Encoder hat eine Transformer-Architektur und schneidet im Durchschnitt besonders schlecht ab.
 Vermutlich sind die Ansprüche an den Trainingsumfang für Transformer-Architekturen besonders hoch, und in den relativ kurzen Trainingsabläufen wird kein ausreichender Merkmalsraum gelernt.
 Für die \ac{cnn}-Architekturen ist das relativ kurze Training weniger problematisch.
-Bei Betrachtung ausschließlich der \ac{cnn} zeigt sich ein negativer Zusammenhang zwischen Parameteranzahl des Encoders und der durchschnittlichen Genauigkeit, allerings ist die Stichprobenanzahl für eine Korrelationsanalyse sehr gering.
+Bei Betrachtung ausschließlich der \ac{cnn} zeigt sich ein negativer Zusammenhang zwischen Parameteranzahl des Encoders und der durchschnittlichen Genauigkeit, allerdings ist die Stichprobenanzahl für eine Korrelationsanalyse sehr gering.
 \\[0.5\baselineskip]
 %Decodern
 Der Volumen-Klassifikator ist signifikant besser als der Schichten-Klassifikator (siehe Kapitel \ref{sec:resultsClassifier}).
-Dieses Erkenntnis legt nahe, dass die dreidimensionalen Faltungsschichten besser den Zusammenhang der Merkmale erfassen können, als der Attention-Mechanismus des Schichten-Klassifikators.
+Diese Erkenntnis legt nahe, dass die dreidimensionalen Faltungsschichten besser den Zusammenhang der Merkmale erfassen können, als der Attention-Mechanismus des Schichten-Klassifikators.
 Das kann daran liegen, dass die dreidimensionale Faltung räumliche Mittlungen nur mit gelernten Gewichten durchführt, während die Spatial Average Operation großflächig die räumliche Beziehung der Merkmale vernachlässigt.
 Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen nicht ausreichend entlang der Z-Dimension erhalten sind, was zu einer schlechten Leistung des tiefen fokusierten Schichten-Klassifikators führt. 
 Stattdessen können auch die Kombination räumlicher Merkmale und der Merkmale entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen kann.
 Da der Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
 Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise und beide Klassifikations-Köpfe haben das Potential Zusammenhänge aus bestimmten Merkmalsräumen besonders gut zu erfassen. 
-Besonders da die ImageNet-Encoder nicht auf dreidimensionale Eingabedaten vortrainiert werden ist die Abwägung zwischen einem Fokus auf die Merkmale entlang der Z-Achse und räumlichen Merkmalen essenziell.
+Besonders da die ImageNet-Encoder nicht auf dreidimensionale Eingabedaten vortrainiert werden, ist die Abwägung zwischen einem Fokus auf die Merkmale entlang der Z-Achse und räumlichen Merkmalen essenziell.
 Auch für zukünftige Encoder besteht die Möglichkeit, dass sie Beziehungen von Merkmalen innerhalb einer 2D-Schicht der Eingabedaten so effizient und einheitlich zusammenfassen, dass der Attention-Mechanismus des Schichten-Klassifikators die Informationen besser als der Volumen-Klassifikator erhalten kann. 
 \\[0.5\baselineskip]
 %Vorverarbeitungsmethoden
@@ -121,17 +121,17 @@ Die durchschnittliche Genauigkeit von Klassifikatoren mit Masken-Methode ist sig
 Kapitel \ref{sec:MethodsClassifier} beschreibt den Vorteil und das Risiko der Methoden.
 Insbesondere der Vorteil der Masken-Methode wird an den Ergebnissen sichtbar. 
 Anhand der GradCAM-Heatmap in Abb. \ref{fig:gradCAM} wird abgeleitet, dass die Oberflächenmerkmale der Nuclei für die Klassifikation keine Rolle spielen.
-Ein Risiko der Masken-Methode ist ein Qualitäts-Verlust aufgrund der Eliminierung der Oberflächenmerkmale, aber selbst mit der Distanz-Methode werden diese Merkmale nicht betrachtet.
+Ein Risiko der Masken-Methode ist ein Qualitätsverlust aufgrund der Eliminierung der Oberflächenmerkmale, aber selbst mit der Distanz-Methode werden diese Merkmale nicht betrachtet.
 Die Masken-Methode hebt die Geometrie der Nuclei besonders hervor und sowohl die statistische Betrachtung der Ergebnisse als auch die GradCAM-Heatmaps legen nahe, dass diese Geometrie besonders wichtig für die Klassifikation der Nuclei ist.
 Mit der Distanz-Methode wird die Geometrie nicht besonders hervorgehoben.
 Unter Umständen wird die Geometrie sogar durch direkt umliegende Nuclei beeinträchtigt.
 Abb. \ref{fig:Nuclei_overlap} zeigt diesen Fall in zwei Beispielen.
-Links ist ein Beispiel besonders starker Überlappung gegeben.
+Links ist ein Beispiel besonders starker Überschneidung gegeben.
 Die Geometrie des Nucleus ist hier nicht ohne die angedeutete Kontur ersichtlich.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{Figures/Nuclei_Overlap.pdf}
-    \caption{Beispiele für eine starke und eine schwache Überlappung von Nuclei nach Anwendung der Distanzmethode.
+    \includegraphics[width=0.75\linewidth]{Figures/Nuclei_Overlap.pdf}
+    \caption{Beispiele für eine starke und eine schwache Überschneidung von Nuclei nach Anwendung der Distanzmethode.
     In grau ist je eine Umrandung der betrachteten Nuclei angedeutet.
     }
     \label{fig:Nuclei_overlap}
@@ -143,16 +143,16 @@ Die Intensität des berührenden Nucleus wird zwar gedämpft, aber die Kante des
 Der berührende Nucleus wird in diesem Fall als Teil des betrachteten Objekts interpretiert.
 %Vortrainingsmethoden
 Der Einfluss der Vortrainingsmethoden ist besonders bedeutsam.
-Mit dem fully-supervised Vortraining ist die durchschnittliche Genauigkeit höher und auch konsistenter als mit anderen Vortrainingsmethoden.
-Das legt nahe, dass das rechenaufwändige Vortraining auf dem ImageNet-Datensatz mit den diversen Klassen und zahlreichen Stichproben für jede Klasse einen stark generalisierten Merkmalsraum erzeugt.
-Obwohl die Bilddomäne biologischer Zelldaten stark von den Bildern des ImageNet-Datensatz abweicht, werden bedeutsame Bildmerkmale extrahiert.
+Mit dem fully-supervised Vortraining ist die durchschnittliche Genauigkeit höher und konsistenter als mit anderen Vortrainingsmethoden.
+Das legt nahe, dass das rechenaufwendige Vortraining auf dem ImageNet-Datensatz mit den diversen Klassen und zahlreichen Stichproben für jede Klasse einen stark generalisierten Merkmalsraum erzeugt.
+Obwohl die Bilddomäne biologischer Zelldaten stark von den Bildern des ImageNet-Datensatzes abweicht, werden bedeutsame Bildmerkmale extrahiert.
 Auch bei der Adaption von 2D-Encodern zu 3D-Encodern bleibt der Merkmalsraum der fully-supervised-vortrainierten Encoder sinnvoll.
 Da die Zieldaten niemals vom Encoder gesehen werden, ist Overfitting weitgehend ausgeschlossen, was die geringe Varianz der Genauigkeiten innerhalb der fully-supervised-vortrainierten Klassifikatoren erklärt.\\[0.5\baselineskip]
 Auch komplett ohne Vortraining wird ein sinnvoller Merkmalsraum gelernt, und die Klassifikatoren erreichen teilweise hohe Genauigkeitswerte. 
-Der Swin V2-Encoder hat ohne Vortraining nur 50\% Genauigkeit erreicht, was vermutlich daran liegt, dass die aufwändige Transformer-Architektur nicht ausreichend mit dem geringen Trainingsumfang der Zieldaten lernen kann.
+Der Swin V2-Encoder hat ohne Vortraining nur 50\% Genauigkeit erreicht, was vermutlich daran liegt, dass die aufwendige Transformer-Architektur nicht ausreichend mit dem geringen Trainingsumfang der Zieldaten lernen kann.
 Es wird keine sinnvolle Merkmalsextraktion gelernt, bevor der Encoder mit dem Overfitting beginnt.
 Das legt auch nahe, dass Encoder mit besonders hoher Parameteranzahl nicht ohne ImageNet-Vortraining auskommen.
-Die Beobachtung, dass der kleinste Encoder, der ResNet18-Encoder ohne Vortraining, das beste Ergebnis geliefert hat unterstützt diese Aussage noch.
+Die Beobachtung, dass der kleinste Encoder, der ResNet18-Encoder ohne Vortraining, das beste Ergebnis geliefert hat, unterstützt diese Aussage noch.
 Abb. \ref{fig:Params_v_pretrain} zeigt die Genauigkeiten der verschiedenen Vortrainingsmethoden abhängig von der Parameteranzahl des genutzen Encoders.
 \begin{figure}[H]
     \centering
@@ -168,17 +168,17 @@ In Anbetracht des hohen Rechenaufwands, den das ImageNet-Vortraining beansprucht
 Beide Methoden erhöhen den Rechenaufwand für das fine-tuning eines Klassifikators auf eine neue Domäne, machen dafür aber das exzessive Vortraining überflüssig.
 Insgesamt ergibt sich hierdurch vermutlich eine geringere Generalisierbarkeit, aber für den angewandten Datensatz wird dafür die Genauigkeit besser.
 Auch die anderen beiden \ac{cnn}-Encoder können ohne ImageNet-Vortraining genutzt werden.
-Der EfficientNet V2-Encoder ist, ohne Vortraining, in der Lage eine vergleichbare Genauigkeit zu erzielen wie mit dem fully-supervised-Vortraining.
+Der EfficientNet V2-Encoder ist ohne Vortraining in der Lage eine vergleichbare Genauigkeit zu erzielen wie mit dem fully-supervised-Vortraining.
 Dass das semi-supervised-Vortraining ein schlechtes Ergebnis erzielt, ist demnach vermutlich dem kurzen Training geschuldet.
 Da der EfficientNet V2-Encoder ohne Vortraining einen sinnvollen Merkmalsraum direkt auf den Zieldaten lernen kann liegt nahe, dass zu wenige Epochen mit den semi-supervised-Annotationen gelernt wurde um diesen Merkmalsraum zu erfassen. 
 Es ist auch möglich, dass der Klassifikator-Kopf zu kurz auf dem neu geschaffenen Merkmalsraum trainiert wurde, um die Klassifikationsentscheidung darin optimal zu lernen.
 Der ConvNeXt-Encoder hingegen hat in den gegebenen Epochen eine sinnvolle Repräsentation gelernt und ist durch das semi-supervised-Vortraining besser, als ohne Vortraining.
 Vermutlich liegt das daran, dass der Encoder im umfangreichen semi-supervised-Vortraining eine besser generalisierte Repräsentation gelernt hat.
 Außerdem liegt es nahe, dass der ConvNeXt-Encoder ohne Vortraining den Merkmalsraum auf die Trainingdaten overfitted. \\ [0.5\baselineskip]
-Die durchschnittliche Genauigkeit des Swin V2-Encoder ImageNet-Vortraining ist 44\%, mit ImageNet-Vortraining ist sie 84 \%. 
+Die durchschnittliche Genauigkeit des Swin V2-Encoder ImageNet-Vortraining ist 44\%, mit ImageNet-Vortraining ist sie bei 84 \%. 
 Das liegt vermutlich daran, dass der relativ große Encoder mit der kopmlexen \ac{vit}-Architektur aus den wenigen Stützvektoren der Repräsentation der Eingangsdaten keinen ausreichenden Merkmalsraum aufspannen kann.
 Außerdem ist es möglich, dass der Klassifikator-Kopf nur schwach generalisiert die Beziehung zwischen Merkmalen und Entscheidung lernen kann, weil der finale Merkmalsvektor der \ac{vit}-Architektur eine viel höhere Dimension hat. \\[0.5\baselineskip]
-Die Genauigkeit der meisten Encoder ist auch ohne ImageNet-Vortaining annehmbar, vor allem da mithilfe der 3D-Zelldaten-Pipeline auch ein optimaler Encoder passed zur Vortrainingsmethode gewählt wird.
+Die Genauigkeit der meisten Encoder ist auch ohne ImageNet-Vortaining annehmbar, vor allem, da mithilfe der 3D-Zelldaten-Pipeline auch ein optimaler Encoder passend zur Vortrainingsmethode gewählt wird.
 %Die durchschnittlich geringere Genauigkeit ist deshalb nicht wichtig, wenn das Optimum besser ist. \\[0.5\baselineskip]
 Eine geringe Durchschnittsgenauigkeit ist nicht problematisch, wenn die maximale gefundene Genauigkeit hoch ist. \\[0.5\baselineskip]
 Trotz der hohen durchschnittlichen Genauigkeit sowohl des fully-supervised-Vortrainings als auch des Modells ohne Vortraining ist der resultierende Merkmalsraum nicht geeignet, um Myotuben-Kerne und Schwannzellen-Kerne zu unterscheiden. 
@@ -221,8 +221,14 @@ Im rechten Scatterplot ist das Schwannzellen-Klassen-Cluster zwar immernoch nich
 Für die Unterscheidung der Myotuben- und Schwannzellen-Nuclei ist also das Vortraining mit semi-supervised-Annotationen besonders hilfreich. 
 Vermutlich wird durch das umfangreiche Vortraining auf den Zieldaten dem Encoder ein so gut generalisierter Merkmalsraum antrainiert, dass der Klassifikations-Kopf die beiden Klassen trotz der Überschneidungen ihrer Merkmale trennen kann.
 In den Zieldaten hingegen sind diese Merkmale häufig vertreten und werden deshalb so hochauflösend extrahiert, dass es zur Trennung der Klassen reicht.
-Die Auflösung genau der Merkmale die für das Trennen der beiden Klassen nötig sind, ist nach dem ImageNet-Datensatz-Vortraining vermutlich nicht sehr hoch.\\[0.5\baselineskip]
+Die Auflösung genau der Merkmale, die für das Trennen der beiden Klassen nötig sind, ist nach dem ImageNet-Datensatz-Vortraining vermutlich nicht sehr hoch.\\[0.5\baselineskip]
 Die durchschnittliche Genauigkeit der semi-supervised-vortrainierten Klassifikatoren ist zwar geringer, als die der anderen Vortrainingsmethoden, dafür ist der entstandene Klassifikator aber besser generalisiert.
 Da im Test-Anteil der annotierten Daten nur acht der 81 Stichproben die Klasse Schwannzellen-Nucleus besitzen, ist die Genauigkeit der semi-supervised-vortrainierten Klassifikatoren nicht zwingend repräsentativ für die tatsächliche Leistung.
 Für die Wahl einer Vortrainingsmethode müssen demnach die genauen Ziele der Anwendung feststehen.
 Wenn einzelne Klassen besonders wichtig für die Interpretation der Ergebnisse sind, aber nicht häufig vorkommen, lohnt es sich den semi-supervised-Ansatz zu testen, um eventuell durch die hohe Generalisierungsfähigkeit einen besseren Klassifikator zu erhalten.\\[0.5\baselineskip] 
+Ein weiterer Ausblick für die Arbeit ist die Erweiterung der Instanzsegmentierung auf den Myotuben-Kanal.
+In einem ersten Versuch wurde bereits getestet, wie die panoptische Segmentierung der Nuclei für die Segmentierung der Myotuben genutzt werden kann.
+Da die Geometrie der Myotuben-Zellkerne meist eine lange Achse aufweist, können diese Nuclei als als Linie geschätzt werden.
+Nuclei mit ähnlicher Ausrichtung der Langen Achse, die annähernd auf einer Geraden entlang dieser Achse liegen, werden verbunden.
+Die entstehenden Linien werden dem \ac{sam}-Modell als Hinweise gegeben und in 2D segmentiert.
+Bisher sind sowohl der Algorithmus zu Linienbildung und auch die Segmentierung noch sehr ausbaufähig, kommende Forschung kann diesen Ansatz aber noch weiter verfolgen.

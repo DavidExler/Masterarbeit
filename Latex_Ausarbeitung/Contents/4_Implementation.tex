@@ -14,13 +14,13 @@ Die beschriebenen Funktionen sind im bereitgestellten Repository zu finden.
 Abb. \ref{fig:Signalfluss_Seg} zeigt den Signalfluss der Anwendung der Segmentierungsmodelle und ihrer Bewertung.
 Die Segmentierungsmodelle werden zur Evaluation in einfachen Entwicklerskripten über die Kommandozeile oder als Jupyter Notebook ausgeführt.
 Die Eingabedaten werden in einem Python-Entwicklerskript vorab normalisiert.
-Für das nnU-Net-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird auf die Eingabedaten zuerst eine Konvertierung angewandt, die sie durch Padding in die geforderte Größe gebracht und zu .nii.gz-Dateien umgeformt werden.
+Für das nnU-Net-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird auf die Eingabedaten zuerst eine Konvertierung angewandt, die die Daten durch Padding in die geforderte Größe gebracht und zu .nii.gz-Dateien umgeformt werden.
 Eine Parameterbestimmung für die Anzahl der Wiederholungen, Normalisierungsart und Datensatz-Eigenschaften wird anhand der Parameter Vorlage der Autoren erstellt.
 Das Modell wird direkt mit der Architektur und den Gewichten der Veröffentlichung initialisiert und über die Kommandozeile auf alle Daten angewandt.
 Die entstehenden Instanzen werden in einen Instanztrenner gegeben (siehe Kap. \ref{sec:Seg_PostProc}), um den Instanzen einzigartige Labels zu vergeben.\\ [0.5\baselineskip]
 Für das Deepcell-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird direkt das bereitgestellte Jupyter-Notebook der Deepcell-Veröffentlichung auf die Benchmarkdaten angewandt \cite{moen2019DeepcellCaliban}.
 Die Ergebnisse werden daraufhin mit dem Watershed-Algorithmus der OpenCV-Bibliothek nachbearbeitet (siehe Kap. \ref{sec:Seg_PostProc}).\\ [0.5\baselineskip]
-Das CellposeSAM-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird als Entwicklerskript weitgehend mit der Architektur, den Gewichten und den vorgeschlagenen Parametern der Autoren angewandt
+Das CellposeSAM-Modell (siehe Kap. \ref{sec:Seg_Modelle}) wird als Entwicklerskript weitgehend mit der Architektur, den Gewichten und den vorgeschlagenen Parametern der Autoren angewandt.
 In einer Parameterbestimmung wird der durchschnittliche Durchmesser der Nuclei an die eingegebenen Daten angepasst.
 Auf die Ergebnisse wird keine Nachbearbeitung angewandt.\\ [0.5\baselineskip]
 Die Instanzen von jedem der drei Modelle und die Annotationen werden in einem Jupyter Notebook zur Berechnung der \ac{ipq} eingegeben (siehe Kap. \ref{sec:Kriterien}).
@@ -35,11 +35,11 @@ Mithilfe einer neu entwickelten Funktion werden hier die Ergebnisse mit der \ac{
 
 \section{Klassifikatoren}\label{sec:IMP_Klas}
 Für die Klassifikatoren werden vier Software-Module entwickelt, wie in Abb. \ref{fig:Signalfluss_Klas} dargestellt.
-Das erste Modul nimmt als Eingabe eine Methodenauswahl (siehe Kap. \ref{sec:MethodsClassifier}), die verwendet werden sollen, und gibt einen Klassifikator zurück.
+Das erste Modul nimmt als Eingabe eine Methodenauswahl (siehe Kap. \ref{sec:MethodsClassifier}), die verwendet werden soll, und gibt einen Klassifikator zurück.
 Mithilfe der Pytorch-Bibliothek werden entsprechende Encoder und, abhängig von der Vortrainingsmethode, entsprechende Gewichte geladen.
 Außerdem werden neu entwickelte Klassen von PyTorch-Modellen für das Erstellen der Klassifikations-Kopf aufgerufen (siehe Kap. \ref{sec:Decoder}).\\ [0.5\baselineskip]
-In das zweite Modul wird auch eine Methodenauswahl eingegeben und abhängig von der Vortrainings- und Vorverarbeitungsmethode wird ein entsprechender Datensatz zurückgegeben (siehe Kap. \ref{sec:Pretrain} und Kap. \ref{sec:Preproc}).
-Dieser Datensatz wird als Pytorch Dataloader erstellt und mit einer Batch-Größe und mit Augmentierungen der Monai-Bibliothek versehen.
+In das zweite Modul wird ebenfalls eine Methodenauswahl eingegeben und abhängig von der Vortrainings- und Vorverarbeitungsmethode ein entsprechender Datensatz zurückgegeben (siehe Kap. \ref{sec:Pretrain} und Kap. \ref{sec:Preproc}).
+Dieser Datensatz wird als Pytorch Dataloader erstellt und mit einer Batch-Größe und Augmentierungen der Monai-Bibliothek versehen.
 In diesen Dataloader wird eine neu entwickelte Retreiver-Instanz (siehe Kap. \ref{sec:Preproc}) eingebettet. 
 Der Retreiver ermöglicht es, die großen, dreidimensionalen Daten nicht alle auf einmal als Variablen im Datensatz unterzubringen, sondern nur die Indizes von Bildern und Instanzen.
 Diese Indizes werden dann genutzt, um dynamisch nur die gewünschten Bildausschnitte auf die GPU zu laden. 
@@ -52,7 +52,7 @@ Im vierten Modul werden mithilfe der plotly-Bibliothek Grafiken aus den eingegeb
     \includegraphics[width=0.98\linewidth]{Figures/Signalfluss_Klassifikator.pdf}
     \caption{Signalflussdiagramm der praktischen Umsetzung der Klassifikatoren.
     Zu sehen sind die Module, aus denen sich die Anwendung der Klassifikatoren zusammensetzt.
-    Links sind als Eingabe Daten mit zugehörigen Annotationen und eine Kombination von Methoden und Rechts Grafiken, die die Ergebnisse visualisieren als Ausgabe zu sehen.
+    Links sind als Eingabe Daten mit zugehörigen Annotationen und eine Kombination von Methoden und rechts Grafiken, die die Ergebnisse visualisieren, als Ausgabe zu sehen.
     Verschiedene Python-Bibliotheken werden genutzt (Rosa), aber auch neue Methoden werden eingesetzt (Grün).
     Der Klassifikator und der Retreiver, der dynamisch Bildausschnitte lädt, greifen auf die GPU zu (Orange).
     }
@@ -63,46 +63,48 @@ Im vierten Modul werden mithilfe der plotly-Bibliothek Grafiken aus den eingegeb
 \subsection{Übersicht}
 In Abb. \ref{fig:Signalfluss} ist die Software-Architektur der 3D-Zelldaten-Pipeline als Signalflussdiagramm dargestellt.
 Die Anwendung vereint die eingeführten Methoden der vorliegenden Arbeit (siehe Kap. \ref{ch:NewMethods}). 
-Oben zentral zu sehen ist das \acf{gui}, die grafische Schnittstelle mit Bedienelementen und Visualisierungen für Interaktionen mit Nutzer*Innen.
-Von der \ac{gui} gehen Start- und Stop-Signale an die wichtigsten Module aus (Segmentierung, \newline Labeling-App, Visualisierung und Methodenvergleich).
-Diese vier Module werden direkt von Nutzer*Innen bedient.
-Das Segmentierung-Modul greift auf lokale Dateien zu, um Bilder einzulesen und startet dann die Segmentierung für diese Daten mit verschiedenen Modellen (siehe Kap. \ref{sec:IMP_Seg}).
-Die gefundenen Segmente werden dann an das \ac{ipq}-Modul gegeben, das die \ac{ipq}-Metrik für die gefundenen Segmente zurückgibt, insofern Annotationen zu den Daten existieren (siehe Kapitel \ref{sec:Kriterien}).
-Das Labeling-App-Modul beinhaltet eine Schleife aus einer Retreiver-Instanz und einer Eingabeaufforderung (siehe Kap. \ref{sec:Preproc}).
-Diese Retreiver-Instanz greift auf lokale Dateien zu, um abhängig von der Nutzereingabe einen Bildausschnitt zu laden.
-Dem Bildausschnitt weisen Nutzer*Innen dann Annotationen zu, die anschließend lokal gespeichert werden. 
-Im Methodenvergleich werden die Annotationen und Semgentierungsmasken eingelesen.
-In einer Schleife werden mit Hilfe eines Klassifikator-Helfer Klassifikatoren aus verschiedenen Methoden-Kombinationen erstellt und trainiert.
-Der Datensatz hierzu wird von einem Datensatz-Helfer-Modul erstellt und beinhaltet eine Retreiver Instanz (siehe Kap. \ref{sec:Preproc}).
-Ein Pseudo-Labler-Modul erstellt Semi-supervised-Annotationen für den Datensatz, die je nach Vortrainingsmethode in der Schleife genutzt werden können (siehe Kap. \ref{sec:Pretrain}).
-Die Ergebnisse der verschiedenen Klassifikatoren werden anschließend verglichen und gespeichert.
-Das Visualisierung-Modul liest die Ergebnisse des Klassifikators und stellt diese in Grafiken dar. \\ [0.5\baselineskip]
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Signalfluss_Implementation.pdf}
     \caption{Übersicht der Architektur der neu entwickelten 3D-Zelldaten-Pipeline.
-    Als Kästen sehen sind die Module die die 3D-Zelldaten-Pipeline bilden.
+    Als Kästen zu sehen sind die Module, die die 3D-Zelldaten-Pipeline bilden.
     Schwarze Pfeile stellen die Weitergabe von Software Objekten zwischen den Modulen dar.
     In Orange und Grün sind Zugriffe auf lokale Dateien dargestellt, Orange ist Dateien lesen und Grün Dateien schreiben.
     Software Schleifen sind als Blaue Kästen dargestellt.
     Rosa Verbindungen stellen die Signale von und an die \ac{gui} dar.}
     \label{fig:Signalfluss}
 \end{figure}
+\noindent
+Oben zentral zu sehen ist das \acf{gui}, die grafische Schnittstelle mit Bedienelementen und Visualisierungen für Interaktionen mit Nutzer*Innen.
+Von der \ac{gui} gehen Start- und Stop-Signale an die wichtigsten Module aus (Segmentierung, Labeling-App, Visualisierung und Methodenvergleich).
+Diese vier Module werden direkt von Nutzer*Innen bedient.
+Das Segmentierung-Modul greift auf lokale Dateien zu, um Bilder einzulesen und startet die Segmentierung für diese Daten mit verschiedenen Modellen (siehe Kap. \ref{sec:IMP_Seg}).
+Die gefundenen Segmente werden dann an das \ac{ipq}-Modul gegeben, das die \ac{ipq}-Metrik für die gefundenen Segmente zurückgibt, insofern Annotationen zu den Daten existieren (siehe Kapitel \ref{sec:Kriterien}).
+Das Labeling-App-Modul beinhaltet eine Schleife aus einer Retreiver-Instanz und einer Eingabeaufforderung (siehe Kap. \ref{sec:Preproc}).
+Diese Retreiver-Instanz greift auf lokale Dateien zu, um abhängig von der Nutzereingabe einen Bildausschnitt zu laden.
+Dem Bildausschnitt weisen Nutzer*Innen dann Annotationen zu, die anschließend lokal gespeichert werden. 
+Im Methodenvergleich werden die Annotationen und Semgentierungsmasken eingelesen.
+In einer Schleife werden mit Hilfe eines Klassifikator-Helfers Klassifikatoren aus verschiedenen Methoden-Kombinationen erstellt und trainiert.
+Der Datensatz hierzu wird von einem Datensatz-Helfer-Modul erstellt und beinhaltet eine Retreiver Instanz (siehe Kap. \ref{sec:Preproc}).
+Ein Pseudo-Labler-Modul erstellt Semi-supervised-Annotationen für den Datensatz, die je nach Vortrainingsmethode in der Schleife genutzt werden können (siehe Kap. \ref{sec:Pretrain}).
+Die Ergebnisse der verschiedenen Klassifikatoren werden anschließend verglichen und gespeichert.
+Das Visualisierung-Modul liest die Ergebnisse des Klassifikators und stellt diese in Grafiken dar. \\ [0.5\baselineskip]
 Abb. \ref{fig:APP_Segment} zeigt die \ac{gui} der 3D-Zellldaten-Pipeline.
-In den fünf Tabs (Segmentierung, Labeling-App, Methodenvergleich, Training und Visualisierung) werden die Aufgaben der Anwendung ausgeführt.
-Als Frontend der App dient eine Dash-Anwendung, die eine einfache HTML-Seite bereitstellt. 
-Das Backend ist mit Python erstellt, und die gesammelten Daten werden als JSON gespeichert.
-Zwischenergebnisse wie trainierte Modelle und verarbeitete Daten werden als nicht interpretierbare Python-spezifische Datentypen abgelegt.
-Hierzu ist ein Docker mit Zugriff auf das lokale Dateiensystem versehen und über Kubernetes betrieben.
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.98\linewidth]{Figures/Screenshot_Segmentierung.png}
+    \includegraphics[width=0.8\linewidth]{Figures/Screenshot_Segmentierung.png}
     \caption{Die Abbildung zeigt einen Ausschnitt der 3D-Zellldaten-Pipeline.
     Oben sind fünf Tabs zu sehen, mit denen die auszuführende Aufgabe gewählt werden kann.
     Diese Tabs sind zur besseren Darstellung untereinander statt nebeneinander platziert.
     Darunter ist ein Ausschnitt des ausgewählten 'Segmentierung' Tab zu sehen.}
     \label{fig:APP_Segment}
 \end{figure}
+\noindent
+In den fünf Tabs (Segmentierung, Labeling-App, Methodenvergleich, Training und Visualisierung) werden die Aufgaben der Anwendung ausgeführt.
+Als Frontend der App dient eine Dash-Anwendung, die eine einfache HTML-Seite bereitstellt. 
+Das Backend ist mit Python erstellt, und die gesammelten Daten werden als JSON gespeichert.
+Zwischenergebnisse wie trainierte Modelle und verarbeitete Daten werden als nicht interpretierbare Python-spezifische Datentypen abgelegt.
+Hierzu ist ein Docker mit Zugriff auf das lokale Dateiensystem versehen und über Kubernetes betrieben.
 \subsection{Segmentierung}
 Abb. \ref{fig:APP_Segment} zeigt den Tab der 3D-Zelldaten-Pipeline, in dem die Segmentierung der Zellkerne vorgenommen wird.
 Im Eingabefeld 'Eingabe Ordner' wird ein Ordner, relativ zu dem Speicherort der Anwendung, angegeben, aus dem TIF-Bilder gelesen werden.
@@ -180,7 +182,7 @@ Außerdem wird die Kombination von Methoden gespeichert, mit der die höchste Ge
 \end{figure}
 
 \subsection{Training}
-Im 'Training'-Tab (Abb. \ref{fig:APP_train}) wird der Klassifikator mit der zuvor ermittelten optimalen Kombination von Methoden erneut trainiert in mehr Epochen.
+Im 'Training'-Tab (Abb. \ref{fig:APP_train}) wird der Klassifikator mit der zuvor ermittelten optimalen Kombination von Methoden in mehr Epochen erneut trainiert.
 Dabei können auch mehr Annotationen eingesetzt werden, die während des Methodenvergleichs nachgeliefert wurden.
 Dieser Tab ist optional, das Training während dem Methodenvergleich kann das intensivere Training in diesem Tab ersetzen, wenn die Genauigkeit bereits zufriedenstellend war.
 In den Eingabefeldern 'Eingabe Ordner' und 'Ausgabe Ordner' wird angegeben, welche Ordner genutzt werden sollen.
@@ -196,9 +198,9 @@ Sind hier keine Annotationen verfügbar, wird eine einfache Inferenz mit dem tra
 \end{figure}
 
 \subsection{Visualisierung}
-In dem letzten Tab werden die Ergebnisse der Anwendung dargestellt (siehe Abb. \ref{fig:APP_Vis}).
+Im letzten Tab werden die Ergebnisse der Anwendung dargestellt (siehe Abb. \ref{fig:APP_Vis}).
 Mithilfe der beiden Eingabefelder wird festgelegt, aus welchen Ordnern die Ergebnisse stammen sollen und wohin die erstellten Grafiken gespeichert werden.
-Mit dem 'Starte Visualisierung'-Knopf wird der Algorithmus gestartet, der die interpretierbaren Eigenschaften aus den Ergebnissen ausliest.
+Mit dem \linebreak 'Starte Visualisierung'-Knopf wird der Algorithmus gestartet, der die interpretierbaren Eigenschaften aus den Ergebnissen ausliest.
 Daraufhin werden unten auf der Seite drei Grafiken dargestellt.
 Links wird beispielhaft eine Instanzsegmentierungsmaske von einer Schicht eines der 3D-Bilder gezeigt.
 In der Mitte wird ein Balkendiagramm dargestellt, das die Anzahl der Nuclei jeder Klasse angibt.
@@ -212,7 +214,7 @@ Um dieses Volumen zu interpretieren, muss die Umrechnung von Pixeln in Micromete
     \label{fig:APP_Vis}
 \end{figure}
 \noindent
-
+\newpage
 \section{Umsetzung}
 Die Tabelle \ref{tab:Umfang} stellt den Umfang des Codes der einzelnen Module dar.
 

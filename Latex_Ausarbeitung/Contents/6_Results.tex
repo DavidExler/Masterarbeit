@@ -5,7 +5,7 @@
 
 \section{Überblick}
 Das nachfolgende Kapitel beschreibt die Ergebnisse der durchgeführten Experimente.
-Die Experimente werden in mehreren Durchläufen des neu entwickelten Konzepts \glqq 3D-Zelldaten-Pipeline\grqq zur Auswertung von 3D-Zelldaten durchgeführt.
+Die Experimente werden in mehreren Durchläufen des neu entwickelten Konzepts \linebreak \glqq 3D-Zelldaten-Pipeline\grqq zur Auswertung von 3D-Zelldaten durchgeführt.
 Auf Grundlage der Messergebnisse der 3D-Zelldaten-Pipeline wird eine statistische Auswertung vorgenommen. 
 Zuerst werden die Bewertungen der Instanzsegmentierungsmasken anhand der \ac{ipq}-Metrik und anschließend die der Klassifikatoren anhand ihrer Genauigkeit betrachtet.
 Die \ac{ipq}-Ergebnisse werden in die drei Faktoren: \acf{sq}, \acf{rq} und die neu eingeführte \acf{iq} gegliedert (siehe Kap. \ref{sec:Kriterien}).
@@ -127,10 +127,10 @@ Zu sehen ist, dass die CellposeSAM-Masken auch intuitiv sehr gut zur Eingabe pas
 \section{Klassifikation}\label{sec:resultsClassifier}
 \subsection{Überblick}
 Die in Abschnitt \ref{sec:MethodsClassifier} eingeführten Methoden zur Klassifikation werden anhand eines separaten Anteils des manuell annotierten Datensatzes durch die neu entwickelte 3D-Zelldaten-Pipeline getestet.
-Der manuell annotierte Datensatz enthält 125 Stichproben von \newline Myotuben-Zellkernen, 95 Stichproben von der Klasse Debris, 148 Stichproben der Klasse \glqq Andere\grqq und nur 16 Stichproben der Klasse Schwannzellen-Nucleus.
+Der manuell annotierte Datensatz enthält 125 Stichproben von \linebreak Myotuben-Zellkernen, 95 Stichproben der Klasse Debris, 148 Stichproben der Klasse \glqq Andere\grqq und nur 16 Stichproben der Klasse Schwannzellen-Nucleus.
 Die Klassen Eins bis Vier sind hier der Reihe nach Myotuben-Kerne, Debris, Andere und Schwannzellen-Kerne.
 Der Abschnitt \ref{supp:Klassifikation} des Anhang zeigt alle Ergebnisse der verschiedenen Methodenkombinationen tabellarisch.
-Um die Genauigkeit der Klassifikatoren anhand des Test-Anteil möglichst repräsentativ zu bestimmen, werden manuell 50\% statt 20\% der Schwannzellen-Nuclei in den Test-Anteil der Daten eingesetzt.
+Um die Genauigkeit der Klassifikatoren anhand des Test-Anteils möglichst repräsentativ zu bestimmen, werden manuell 50\% statt 20\% der Schwannzellen-Nuclei in den Test-Anteil der Daten eingesetzt.
 Die Genauigkeit, also der prozentuale Anteil richtiger Vorhersagen, auf dem Test-Anteil des Zieldatensatzes wird als Kriterium verwendet.\\[0.5\baselineskip]
 Da die Modelle während des Trainings rauschbehaftete Verläufe der Genauigkeit aufweisen und es zu Overfitting kommen kann, wird Early-Stopping implementiert, mit der mittleren Genauigkeit des Klassifikators auf dem Test-Anteil der manuell annotierten Daten über fünf Epochen.
 Dazu wird die geglättete Genauigkeit betrachtet.
@@ -150,9 +150,9 @@ Abb. \ref{fig:Trainingsverlauf} zeigt exemplarisch zwei Trainingsverläufe, die 
 \noindent
 Im oberen Verlauf ist zu sehen, dass die Genauigkeit des Klassifikators tendenziell steigt.
 Die geglättete Genauigkeit zeigt hier zwar rauschbehaftetes Verhalten mit einigen lokalen Minima, aber nach ein bis zwei Berechnungsschritten steigt der Wert wieder.
-Der Verlauf ist also zwar nicht monoton steigend, aber es liegt nahe, dass bei Fortsetzung des Trainings weitere Verbesserungen zu erwarten sind.
+Der Verlauf ist zwar nicht monoton steigend, aber es liegt nahe, dass bei Fortsetzung des Trainings weitere Verbesserungen zu erwarten sind.
 Im unteren Verlauf ist Overfitting zu erkennen, da die geglättete Genauigkeit über vier Berechnungsschritte hinweg gesunken oder gleich geblieben ist.
-Der Trainings-Loss nimmt in den selben Epochen weiter ab, das Modell passt sich also weiter an die Trainingsdaten an, ohne dass es besser darin wird, ungesehene Nuclei zu erkennen.
+Der Trainings-Loss nimmt in den gleichen Epochen weiter ab, das Modell passt sich also weiter an die Trainingsdaten an, ohne dass es besser darin wird, ungesehene Nuclei zu erkennen.
 Die Genauigkeit auf dem Test-Anteil des Datensatzes sinkt etwa ab Epoche 30 und erreicht ihr Maximum in Epoche 32. 
 Dementsprechend wird die Genauigkeit des Klassifikators in Epoche 32 für den Vergleich herangezogen. \\[0.5\baselineskip]
 Mit der Prädiktion erweitern die Klassifikatoren die Instanzsegmentierungsmasken zu panoptischen Segmentierungsmasken.
@@ -188,6 +188,15 @@ CellposeSAM und ResNet101 haben als Encoder die zweit- und dritthöchste durchsc
 Während CellposeSAM allerdings die zweithöchste maximale Genauigkeit aufweist, hat ResNet101 die geringste.
 Besonders auffällig ist Swin V2.
 Mit 64,6\% hat es die niedrigste durchschnittliche Genauigkeit, aber der Maximalwert von 83,9\% ist der dritthöchste.
+Besonders häufig werden mit beiden Klassifikations-Köpfen die Klassen Schwannzellen-Kern mit Myotuben-Kernen und die Klasse \glqq Andere\grqq mit Debris verwechselt.
+Abb. \ref{fig:Decoder_errors} zeigt einige Beispiele für diese Verwechslung.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Slice_Decoder_1and4.pdf}
+    \caption{Beispiele für die Verwechslung von Schwannzellen-Kernen und Myotuben-Kernen sowie \glqq Andere\grqq und Debris}
+    \label{fig:Decoder_errors}
+\end{figure}
+\noindent
 \subsection{Vortraining}\label{subsec:RES_pretrain}
 Abb. \ref{fig:heatmap_pretrain} zeigt eine Übersicht über die Effektivität der verwendeten Vortrainingsmethoden.
 \begin{figure}[H]
@@ -205,11 +214,11 @@ Auf der vertikalen Achse sind die verschiedenen Encoder sowie der Durchschnitt a
 Auf der horizontalen Achse sind die vier Vortrainingsmethoden aufgeführt.
 Links ist nur semi-supervised-Training zu sehen.
 Daneben steht das semi-supervised-Vortraining, also das Vortraining mit den Pseudo-Labler-Annotationen, Einfrieren der Encoder-Gewichte und Fortsetzen des Trainings mit vollständig annotierten Daten. 
-Rechts ist das fully-supervised ImageNet-Vortraining mit eingefrorenen Encoder-Gewichten und kein Vortraining aufgetragen (siehe Kap. \ref{sec:Pretrain}).
+Rechts ist das \linebreak fully-supervised ImageNet-Vortraining mit eingefrorenen Encoder-Gewichten und kein Vortraining aufgetragen (siehe Kap. \ref{sec:Pretrain}).
 Zu sehen ist, dass das Vortraining mit semi-supervised-Daten durchschnittlich deutlich schlechtere Ergebnisse liefert als das fully-supervised ImageNet-Vortraining und etwas schlechtere Ergebnisse als kein Vortraining.
-Im Durchschnitt führt das Fortführen des Trainings mit den annotierten Daten nach dem \newline semi-supervised-Training zu einer Steigerung der Genauigkeit um 13 Prozentpunkte.
+Im Durchschnitt führt das Fortführen des Trainings mit den annotierten Daten nach dem \linebreak semi-supervised-Training zu einer Steigerung der Genauigkeit um 13 Prozentpunkte.
 Für den ConvNeXt-Encoder ist der Vorteil des fortgesetzten Trainings besonders hoch mit 39 Prozentpunkten.
-Der ConvNeXt-Encoder ist außerdem mit dem semi-supervised-Vortraining um sieben Prozentpunkte genauer als ohne Vortraining.
+Der ConvNeXt-Encoder ist außerdem mit dem \linebreak semi-supervised-Vortraining um sieben Prozentpunkte genauer als ohne Vortraining.
 Auch die beiden ResNet-Modelle erzielen mit dem semi-supervised-Vortraining ähnlich gute Ergebnisse wie mit anderen Vortrainingsmethoden.
 Gegenüber dem ImageNet-Vortraining, das deutlich mehr Rechenaufwand erfordert, sind die Klassifikatoren mit ResNet18 und ResNet101 nur um zwei bzw. drei Prozentpunkte schlechter, wenn sie die Annotationen des Pseudo-Lablers als Vortraining nutzen.
 Beide haben außerdem eine höhere Genauigkeit als der Durchschnitt ohne Vortraining.
@@ -219,10 +228,6 @@ Vortraining auf dem ImageNet-Datensatz führt im Vergleich dazu bei diesem Encod
 Wie in Abschnitt \ref{subsec:RES_encoder} beschrieben hat die Genauigkeit des Swin V2-Encoder einen hohen Maximalwert, aber einen geringen Durchschnittswert.
 Der Vergleich der Vortrainingsmethoden zeigt, dass das an der schlechten Leistung des Swin V2-Encoder ohne ImageNet-Vortraining liegt.
 Abb. \ref{fig:gradCAM_Swin} zeigt zwei Scatterplots.
-Beide visualisieren Projektionen des Merkmalsraums des Swin V2-Ecoders auf zwei Dimensionen mittels \ac{tsne}.
-Die linke Abbildung zeigt den Merkmalsraum des Encoders ohne Vortraining und die Rechte den Merkmalsraum nach ImageNet-Vortraining.
-Zu sehen ist, dass der Swin V2-Encoder keinen sinnvollen Merkmalsraum lernt.
-Das Vortraining auf dem ImageNet-Datensatz ist umfangreicher und diverser als auf den Zieldaten und führt dadurch zu einem generalisierteren Merkmalsraum.
 \begin{figure}[H]
     \centering
     \begin{subfigure}[t]{0.4\textwidth}
@@ -242,20 +247,15 @@ Das Vortraining auf dem ImageNet-Datensatz ist umfangreicher und diverser als au
     \label{fig:gradCAM_Swin}
 \end{figure}
 \noindent
+Beide visualisieren Projektionen des Merkmalsraums des Swin V2-Ecoders auf zwei Dimensionen mittels \ac{tsne}.
+Die linke Abbildung zeigt den Merkmalsraum des Encoders ohne Vortraining und die Rechte den Merkmalsraum nach ImageNet-Vortraining.
+Zu sehen ist, dass der Swin V2-Encoder keinen sinnvollen Merkmalsraum lernt.
+Das Vortraining auf dem ImageNet-Datensatz ist umfangreicher und diverser als auf den Zieldaten und führt dadurch zu einem generalisierteren Merkmalsraum.
 ImageNet-Vortraining liefert im Durchschnitt die besten Ergebnisse mit einer Genauigkeit von 84\%. 
 Außerdem ist die Varianz entlang der Encoder mit dem ImageNet-Vortraining (\num{5.6e-5}) deutlich geringer als ohne Vortraining (0,016). 
 Dennoch erreicht ResNet18 ohne Vortraining die beste Genauigkeit von 86\%.
 Des Weiteren wird hier die durchschnittliche Genauigkeit pro Klasse betrachtet.
 Abb. \ref{fig:per_class_acc} zeigt die durchschnittliche Genauigkeit pro Klasse und Sterne als Hinweise auf signifikante Ergebnisse von paarweisen t-Tests.
-Wie eingangs beschrieben, sind nur 16 Beispiele der Klasse Schwannzellen-Nucleus im Datensatz enthalten, acht hiervon im Trainings- und acht im Test-Anteil.
-Zu sehen ist, dass insbesondere die Schwannzellen-Kerne schlecht erkannt werden.
-Wie in Kap. \ref{sec:Preproc} beschrieben, wird dieses Problem der ungleichen Verteilung der Klassen durch den Retreiver durch eine Gewichtung der Gradienten unterrepräsentierter Klassen angegangen.
-In der Abbildung ist jedoch zu sehen, dass dieser Ansatz das Problem nicht vollständig gelöst hat. 
-Die unterrepräsentierte Klasse der Schwannzellen-Nuclei wird höchst signifikant schlechter erkannt als alle anderen Klassen.
-Beinahe alle Methoden ergeben isoliert betrachtet eine ähnliche Verteilung der Genauigkeit pro Klassen, nur das Vortraining hat einen Einfluss.
-Vortraining mit semi-supervised-Annotationen und anschließendes Fortsetzen des Trainings mit manuell annotierten Daten führen zu Klassifikatoren, die teilweise wesentlich ausgeglichener die Klassen erkennen.
-Mit dem Volumen-Klassifikator und der Masken-Methode zur Vorverarbeitung erreichen der ResNet101-Encoder 83,2\%, der ResNet18-Encoder 73,5\% und der  ConvNeXt-Encoder 56,3\% Genauigkeit für die Klasse der Schwannzellen-Nuclei.
-Das ist im Vergleich zu den 21,7\% durchschnittlicher Genauigkeit für die Schwannzellen-Klasse ein starker Gewinn.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{Figures/per_class_acc.pdf}
@@ -265,6 +265,15 @@ Das ist im Vergleich zu den 21,7\% durchschnittlicher Genauigkeit für die Schwa
     \label{fig:per_class_acc}
 \end{figure}
 \noindent
+Wie eingangs beschrieben, sind nur 16 Beispiele der Klasse Schwannzellen-Nucleus im Datensatz enthalten, acht hiervon im Trainings- und acht im Test-Anteil.
+Zu sehen ist, dass insbesondere die Schwannzellen-Kerne schlecht erkannt werden.
+Wie in Kap. \ref{sec:Preproc} beschrieben, wird dieses Problem der ungleichen Verteilung der Klassen durch den Retreiver durch eine Gewichtung der Gradienten unterrepräsentierter Klassen angegangen.
+In der Abbildung ist jedoch zu sehen, dass dieser Ansatz das Problem nicht vollständig gelöst hat. 
+Die unterrepräsentierte Klasse der Schwannzellen-Nuclei wird höchst signifikant schlechter erkannt als alle anderen Klassen.
+Beinahe alle Methoden ergeben isoliert betrachtet eine ähnliche Verteilung der Genauigkeit pro Klassen, nur das Vortraining hat einen Einfluss.
+Vortraining mit semi-supervised-Annotationen und anschließendes Fortsetzen des Trainings mit manuell annotierten Daten führen zu Klassifikatoren, die teilweise wesentlich ausgeglichener die Klassen erkennen.
+Mit dem Volumen-Klassifikator und der Masken-Methode zur Vorverarbeitung erreichen der ResNet101-Encoder 83,2\%, der ResNet18-Encoder 73,5\% und der  ConvNeXt-Encoder 56,3\% Genauigkeit für die Klasse der Schwannzellen-Nuclei.
+Das ist im Vergleich zu den 21,7\% durchschnittlicher Genauigkeit für die Schwannzellen-Klasse ein starker Gewinn.
 Abb. \ref{fig:class_examples} zeigt je ein Beispiel der Klassen, ohne Vorverarbeitung.
 \begin{figure}[H]
      \centering
@@ -284,14 +293,6 @@ Die durchschnittliche Genauigkeit ist nach dem semi-supervised-Vortraining also 
 
 \subsection{Klassifikations-Kopf}\label{subsec:RES_decoder}
 Abb. \ref{fig:bars_decoders} zeigt eine Gegenüberstellung der Genauigkeit beider Klassifikations-Köpfe in einem Balkendiagramm mit Fehlerbalken.
-\begin{figure}[H]
-    \centering\includegraphics[width=0.8\linewidth]{Figures/encodersVdecoder.pdf}
-    \caption{Genauigkeitswert der Klassifikatoren unter Verwendung eines bestimmten Klassifikations-Kopfes.
-    Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diesen Klassifikations-Kopf nutzen, aufgetragen. 
-    Die X-Achse zeigt Gruppen von Encodern, jeweils besetzt mit einem Wert für den Schichten- und den Volumen-Klassifikator.
-    Rechts zu sehen sind Balken, die den Durchschnitt der Werte aller Encoder, abhängig von dem Klassifikations-Kopf, zeigen.}
-    \label{fig:bars_decoders}
-\end{figure}
 Dabei werden nur die Klassifikatoren berücksichtigt, bei denen sich die Methodenkombination ausschließlich im verwendeten Klassifikations-Kopf unterscheidet.
 Das ist notwendig, da nicht alle möglichen Kombinationen trainiert wurden und ein Vergleich mit unvollständigen Kombinationen keine aussagekräftigen Ergebnisse liefert.  
 Die blauen Balken des Balkendiagramms zeigen jeweils die Ergebnisse der Architekturen, die den Schichten-Klassifikator nutzen, die orangenen Balken die Ergebnisse des Volumen-Klassifikators.
@@ -300,8 +301,32 @@ An den Daten lässt sich erkennen, dass der Einfluss des Klassifikations-Kopfes 
 Mit dem ConvNeXt-Encoder ist der Schichten-Klassifikator performanter als der Volumen-Klassifikator, während es bei allen anderen Encodern umgekehrt ist.
 Für den CellposeSAM Encoder ist der Genauigkeitsunterschied 12,6 Prozentpunkte groß, für EfficientNetV2 einen halben Prozentpunkt.
 Die Daten zeigen also, dass die Intensität des Unterschieds in der Genauigkeit der beiden Klassifikations-Köpfe stark vom Encoder abhängt.
-Die Balken rechts, die je den Durchschnitt aller Modelle mit einem Klassifikations-Kopf darstellen, zeigen mit einem signifikant, dass der Volumen-Klassifikator insgesamt bessere Ergebnisse liefert.
-
+\begin{figure}[H]
+    \centering\includegraphics[width=0.8\linewidth]{Figures/encodersVdecoder.pdf}
+    \caption{Genauigkeitswert der Klassifikatoren unter Verwendung eines bestimmten Klassifikations-Kopfes.
+    Auf der Y-Achse ist der Durchschnitt der Genauigkeiten der besten Trainingsepoche aller Klassifikatoren, die diesen Klassifikations-Kopf nutzen, aufgetragen. 
+    Die X-Achse zeigt Gruppen von Encodern, jeweils besetzt mit einem Wert für den Schichten- und den Volumen-Klassifikator.
+    Rechts zu sehen sind Balken, die den Durchschnitt der Werte aller Encoder, abhängig von dem Klassifikations-Kopf, zeigen.}
+    \label{fig:bars_decoders}
+\end{figure}
+\noindent
+Die Balken rechts, die je den Durchschnitt aller Modelle mit einem Klassifikations-Kopf darstellen, zeigen signifikant, dass der Volumen-Klassifikator bessere Ergebnisse liefert.\\[0.5\baselineskip]
+Mit dem Schichten-Klassifikator werden häufig Nuclei fehlerhaft klassifiziert, die nicht in der mittleren Schicht des Bildausschnitts vorkommen.
+Die Nuclei sind oft in den obersten Schichten der Eingabedaten zu finden.
+Wenn sie nicht mindestens zwölf Ebenen von der obersten Z-Ebene entfernt sind schneidet der Retreiver Bildausschnitte aus, in denen die Nuclei in Z-Richtung nicht zentriert sind.
+Abb. \ref{fig:Sclice_decoder_slices} zeigt fünf Ebenen eines Nucleus für den das zutrifft.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Slice_Decoder_Ebenen.pdf}
+    \caption{Fünf 2D-Schichten eines fehlklassifizierten Nucleus.
+    Die Z-Ebene ist über den Abbildungen gegeben.
+    Zu sehen ist, dass der Nucleus nicht zentriert ist und nicht in der mittleren Schicht präsent ist.}
+    \label{fig:Sclice_decoder_slices}
+\end{figure}
+\noindent
+Der Nucleus ist mit der Masken-Methode vorverarbeitet und in rot zu sehen.
+Er erscheint nicht in den Schichten zehn und zwölf.
+Schicht acht zeigt gerade die untere Kante des Nucleus. 
 
 \subsection{Vorverarbeitung}\label{subsec:RES_preproc}
 In Abb. \ref{fig:bars_channel1} sind die durchschnittlichen Genauigkeiten der Modelle gezeigt, die jeweils eine der Vorverarbeitungsmethoden nutzen.
@@ -321,6 +346,18 @@ Mit der Distanz-Methode, also dem Anwenden einer Distanztransformation von der S
 Die Differenz ist hoch signifikant.
 Zu sehen ist aber, dass der Einfluss der Vorverarbeitung unterschiedlich stark ist, je nach Encoder.
 Während die Genauigkeit für Modelle mit dem ResNet101-Encoder mit der Masken-Methode um 0,8 Prozentpunkte gegenüber der Verwendung von der Distanz-Methode steigt, macht die Vorverarbeitung beim EfficientNetV2 Encoders 11,5 Prozentpunkte aus. \\[0.5\baselineskip]
+Mit der Distanz-Methode treten häufig Fehler auf, wenn Nuclei dicht aneinander liegen.
+Abb. \ref{fig:nuclei_overlap_examples} zeigt Nuclei mit der Distanz-Methode und der Masken-Methode, für die mit der Distanz-Methode eine schlechtere Genauigkeit erzielt wird, als mit der Masken-Methode.
+\begin{figure}[H]
+    \centering\includegraphics[width=0.9\linewidth]{Figures/Cluster_MaskVDist.pdf}
+    \caption{Beispiele für Nuclei, die häufig mit der Masken-Methode korrekt und mit der Distanz-Methode fehlerhaft klassifiziert werden.
+    In der oberen Zeile sind die Nuclei zu sehen, die mit der Distanz-Methode vorverarbeitet sind, darunter ist jeweils der gleiche Nucleus mit der Masken-Methode zu sehen.}
+    \label{fig:nuclei_overlap_examples}
+\end{figure}
+\noindent
+Die Nuclei in den Beispielen sind alle in Clustern angeordnet und berühren umliegende Nuclei.
+Mit der Masken-Methode sind die umliegenden Nuclei ausgeblendet, mit der Distanz-Methode gehen sie in den betrachteten Nucleus über.
+Intuitiv lassen sich die Nuclei auch mit der Distanz-Methode trennen, wie die Ergebnisse zeigen ist das den Klassifikatoren aber nicht immer möglich.\\[0.5\baselineskip]
 Mithilfe von GradCAM \cite{Selvaraju2017} wird außerdem das Verhalten der Klassifikatoren exemplarisch visualisiert.
 Abb. \ref{fig:gradCAM} zeigt den Nucleus-Kanal und einen Marker-Kanal von zwei 2D-Schichten.
 \begin{figure}[H]
@@ -334,13 +371,13 @@ Abb. \ref{fig:gradCAM} zeigt den Nucleus-Kanal und einen Marker-Kanal von zwei 2
     \label{fig:gradCAM}
 \end{figure}
 \noindent
-Die beiden 2D-Schichten sind aus unterschiedlichen 3D-Stapeln, links einer der mit der Masken-Methode, und rechts einer der mit der Distanz-Methode vorverarbeitet wurde.
-Zu sehen ist jeweils eine Heatmap für zwei Klassifikatoren
+Die beiden 2D-Schichten sind aus unterschiedlichen 3D-Stapeln, links einer, der mit der Masken-Methode, und rechts einer, der mit der Distanz-Methode vorverarbeitet wurde.
+Zu sehen ist jeweils eine Heatmap für zwei Klassifikatoren.
 Beide Heatmaps zeigen gradientenbasiert die Aktivierungen in einer Schicht des Merkmalsraums zurück auf die Eingangsdaten projeziert.
 Die Heatmaps sind jeweils zur besseren Interpretierbarkeit einer 2D-Schicht der Segmentierungsmaske des Nucleus und einem Marker-Kanal überlagert. 
 Dadurch wird räumlich aufgezeigt, welche Regionen der Eingangsdaten zur Entscheidung für eine bestimmte Klasse besonders beigetragen haben.
 Die beiden Nucleus-Kanal-Ansichten zeigen, dass Regionen direkt um den Nucleus herum für die Klassifikationsentscheidung wichtiger sind als die Oberfläche des Nucleus.
-Selbst unter Verwendung der Distanz-Methode, die zum Ziel hat, Oberflächen-Merkmale zu erhalten und dafür klare Kanten und eine eindeutige Geometrie der Segmentierungsmaske augibt, wird die Oberfläche kaum betrachtet.
+Selbst unter Verwendung der \linebreak Distanz-Methode, die zum Ziel hat, Oberflächen-Merkmale zu erhalten und dafür klare Kanten und eine eindeutige Geometrie der Segmentierungsmaske augibt, wird die Oberfläche kaum betrachtet.
 Des Weiteren sind in den Heatmaps der Marker-Kanäle zu sehen, dass auch abseits des Nucleus-Kanals eine intuitiv sinnvolle Lokalisierung der Aufmerksamkeit des Klassifikators erfolgt.
 Die Maxima der Heatmaps sind auf sichtbare Strukturen im Marker-Kanal platziert.
 
@@ -363,7 +400,7 @@ Der hohe Wert spricht für eine stabile und konsistente Aufmerksamkeitslokalisie
 \begin{figure}[H]
     \centering\includegraphics[width=0.8\linewidth]{Figures/gradients.pdf}
     \caption{Die Abbildung zeigt zwei Gradienten-Felder einer 2D-Schicht einer Stichprobe der dreidimensionalen Zieldaten und deren Kosinus-Ähnlichkeit.
-    Die Kosinus-Ähnlichkeit ist em der 2D-Schicht überlagert.
+    Die Kosinus-Ähnlichkeit ist der 2D-Schicht überlagert.
     Das rechte Gradientenfeld ist integriert, um hochfrequente lokale Unterschiede zu entfernen.
     Die Untersuchung der Kosinus-Ähnlichkeit soll zeigen, ob der Klassifikator konsistent auf bestimmte Strukturen der Eingabe reagiert.
     Mit den roten Pfeilen ist die Region mit besonders dichten lokalen Maxima der integrierten Maxima gekennzeichnet.

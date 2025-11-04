@@ -2,7 +2,7 @@
 
 \chapter{Zusammenfassung und Ausblick}\label{ch:Conclusion}
 
-Die Arbeit befasst sich mit der automatisierten Optimierung von Deep-Learing-Methoden.
+Die vorliegende Arbeit befasst sich mit der automatisierten Optimierung von Deep-Learing-Methoden.
 In der theoretischen Grundlage sind etablierte Deep-Learing-Methoden für die Instanzsegmentierung und Klassifikation gegeben.
 Vor allem Methoden die für biologische 3D-Daten geeignet sind werden beleuchtet.
 Zusätzlich sind Methoden zusammengefasst, die für die Anwendung, Auswertung und Visualisierung der vorgestellten Methoden wichtig sind.
@@ -27,8 +27,15 @@ Außerdem sind die Marker-Kanäle für die Klassenentscheidung genauso wichtig w
 %Ausblick
 Die Ergebnisse haben gezeigt, dass die Geometrie der Nuclei für die Klassifikation essenziell ist.
 Dementsprechend ist ein mögliches Anliegen kommender Forschung die Erweiterung der \ac{ipq}-Metrik, um Veränderungen der Geometrie durch das Segmentierungsmodell explizit zu bestrafen.
+Für diese Erweiterung kann ein neuer Faktor eingeführt werden, der die geometrischen Eigenschaften der Annotationen und der segmentierten Instanzen erfasst, beispielsweise als Parameter der Fourier-Entwicklung ihrer Konturen, und mit einem geeigneten Ähnlichkeitsmaß vergleicht.
 In Anbetracht der Ergebnisse der Klassifikator-Methoden kann zukünftige Forschung weitere, kleinere \ac{cnn}-Encoder in Betracht ziehen, um die Hypothese zu prüfen, dass die Encoder zu groß sind um eine sinnvolle Repäsentation der räumlich relativ kleinen Nuclei zu finden. 
-Mit neuen Datensätzen kann außerdem die Hypothese geprüft werden, dass die Oberflächenmerkmale von Nuclei egal und die Geometrie ausschlaggebend sind, indem die neu eingeführten Vorverarbeitungsmethoden weiter verglichen werden. 
+Mit neuen Datensätzen kann außerdem die Hypothese geprüft werden, dass die Oberflächenmerkmale von Nuclei für die Klassifikation unwichtig und die Geometrie ausschlaggebend sind, indem die neu eingeführten Vorverarbeitungsmethoden weiter verglichen werden. 
 Besonders interessant ist für kommende Forschung eine fortgeführte Analyse der vorgestellten Vortrainingsmethoden.
 Das semi-supervised-Vortraining führt zu einer geringeren Durchschnittsgenauigkeit, aber zu einer stärkeren Generalisierungsfähigkeit des Klassifikators.
-Kommende Forschung kann die Methode weiter Optimieren, um die Durchschnittsgenauigkeit möglicherweise zu erhöhen und die Vorteile der Methode so besser anwendbar zu machen.% \\[0.5\baselineskip]
+Kommende Forschung kann die Methode weiter Optimieren, um die Durchschnittsgenauigkeit möglicherweise zu erhöhen und die Vorteile der Methode so besser anwendbar zu machen.
+Hierzu können weitere Eigenschaften der Nuclei erfasst und dem Merkmalsvektor hinzugefügt werden, auf den der Label-Spreading-Algorithmus angewandt wird oder die PCA durch einen anderen Algorithmus ersetzt werden.
+Außerdem kann die anschließende Trainingsroutine mit mehr Epochen und einer geringeren Lernrate durchgeführt werden.\\[0.5\baselineskip]
+In Ausblick auf eine vollständige Instanzsegmentierung von Myotuben kann die panoptische Segmentierungsmaske der Nuclei genutzt werden, um Hinweise für ein Segmentierungsmodell wie \ac{sam} zu generieren.
+Die Myotuben-Zellkerne liegen in den Myotuben und sind mit ihrer langen Achse entlang der Ausrichtung der Nuclei orientiert.
+Anhand der Ausrichtungen und relativen Positionen der vorhergesagten Myotuben-Zellkerne können Linien gefunden werden.
+Diese Linien können dem Segmentierungsmodell als Hinweise übergeben und so eventuell die Instanzsegmentierung von Myotuben ermöglicht werden.

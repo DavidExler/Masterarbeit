@@ -3,9 +3,9 @@
 \pagenumbering{arabic}
 
 \chapter{Einleitung}\label{ch:Introduction}
-Die vorliegende Arbeit behandelt die automatisierte Optimierung von Deep-Learning Methoden zur Segmentierung und Klassifikation für dreidimensionale Bildstapel.
-Zur Optimierung der Segmentierung wird ein neues Qualitätskriterium für Segmentierungmodelle eingeführt und zur Optimierung der Klassifikation werden diverse neue Methoden sowie ein Framework zum automatisierten Vergleich der Methoden vorgestellt.
-Die eingeführten Methoden werden an einem Datensatz aus dreidimensionalen Mikroskopaufnahmen von Myotuben-Zellkulturen angewandt. 
+Die vorliegende Arbeit behandelt die automatisierte Optimierung von Deep-Learning-Methoden zur Segmentierung und Klassifikation dreidimensionaler Bildstapel.
+Zur Optimierung der Segmentierung wird ein neues Qualitätskriterium für Segmentierungsmodelle eingeführt und zur Optimierung der Klassifikation werden diverse neue Methoden sowie ein Framework zum automatisierten Vergleich der Methoden vorgestellt.
+Die eingeführten Methoden werden an einem Datensatz aus dreidimensionalen Mikroskopaufnahmen von Myotubenkulturen angewandt. 
 Myotuben sind mehrkernige Muskelzellfäden \cite{lewis1917behavior, Enwere2014}. 
 Sie repräsentieren ein intermediäres Stadium der Muskelentwicklung, in dem sich die grundlegende Organisation der Muskelfaser bildet \cite{Gilbert2014}. 
 Menschliche Myotube-Kulturen \cite{Pogogeff1946} können für diverse Forschungszwecke als Modellsysteme eingesetzt werden.
@@ -14,34 +14,32 @@ In den meisten Fällen werden die Myotuben, ihre Zellkerne (Nuclei) und die zuge
 Die Bilddaten entstehen unter unterschiedlichen Herstellungsbedingungen, Färbungen und Aufnahmegeräten, was eine generalisierte Automatisierung erschwert \cite{Chua2019, Shahini2018, Brunetti2021, NogalesGadea2010}. \\[0.5\baselineskip]
 Im Zuge der vorliegenden Arbeit werden nach dem Protokoll von Couturier et al. \cite{Couturier2024} hergestellte in-vitro-Kulturen von Myotuben analysiert und die Ergebnisse automatisiert ausgewertet.
 Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl, die Verteilung der Zellkernklassen und die Verteilung der Volumina der Instanzen extrahiert.
-Diese Merkmale ermöglichen, die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
+Diese Merkmale ermöglichen die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
 Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich an die Anforderungen angepasst.\\[0.5\baselineskip]
-% - 3D!! bzw 2.5D als depth map plus intensity map \cite{Marr2010, Marr1978}
-%\section{Offene Probleme}
 Um die Analyse biologischer 3D-Daten effizient und in großem Umfang durchführen zu können, sind Bildverarbeitungsprogramme erforderlich \cite{Noe2022}, da die manuelle Auswertung anspruchsvoll und zeitintensiv ist \cite{Weisrock2024}.
-Myotuben ordnen sich in Forschungsumgebungen in chaotische Netze mit Verschränkungen und Überkreuzungen an \cite{Abdelmoez2020}.
+Myotuben ordnen sich in Forschungsumgebungen zu chaotischen Netzen mit Verschränkungen und Überkreuzungen an \cite{Abdelmoez2020}.
 Aktuell sind Bildverarbeitungsmethoden nicht in der Lage, zuverlässig einzelne Myotuben in einem dreidimensionalen Bild zu erkennen und von ihrem Anfang bis zum Ende zu verfolgen \cite{Inoue2018}.
 Besonders die Bündel, die in der Entwicklung der Myotuben häufig entstehen, verhindern die getrennte Segmentierung der einzelnen Myotuben \cite{Jeong2025}.
 Außerdem stellen die dreidimensionalen Daten eine große Herausforderung für Hard- und Software dar \cite{Moore2021, Pan2023, Li2023, Bagheri2022}.
 Besonders herausfordernd sind dabei die stark erhöhten Speicher- und GPU-Anforderungen sowie die geringere Zahl an etablierten Methoden und Datensätzen \cite{liu2021, James2023, Chan2020}. 
 Der Mehrwert einer dritten räumlichen Dimension kann die Ergebnisse allerdings wesentlich verbessern, was die Verarbeitung von 3D-Daten zu einem zentralen Forschungsaspekt macht \cite{Hirabayashi2024, Midgley2003}.\\[0.5\baselineskip]
-Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung und Klassifikation der Nuclei in den Myotuben-Kulturen zu optimieren. 
-Hierzu müssen ein optimales Modell aus etablierten 3D-Segmentierungsmodellen für Nuclei gewählt werden, Annotationen für die Klassifikationen durch Expert*Innen erfasst werden und Methoden zur Klassifikation von 3D-Bildstapeln optimiert werden.
+Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung und Klassifikation der Nuclei in den Myotubenkulturen zu optimieren. 
+Hierzu muss ein optimales Modell aus etablierten 3D-Segmentierungsmodellen für Nuclei gewählt werden, Annotationen für die Klassifikationen durch Expert*Innen erfasst werden und Methoden zur Klassifikation von 3D-Bildstapeln optimiert werden.
 Um diese Anforderungen zu erfüllen, liefert die Arbeit folgende Neuheitswerte:
 \begin{itemize}
     \item Ein neues Qualitätskriterium zur Bewertung von Segmentierungsmodellen hinsichtlich der Eignung der entstehenden Segmentierungsmasken zur Extraktion interpretierbarer Merkmale.
     \item Eine Anwendung, die zeiteffizient Expertenwissen zu den Klassen von Nuclei in dreidimensionalen Daten erfasst.
-    \item Eine neue Methode um Klassifikatoren durch semi-supervised-Vortraining stärker zu generalisieren.
-    \item Zwei neue Klassifikations-Kopf-Architekturen für dreidimensionale Daten, die einen Klassifikator and verschiedene räumliche Verteilungen von Informationen in dreidimensionalen biologischen Daten anpassen.
-    \item Zwei Vorverarbeitungsmethoden für dreidimensionale Nuclei, die gundlegende Aussagen über die Lokalisierung der zur Klassifikation relevanten Informationen ermöglichen.
-    \item Ein automatisiertes Framework, das Anwender*Innen ohne Vorkenntnisse die Segmentierung und das zeiteffiziente Annotieren von Nuclei neuer Datensätze ermöglicht und einen Klassifikator auf Basis umfassender Vergleiche der eingeführten Methoden optimiert.
-    \item Ein optimierter Klassifikator für die vorliegende Myotuben-Kultur.   
+    \item Eine neue Methode, um Klassifikatoren durch semi-supervised-Vortraining stärker zu generalisieren.
+    \item Zwei neue Klassifikations-Kopf-Architekturen für dreidimensionale Daten, die einen Klassifikator an verschiedene räumliche Verteilungen von Informationen in dreidimensionalen biologischen Daten anpassen.
+    \item Zwei Vorverarbeitungsmethoden für dreidimensionale Nuclei, die grundlegende Aussagen über die Lokalisierung der zur Klassifikation relevanten Informationen ermöglichen.
+    \item Ein automatisiertes Framework, das Anwender*Innen ohne Vorkenntnisse die Segmentierung und das zeiteffiziente Annotieren von Nuclei in neuen Datensätzen ermöglicht und einen Klassifikator auf Basis umfassender Vergleiche der eingeführten Methoden optimiert.
+    \item Ein optimierter Klassifikator für die vorliegende Myotubenkultur.   
 \end{itemize}
 \noindent
 Die nachfolgende Ausarbeitung ist wie folgt strukturiert. 
 In Kapitel \ref{ch:Theory} werden die Grundlagen, die relevante Literatur und der Stand der Technik beschrieben. 
 Außerdem sind dort offene Probleme, sowie die Ansätze, die die vorliegende Arbeit verfolgt um sie zu lösen, dargestellt. 
 Die Methodik (Kapitel \ref{ch:NewMethods}) beschreibt das neue, praktische Konzept, das die Arbeit einführt, und Kapitel \ref{ch:Implementation} (Implementierung) behandelt, wie diese Methoden umgesetzt werden.
-Im Kapitel \ref{ch:results} (Ergebnisse) werden ungewertet die Ergebnisse der durchgeführten Experimente dargestellt, im Kapitel \ref{ch:Discussion} (Diskussion) werden dann diese Ergebnisse ausgewertet.
+Im Kapitel \ref{ch:results} (Ergebnisse) werden die Ergebnisse der durchgeführten Experimente ungewertet dargestellt; im Kapitel \ref{ch:Discussion} (Diskussion) werden sie anschließend ausgewertet.
 Mit dem Kapitel \ref{ch:Conclusion} (Zusammenfassung) schließt die Ausarbeitung ab, stellt kurz die gesamte Arbeit dar und liefert einen Ausblick auf zukünftige Ziele.
 Der Code dieser Arbeit ist verfügbar unter: \href{https://github.com/DavidExler/Masterarbeit}{github.com/DavidExler/Masterarbeit}.

@@ -3,53 +3,41 @@
 \pagenumbering{arabic}
 
 \chapter{Einleitung}\label{ch:Introduction}
-%Your thesis should start with an introduction. The introduction is supposed to motivate your thesis. Discuss the relevance of your topic, why are you looking into it, why is it relevant in the research field? Cite important research related to your motivation. 
-
-%\section*{Objectives and Structure of this Thesis}
-%Give an outline of your thesis. Briefly repeat the problem and  your contribution, for example in the form of research questions. asdasdasd
-
-
-%\section{Allgemeine Beschreibung}
+Die vorliegende Arbeit behandelt die automatisierte Optimierung von Deep-Learning Methoden zur Segmentierung und Klassifikation für dreidimensionale Bildstapel.
+Zur Optimierung der Segmentierung wird ein neues Qualitätskriterium für Segmentierungmodelle eingeführt und zur Optimierung der Klassifikation werden diverse neue Methoden sowie ein Framework zum automatisierten Vergleich der Methoden vorgestellt.
+Die eingeführten Methoden werden an einem Datensatz aus dreidimensionalen Mikroskopaufnahmen von Myotuben-Zellkulturen angewandt. 
 Myotuben sind mehrkernige Muskelzellfäden \cite{lewis1917behavior, Enwere2014}. 
 Sie repräsentieren ein intermediäres Stadium der Muskelentwicklung, in dem sich die grundlegende Organisation der Muskelfaser bildet \cite{Gilbert2014}. 
 Menschliche Myotube-Kulturen \cite{Pogogeff1946} können für diverse Forschungszwecke als Modellsysteme eingesetzt werden.
-Sie werden beispielsweise verwendet, um Muskelkrankheiten zu modellieren \cite{Weisrock2024}, Antworten auf neue Medikamente vorherzusagen \cite{Lair2025}, synthetische Muskeln \cite{Jeong2025} sowie Muskelregeneration \cite{Scharner2011} zu erforschen.
+Sie werden beispielsweise verwendet, um Muskelkrankheiten zu modellieren \cite{Weisrock2024}, Antworten auf neue Medikamente vorherzusagen \cite{Lair2025} und synthetische Muskeln \cite{Jeong2025} sowie Muskelregeneration \cite{Scharner2011} zu erforschen.
 In den meisten Fällen werden die Myotuben, ihre Zellkerne (Nuclei) und die zugehörigen, umliegenden Strukturen eingefärbt und unter dem Mikroskop analysiert \cite{Velica2011, Nolan2024, Agley2012}.
-Die Bilddaten entstehen unter unterschiedlichen Herstellungsbedingungen, Färbungen und Aufnahmegeräten, was eine generalisierte Automatisierung erschwert \cite{Chua2019, Shahini2018, Brunetti2021, NogalesGadea2010}. \newline
+Die Bilddaten entstehen unter unterschiedlichen Herstellungsbedingungen, Färbungen und Aufnahmegeräten, was eine generalisierte Automatisierung erschwert \cite{Chua2019, Shahini2018, Brunetti2021, NogalesGadea2010}. \\[0.5\baselineskip]
 Im Zuge der vorliegenden Arbeit werden nach dem Protokoll von Couturier et al. \cite{Couturier2024} hergestellte in-vitro-Kulturen von Myotuben analysiert und die Ergebnisse automatisiert ausgewertet.
-Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl, die Verteilung der Zellkernklassen und das Myotubenvolumen extrahiert.
+Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl, die Verteilung der Zellkernklassen und die Verteilung der Volumina der Instanzen extrahiert.
 Diese Merkmale ermöglichen, die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
-Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich auf die Anforderungen angepasst.\newline
+Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich an die Anforderungen angepasst.\\[0.5\baselineskip]
 % - 3D!! bzw 2.5D als depth map plus intensity map \cite{Marr2010, Marr1978}
 %\section{Offene Probleme}
-Um die Analyse biologischer Daten effizient und in großem Umfang durchführen zu können, sind Bildverarbeitungsprogramme erforderlich \cite{Noe2022}, da die manuelle Auswertung sowohl anspruchsvoll als auch zeitintensiv ist \cite{Weisrock2024}.
-Myotuben in Forschungsumgebungen ordnen sich in chaotische Netze mit Verschränkungen und Überkreuzungen an \cite{Abdelmoez2020}.
+Um die Analyse biologischer 3D-Daten effizient und in großem Umfang durchführen zu können, sind Bildverarbeitungsprogramme erforderlich \cite{Noe2022}, da die manuelle Auswertung anspruchsvoll und zeitintensiv ist \cite{Weisrock2024}.
+Myotuben ordnen sich in Forschungsumgebungen in chaotische Netze mit Verschränkungen und Überkreuzungen an \cite{Abdelmoez2020}.
 Aktuell sind Bildverarbeitungsmethoden nicht in der Lage, zuverlässig einzelne Myotuben in einem dreidimensionalen Bild zu erkennen und von ihrem Anfang bis zum Ende zu verfolgen \cite{Inoue2018}.
-Besonders die Bündel, die in der Entwicklung der Myotuben häufig entstehen, verhindern oft die getrennte Segmentierung der einzelnen Myotuben \cite{Jeong2025}.
+Besonders die Bündel, die in der Entwicklung der Myotuben häufig entstehen, verhindern die getrennte Segmentierung der einzelnen Myotuben \cite{Jeong2025}.
 Außerdem stellen die dreidimensionalen Daten eine große Herausforderung für Hard- und Software dar \cite{Moore2021, Pan2023, Li2023, Bagheri2022}.
 Besonders herausfordernd sind dabei die stark erhöhten Speicher- und GPU-Anforderungen sowie die geringere Zahl an etablierten Methoden und Datensätzen \cite{liu2021, James2023, Chan2020}. 
-Der Mehrwert einer dritten räumlichen Dimension kann die Ergebnisse allerdings wesentlich verbessern, was die Verarbeitung von 3D-Daten daher zu einem zentralen Forschungsaspekt macht \cite{Hirabayashi2024, Midgley2003}.\newline
-%Weniger Methoden und Daten und schwerere Ground truths: \cite{Liu2021}
-%Große Daten und Artefakte \cite{James2023}
-%"Challenge" \cite{Chan2020}
-%\section{Zielsetzung}
-Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung einzelner Myotuben in dreidimensionalen Mikroskopiedaten zu ermöglichen.
-Aus den Segmentierungsmasken werden anschließend morphologische Eigenschaften der einzelnen Myotuben gewonnen.
-Außerdem können die Ergebnisse genutzt werden, um den Status der Entwicklung einzelner Myotuben, unter anderem, anhand der darin enthaltenen Zellkerne zu ermitteln.
-Deshalb ist ein weiteres Ziel, die Zellkerne zu segmentieren und zu klassifizieren.
-Für die Klassifikation soll im Rahmen dieser Arbeit Expertenwissen zeiteffizient erfasst und genutzt werden.
-In einer Applikation die keine Programmierkenntnisse benötigt sollen sowohl die Segmentierung, als auch die Annotation durch Expert*Innen, der Klassifikator-Methodenvergleich zur Anpassung an neue Daten und das Klassifikatortraining durchführbar sein. 
-Aus diesen Zielen ergeben sich die folgenden Mehrwerte der vorliegenden Arbeit:
+Der Mehrwert einer dritten räumlichen Dimension kann die Ergebnisse allerdings wesentlich verbessern, was die Verarbeitung von 3D-Daten zu einem zentralen Forschungsaspekt macht \cite{Hirabayashi2024, Midgley2003}.\\[0.5\baselineskip]
+Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung und Klassifikation der Nuclei in den Myotuben-Kulturen zu optimieren. 
+Hierzu müssen ein optimales Modell aus etablierten 3D-Segmentierungsmodellen für Nuclei gewählt werden, Annotationen für die Klassifikationen durch Expert*Innen erfasst werden und Methoden zur Klassifikation von 3D-Bildstapeln optimiert werden.
+Um diese Anforderungen zu erfüllen, liefert die Arbeit folgende Neuheitswerte:
 \begin{itemize}
-    \item Ein Vergleich etablierter Segmentierungsmodelle für dreidimensionale Nuclei.
-    \item Ein neues Kriterium zum Vergleich von Segmentierungsmodellen hinsichtlich der Eignung der entstehenden Segmentierungsmasken zur Extraktion interpretierbarer Merkmale.
-    \item Eine Labeling-App, die zeiteffizient Expertenwissen zu den Klassen von Nuclei in dreidimensionalen Daten erfasst.
-    \item Ein Vergleich der Methoden des Vortraining, der Vorverarbeitung sowie etablierter Encoder und neuer Decoder für die Klassifikation dreidimensionaler Zellkerne.
-    \item Ein optimaler Klassifikator für die Nuclei der vorliegenden Arbeit.
-    \item Eine Applikation mit automatischem Ablauf, die Nutzer*Innen durch die Annotation und das Training von Klassifikatoren leitet und einen Methodenvergleich für die Klassifikatoren ermöglicht.
-    \item Eine Methode, das Klassifikationsergebnis zu nutzen, um die Instanzsegmentierung von Myotuben zu verbessern.   
+    \item Ein neues Qualitätskriterium zur Bewertung von Segmentierungsmodellen hinsichtlich der Eignung der entstehenden Segmentierungsmasken zur Extraktion interpretierbarer Merkmale.
+    \item Eine Anwendung, die zeiteffizient Expertenwissen zu den Klassen von Nuclei in dreidimensionalen Daten erfasst.
+    \item Eine neue Methode um Klassifikatoren durch semi-supervised-Vortraining stärker zu generalisieren.
+    \item Zwei neue Klassifikations-Kopf-Architekturen für dreidimensionale Daten, die einen Klassifikator and verschiedene räumliche Verteilungen von Informationen in dreidimensionalen biologischen Daten anpassen.
+    \item Zwei Vorverarbeitungsmethoden für dreidimensionale Nuclei, die gundlegende Aussagen über die Lokalisierung der zur Klassifikation relevanten Informationen ermöglichen.
+    \item Ein automatisiertes Framework, das Anwender*Innen ohne Vorkenntnisse die Segmentierung und das zeiteffiziente Annotieren von Nuclei neuer Datensätze ermöglicht und einen Klassifikator auf Basis umfassender Vergleiche der eingeführten Methoden optimiert.
+    \item Ein optimierter Klassifikator für die vorliegende Myotuben-Kultur.   
 \end{itemize}
-
+\noindent
 Die nachfolgende Ausarbeitung ist wie folgt strukturiert. 
 In Kapitel \ref{ch:Theory} werden die Grundlagen, die relevante Literatur und der Stand der Technik beschrieben. 
 Außerdem sind dort offene Probleme, sowie die Ansätze, die die vorliegende Arbeit verfolgt um sie zu lösen, dargestellt. 

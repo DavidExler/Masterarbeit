@@ -20,36 +20,15 @@ Der Begriff \textit{Ähnlichkeit} ist mehrdeutig und das Definieren von Merkmale
 Metriken, die als Maß für \textit{Ähnlichkeit} herangezogen werden, müssen maßgeschneidert zur Anwendung passen und sind bereits breit erforscht \cite{zhu2020domain_similarity, koohi2018similarity, cai2009similarity}.
 Daten können mithilfe passender Metriken \textit{Ähnlichkeits-}Gruppen, sogenannten \textit{Domänen}, zugeordnet werden \cite{yuan2005domainsimilarity}.
 Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind verschiedene Farbmarker, Aufnahmegeräte oder Zoomstufen. 
-In Abb. \ref{fig:domains} sind Zellkerne in verschiedenen Darstellungsarten abgebildet. \newline
-%\newline Altes Bild (Katzen) ersetzt \newline
-%\begin{figure}[htbp]
-%    \centering
-%    \includegraphics[width=0.18\textwidth]{Figures/Katze_0.jpg} \hfill
-%    \includegraphics[width=0.24\textwidth]{Figures/Katze_1.jpg}\hfill
-%    \includegraphics[width=0.24\textwidth]{Figures/Katze_3.jpg}\hfill
-%    \includegraphics[width=0.24\textwidth]{Figures/Katze_2.jpg}
-%    \caption{Vier Bilder der Klasse \textit{Katze} aus verschiedenen Bilddomänen. Von Links nach Rechts steigt der wahrgenommene Abstraktionsgrad \cite{jrfarm_katze, Egan_Katzen}.}
-%    \label{fig:domains}
-%\end{figure}
+In Abb. \ref{fig:domains} sind Zellkerne in verschiedenen Darstellungsarten abgebildet. 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[t]{0.24\textwidth} 
-        \includegraphics[width=\textwidth]{Figures/Cell_domain0.jpg}
-        \caption{3D-Bildstapel mit verschiedenen Fluoreszenzmarkern, aufgenommen mit einem Leica TCS SP8 Konfokalmikroskop.}
-    \end{subfigure} \hfill
-    \begin{subfigure}[t]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{Figures/Cell_domain1.jpg}
-        \caption{3D-SIM Superauflösungsmikroskopie mit DAPI-Färbung \cite{Schermelleh2008}.}
-    \end{subfigure} \hfill
-    \begin{subfigure}[t]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{Figures/Cell_domain2.jpg}
-        \caption{Konfokale Fluoreszenzmikroskopie mit antikörperbasierten Farbstoffen \cite{Peng2015}.}
-    \end{subfigure} \hfill
-    \begin{subfigure}[t]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{Figures/Cell_domain3.jpg}
-        \caption{Klassische Hellfeldmikroskopie \cite{Ali2012}.}
-    \end{subfigure}
-    \caption{Vier Aufnahmen von Zellen. Die Bilddomänen sind durch die verschiedenen Marker und Aufnahmetechniken klar zu unterscheiden \cite{Schermelleh2008, Peng2015, Ali2012}.}
+    \includegraphics[width=0.98\linewidth]{Figures/Cell_domains.pdf}
+    \caption{Vier Aufnahmen von Zellen. Die Bilddomänen sind durch die verschiedenen Marker und Aufnahmetechniken klar zu unterscheiden.
+    a) 3D-Bildstapel aus den Daten der vorliegenden Arbeit mit verschiedenen Fluoreszenzmarkern, aufgenommen mit einem Leica TCS SP8 Konfokalmikroskop.
+    b) 3D-SIM Superauflösungsmikroskopie mit DAPI-Färbung \cite{Schermelleh2008}.
+    c) Konfokale Fluoreszenzmikroskopie mit antikörperbasierten Farbstoffen \cite{Peng2015}.
+    d) Klassische Hellfeldmikroskopie \cite{Ali2012}.}
     \label{fig:domains}
 \end{figure}
 \noindent
@@ -65,22 +44,7 @@ Links zu sehen ist ein exemplarisches Originalbild, daneben sind von links nach 
 In der semantischen- sowie in der panoptischen Maske sind die Farben der Objekte mit einer interpretierbaren Objektklasse verknüpft. 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{Figures/SegmentationOriginal.png}
-        \caption{Original}
-    \end{subfigure} \hfill
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{Figures/Semantic.png}
-        \caption{Semantisch}
-    \end{subfigure} \hfill
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{Figures/Instance.png}
-        \caption{Instanz}
-    \end{subfigure} \hfill
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{Figures/Panoptic.png}
-        \caption{Panoptisch}
-    \end{subfigure}
+    \includegraphics[width=\textwidth]{Figures/Segmentation_Types.pdf}
     \caption{Die verschiedenen Arten der Segmentierung. Links ist das Originalbild zu sehen, rechts sind die zugeordneten pixelweise Annotationen farblich eingezeichnet. 
     Gleiche Farben bedeuten gleiche Annotationen. 
     In der semantischen Maske sind gleiche Annotationen mehrerer Objekte derselben semantischen Klasse zu finden. 
@@ -113,24 +77,24 @@ Zur Merkmalsextraktion werden klassisch beschreibende Eigenschaften des Objekts 
 Als Eigenschaften eignen sich beispielsweise die Verteilung der Farbkanäle, eine Charakterisierung der Textur oder die Fläche des Objekts \cite{Kunaver2005, Mutlag2020}.
 Eine weitere verbreitete Eigenschaft ist eine Kombination von Parametern der Fourier-Entwicklung einer Kontur, die aus der diskreten komplexen Zahlenfolge
 \begin{equation}
-  c[n] = x[n] + i \cdot y[n], n = 0,...,N-1
+  c[n] = x[n] + i \cdot y[n], \quad n = 0, \ldots, N-1
 \end{equation}
 mithilfe der diskreten Fourier-Transformation 
 \begin{equation}
-  F[k] = \sum_{n=0}^{N-1} c[n] \cdot e^{-2 \pi i \frac{kn}{N}, k = 0,...,N-1}
+  F[k] = \sum_{n=0}^{N-1} c[n] \cdot e^{-2 \pi i \frac{kn}{N}}, \quad k = 0, \ldots, N-1
 \end{equation} gebildet werden \cite{Zahn1972, Kuhl1982}.
 Hierbei sind $x[n]$ und $y[n]$ die Koordinaten des $n$-ten von N equidistanten Sützpunkten entlang der Kontur des Objekts, $c[n]$ ihre komplexe Darstellung und $F[k]$ die Fourier-Transformation der komplexen Darstellungen.
 Die Ergebnisse der Fourier-Transformationen mehrerer Stützpunkte werden anschließend als Eigenschaft verwendet.
 Merkmalsvektoren werden häufig abstrahiert und in ihrer Dimension reduziert, beispielsweise durch eine Principal Component Analysis \cite{Pearson1901, Hotelling1933}.
 Sind keine Annotationen verfügbar, werden diese Metriken zum Clustering verwendet \cite{Jain1999, Xu2005}. 
 Wenn nur wenige Annotationen vorhanden sind, können semi-supervised-Verfahren angewandt werden, die insbesondere die Ähnlichkeit zwischen Stichproben ohne Annotationen herausarbeiten \cite{Boser1992, Yarowsky1995}.
-Eine prominente Methode des semi-supervised-Lernens ist das label-spreading, das mithilfe einer Kernfunktion \cite{Schoelkopf1997, Smola1998} die Dimension von Merkmalsvektoren ändert und in einen alternativen Merkmalsraum transformiert \cite{Zhou2003}.
+Eine prominente Methode des semi-supervised-Lernens ist das Label-Spreading, das mithilfe einer Kernfunktion \cite{Schoelkopf1997, Smola1998} die Dimension von Merkmalsvektoren ändert und in einen alternativen Merkmalsraum transformiert \cite{Zhou2003}.
 Verschiedene Kernfunktionen wie die Radiale-Basis-Funktion \cite{Lowe1988}
 \begin{equation}
     \phi(x, y) = \exp\!\left(-\gamma \|x - y\|^2\right), \quad \gamma > 0
     %\phi(\mathbf{x}) = \exp\Big(-\frac{\|\mathbf{x}-\mathbf{c}\|^2}{2\sigma^2}\Big)
 \end{equation}
-werden für das label-spreading eingesetzt \cite{Delalleau2005}.
+werden für das Label-Spreading eingesetzt \cite{Delalleau2005}.
 Hierbei sind $x, y \in \mathbb{R}^d$ die Koordinaten der Stichprobe im Merkmalsraum, $\gamma$ ein Parameter, der die Breite der Radialbasisfunktion steuert, und $\phi(x,y)$ der Wert der Radialen-Basis-Funktion.
 Die meist genutzten Methoden der Klassifikation sind logikbasierte Ansätze wie Entscheidungsbäume, Perzeptron-basierte Ansätze wie neuronale Netze, statistische Ansätze wie Bayes'sche Netzwerke oder Nächster-Nachbar-Verfahren und Support-Vector-Maschinen \cite{Kotsiantis2007}.
 Diese Methoden basieren direkt auf Ähnlichkeiten zwischen den Merkmalen unbekannter Stichproben und Stichproben mit bekannter Klasse \cite{Hughes1968}.
@@ -141,7 +105,6 @@ Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} 
 Als \textbf{Klassifikations-Kopf} wird der zusammenfassende Teil des Klassifikators bezeichnet; er gibt einen Zuversichtlichkeitswert für jede Klasse aus.
 Der State-of-the-Art für den Klassifikations-Kopf ist ein neuronales Netz, das auf Basis der abstrakten Merkmale des Encoders eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
 Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger Annotation den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\\ [0.5\baselineskip]
-
 Für das Training von Klassifikatoren sind eine Loss-Funktion und häufig Vorverarbeitungsmethoden notwendig.
 Der Cross-Entropy Loss \cite{Sukhbaatar2014} \newline
 \begin{equation}
@@ -211,11 +174,10 @@ Links sind die Klassen-Cluster schlechter getrennt als rechts.
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
         \includegraphics[width=\textwidth]{Figures/scatter_bad.pdf}
-        \caption{Epoche 1}
-    \end{subfigure} \hfill
+    \end{subfigure} 
+    \hspace{0.5cm}
     \begin{subfigure}[b]{0.4\textwidth}
         \includegraphics[width=\textwidth]{Figures/scatter_good.pdf}
-        \caption{Epoche 25}
     \end{subfigure}
     \caption{Die Abbildung zeigt zwei Scatterplots.
     Beide Scatterplots visualisieren den Merkmalsraum eines Klassifikators, links nach der ersten Epoche des Trainings, rechts nach 25 Epochen.
@@ -225,19 +187,11 @@ Links sind die Klassen-Cluster schlechter getrennt als rechts.
 \end{figure}
 \noindent 
 Dreidimensionale Daten stellen eine besondere Herausforderung für die Klassifikation dar \cite{Tran2018}.
-
 Vortrainierte Methoden der 2D-Klassifikation wie \ac{cnn}-Encoder können auf einzelne Schichten von 3D-Volumen angewandt und ihre extrahierten Merkmale aneinandergereiht werden, aber explizite 3D-Methoden sind oft besser \cite{Feichtenhofer2020}.
 Die Methoden können auch an dreidimensionale Daten angepasst werden, indem ihre 2D-Operationen auf drei Dimensionen ausgeweitet werden, aber der Rechenaufwand steigt dadurch \cite{Carreira2017}.
 Angepasste Methoden wie 3D-\acp{cnn} sind nicht in der Lage Beziehungen zu erfassen, wenn die relevanten Bildregionen räumlich weit voneinander entfernt sind und sich schräg in den drei Dimensionen verteilt sind \cite{Tran2015}. 
-Um dieses Problem zu lösen schlägt die Literatur self-attention-Mechanismen vor, die auch nicht-lokale Informationen erfassen \cite{Bertasius2021, Wang2018}. 
-%\cite{Carreira2017} - 2D convs auf 3D "aufgeblasen" - nicht gestapelt
-%\cite{Tran2015} - 2D convs struggeln in 3D beziehungen Festzustellen
-%\cite{Tran2018} - 3D struggles generell, Architektur für 3D mit besserer Z Beziehung
-%\cite{Feichtenhofer2020} 2D ist adaptbar auf 3D und wird dadurch bessre, 2D+stitching hat struggels
-%\cite{Wang2018} Besonders lange dependencies auf der Z-Ebene sind von 3D-Convs nicht gedeckt- self-attention als Lösung
-%Bertasius2021 Attention für space-time zusammenhänge
+Um dieses Problem zu lösen schlägt die Literatur self-attention-Mechanismen über die Z-Dimension vor, die auch nicht-lokale Informationen erfassen \cite{Bertasius2021, Wang2018}. 
 \section{Literaturrecherche}
-
 \subsection{Benchmark}\label{sec:bench}
 Da das manuelle Erstellen der Annotationen für die Segmentierung von Zelldaten mit erheblichem manuellen Aufwand verbunden ist und zusätzlich Expertenwissen voraussetzt, sind Datensätze hierfür selten. 
 Einige prominente Datensätze mit Annotationen für eine Instanzsegmentierung, deren Domänen zu den Zieldaten der Anwendung dieser Arbeit \textit{ähnlich} sind, sind:  
@@ -249,7 +203,7 @@ Einige prominente Datensätze mit Annotationen für eine Instanzsegmentierung, d
     \item die Cell Tracking Challenge \cite{ulman2017cellTrackingChallenge}, eine Sammlung aus 13 Datensätzen verschiedener Mikroskopiemodalitäten, die sich zur Messung der Segmentierungs- und Verfolgungsfähigkeiten für verschiedene Zelltypen eignen.
     \item MoNuSeg \cite{kumar2017MoNuSeg}, eine Zusammenstellung manuell annotierter Gewebeschnitte aus sieben verschiedenen Organen. Über 21.000 Zellen sind pro Bild in den 30 Bildern mit verschiedenen Färbungen und Aufnahmetechniken verteilt.
     \item TissueNet \cite{greenwald2022Tissuenet} ist ein umfassender Datensatz mit über 1.000.000 Zellen aus verschiedenen Gewebearten und unterschiedlichen Aufnahmetechniken.
-    \item S-BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset}, ein Datensatz der neben manuell annotierten Bildern von acht verschiedenen Zellarten synthetisch erzeugte Daten enthält. Mit Hilfe von SpCycleGAN \cite{fu2018cycleGAN} wurden dazu auf Basis von simulierten Annotationen Bilder generiert, die anstreben, die Merkmale der realen Bilder zu reproduzieren. Es handelt sich um 3D-Multispektraldaten, aufgenommen mittels Fluoreszenzbildgebung. 
+    \item S\_BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset}, ein Datensatz der neben manuell annotierten Bildern von acht verschiedenen Zellarten synthetisch erzeugte Daten enthält. Mit Hilfe von SpCycleGAN \cite{fu2018cycleGAN} wurden dazu auf Basis von simulierten Annotationen Bilder generiert, die anstreben, die Merkmale der realen Bilder zu reproduzieren. Es handelt sich um 3D-Multispektraldaten, aufgenommen mittels Fluoreszenzbildgebung. 
 \end{itemize}
 Aufgrund des geringen Volumens an frei zugänglichen Daten sind diese Sammlungen auch für das Training von Segmentierungsnetzen begehrt. 
 Neben annotierten Datensätzen bietet die Literatur auch Methoden zum eigenständigen Erzeugen domänenspezifischer Datensätze \cite{Abay2019, Raghunathan2021, Nikolenko2021, Choi2017, Lu2023}.
@@ -262,13 +216,13 @@ Auch Segmentierungsmodelle profitieren stark von umfangreichem Vortraining \cite
 In der aktuellen Forschung werden verschiedene Foundation-Modelle für die Segmentierung angewandt \cite{wang2021max,zou2023segment,jain2023oneformer,li2023mask}.
 Ein prominentes Exemplar ist das \ac{sam} von Meta AI \cite{kirillov2023sam} (siehe Abb. \ref{fig:SAM_Architektur}). 
 Es besteht aus einem Bild-Encoder, einem Prompt-Encoder und einem Masken-Decoder. 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Figures/SAM_Architecture.png}
-    \caption{\cite{kirillov2023sam}. Architektur des \ac{sam}. 
+    \caption{Architektur des \ac{sam}. 
     Eingabebilder werden durch einen Bildencoder in Repräsentationen umgeformt. 
     Zusätzliche optionale Hinweise zum zu segmentierenden Objekt werden durch Bildfaltungen oder einen Prompt-Encoder repräsentiert. 
-    Anschließend prädiziert der Decoder mehrere mögliche Masken und zugehörige Zuversichtlichkeiten.}
+    Anschließend prädiziert der Decoder mehrere mögliche Masken und zugehörige Zuversichtlichkeiten\cite{kirillov2023sam}.}
     \label{fig:SAM_Architektur}
 \end{figure}
 \noindent
@@ -286,10 +240,10 @@ Er kombiniert den Bild-Encoder von \ac{sam} mit dem \textit{Flow}-Segmentierungs
 Dabei generiert der Bild-Encoder direkt Vektoren, die Zwischenrepräsentationen, die sogenannten \textit{Flows}, darstellen.
 Diese \textit{Flows} werden zu einem Gradientenfeld pixelweise überführt.
 Mithilfe der Gradienten werden Objektinstanzen vorhergesagt.
-Abb. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
-\begin{figure}
+Abb. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm.
+\begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{Figures/CellposeSAM_Diagramm.png}
+    \includegraphics[width=0.98\linewidth]{Figures/CellposeSAM_Diagramm.png}
     \caption{Ablauf des CellposeSAM-Modells. 
     Eingabebilder werden durch einen Bild-Encoder (ViT-L) direkt zu sogenannten \textit{Flows} umgeformt, einer Repräsentation von vorhergesagten Objektmerkmalen, deren Werte von der relativen Position innerhalb des detektierten Objekts abhängen. 
     Die Gradienten der Flows werden verfolgt (gradient tracking) und aus dem daraus entstehenden Gradientenfeld werden Segmentierungsinstanzen (ROIs) vorhergesagt \cite{pachitariu2025samcellpose}.}
@@ -299,7 +253,7 @@ Abb. \ref{fig:CellposeSAM} zeigt diesen Ablauf als Diagramm. \newline
 Deepcell \cite{van2016deepcell,bannon2021deepcell,greenwald2022deepcell} bietet weitere Zellsegmentierungsmodelle.
 Das Deepcell-Caliban-Modell \cite{moen2019DeepcellCaliban} nutzt als Encoder eine EfficientNetV2L-Architektur \cite{Tan2021}, an deren Ausgabeschichten (C1\–C5) eine Pyramidenstruktur zur Merkmalsfusion (P1\–P7) angeschlossen ist. 
 Eine Besonderheit des Netzes ist, dass Eingabebildern zusätzlich Koordinatenkarten hinzugefügt werden.
-Als Decoder dienen drei Segmentierungsköpfe, die verschiedene Transformationen der gelabelten Trainingsmasken vorhersagen.\\ [0.5\baselineskip]
+Als Decoder dienen drei Segmentierungsköpfe, die verschiedene Transformationen der annotierten Trainingsmasken vorhersagen.\\ [0.5\baselineskip]
 In der Literatur ist außerdem das nnU-Net \cite{isensee2021nnu} sehr verbreitet, ein Segmentierungsframework, das sich automatisch an neue biomedizinische Aufgaben anpasst.
 Es konfiguriert Vorverarbeitung, Netzwerkarchitektur, Training und Nachbearbeitung dynamisch auf Basis der Eigenschaften des jeweiligen Datensatzes. 
 Die Leistungsfähigkeit des Ansatzes ergibt sich nicht aus einer neuen Architektur oder einer neuen Lernmethode, sondern aus der konsequenten Automatisierung und Systematisierung von Entwurfsentscheidungen.
@@ -309,28 +263,19 @@ Für Klassifikatoren werden in der Regel nur Encoder vortrainiert, der Klassifik
 State-of-the-Art für Bild-Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet-Datensatz \cite{Russakovsky2015} vortrainiert werden \cite{You2018, Kornblith2019}.
 Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.\\[0.5\baselineskip]
 \textbf{ResNet} ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
-Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten und verbessern die Leistungsfähigkeit tiefer neuronaler Netze \cite{He2015, He2016, srivastava2015highway} (siehe Abb. \ref{fig:ResCon}).
+Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten und verbessern die Leistungsfähigkeit tiefer neuronaler Netze \cite{He2016, He2015, srivastava2015highway} (siehe Abb. \ref{fig:ResDiagramms} a)).
 In ihrem Paper stellen die Autoren fünf unterschiedlich tiefe Varianten der \textbf{ResNet}-Architektur vor.
 Jede Variante enthält fünf Blöcke mit residual connections.
 Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, Batch Normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\\[0.5\baselineskip]
-\textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet-Modellfamilie \cite{Tan2019, Tan2021}.
-Die Architektur basiert auf modularen Blöcken von Bildfaltungsoperatoren mit besonders kleinen Faltungskernen und Squeeze-and-Excitations, genannt MBConv \cite{Sandler2018, Tan2019} und Fused-MBConv \cite{Gupta2019} (siehe Abb. \ref{fig:MBConv}).\newline
+\textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet-Modellfamilie \cite{Tan2021, Tan2019}.
+Die Architektur basiert auf modularen Blöcken von Bildfaltungsoperatoren mit besonders kleinen Faltungskernen und Squeeze-and-Excitations, genannt MBConv \cite{Tan2019, Sandler2018} und Fused-MBConv \cite{Gupta2019} (siehe Abb. \ref{fig:ResDiagramms} b)).\newline
 %einer Kombination aus MBConv- \cite{Sandler2018, Tan2019} und Fused-MBConv-Blöcken \cite{Gupta2019}, also aus .
 %Beide MBConv-Arten nutzen dabei Squeeze-and-Excitation und 1x1-Faltungsschichten.
 %Während MBConv aber die Dimension der Daten mithilfe einer weiteren 1x1 Faltung und 3x3 Depthwise-Faltung erhöht, nutzt der Fused-MBConv-Block hierzu eine reguläre 3x3 Faltung 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includegraphics[width=1\textwidth]{Figures/ResidualConns.png}
-        \caption{Residual connection. Der Eingang des modularen Blocks ist mit dem Eingang direkt verbunden \cite{He2016}.}
-        \label{fig:ResCon}
-    \end{subfigure} \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includegraphics[width=1\textwidth]{Figures/MBConv.png}
-        \caption{MBConv- und Fused-MBConv-Blöcke. Die Blöcke nutzen neben einer residual connection auch Faltungsschichten und Squeeze-and-Excitation, um die Datendimension zu erhöhen \cite{Tan2021}.}
-        \label{fig:MBConv}
-    \end{subfigure}
-    \caption{Diagramme a) der Residual Connections und b) MBConv-Blöcke und Fused-MBConv-Blöcke.}
+    \includegraphics[width=0.98\textwidth]{Figures/Convs.pdf}
+    \caption{Diagramme a) der Residual Connections \cite{He2016} und b) MBConv-Blöcke und Fused-MBConv-Blöcke \cite{Tan2021}.}
     \label{fig:ResDiagramms}
 \end{figure}
 \noindent
@@ -371,15 +316,15 @@ Diesen Lösungen fehlt bislang, ein Arbeitsablauf der Daten unmittelbar segmenti
 Im Zuge der vorliegenden Arbeit soll die automatische Extraktion interpretierbarer Eigenschaften der Myotubenkulturen ermöglicht werden.
 Zu diesem Ziel bearbeitet die vorliegende Arbeit Zwischenziele und liefert Folgendes:
 \begin{itemize}
-    \item Es soll ein Segmentierungsmodell gefunden werden, das die Eigenschaften der Nuclei in den vorliegenden, dreidimensionalen Daten besonders wenig durch Segmentierungsfehler verfälscht.
+    \item Es soll ein Segmentierungsmodell gefunden werden, das die Eigenschaften wie Zellkernvolumina und die lokale Nucleidichte möglichst unverändert aus den vorliegenden, dreidimensionalen Daten extrahieren kann.
     Dazu wird ein neues Bewertungskriterium für die Instanzsegmentierung eingeführt und auf einige etablierte Modelle angewandt.
     \item Das Segmentierungsmodell soll dann genutzt werden, um einen Ablauf zu schaffen, in dem Expert*Innen die Klassen der Nuclei besonders zeiteffizient annotieren können, um einen Klassifikator zu trainieren.
-    Durch das Anreichern dreidimensionaler Daten mittels Segmentierungsmasken und das automatische Fokusieren einzelner Nuclei soll sowohl die Rechenzeit optimiert werden als auch der Aufwand, einzelne Nuclei entlang drei Dimensionen zu suchen, eliminiert werden.
+    Durch das Anreichern dreidimensionaler Daten mit den Segmentierungsmasken und das automatische Fokusieren einzelner Nuclei soll sowohl die Rechenzeit optimiert werden als auch der Aufwand, einzelne Nuclei entlang drei Dimensionen zu suchen, eliminiert werden.
     Hierzu wird eine neue Anwendung entwickelt, die 3D-Zelldaten liest und anschließend eine Oberfläche zum Annotieren bereitstellt.
     \item Die entstehenden Annotationen sollen direkt in einen Trainingsablauf für Klassifikatoren integriert werden.
     Hierbei müssen Klassifikatoren mit dreidimensionalen Daten variierender Tiefe umgehen können.
     Ein ausführlicher Methodenvergleich verschiedener Encoder, Klassifikations-Köpfe, Vorverarbeitungsmethoden sowie Vortrainingsmethoden soll für Nutzer*Innen ohne Programmierkenntnisse ermöglicht werden.
-    Dazu wird eine neue Anwendung entwickelt, die die zuvor erstellten Annotationen und Segmentierungsmasken nutzt, um einen Klassifikator zu trainieren.
+    Dazu wird eine neue Anwendung entwickelt, die die erstellten Annotationen und Segmentierungsmasken nutzt, um einen Klassifikator zu trainieren.
     Nutzer*Innen können in einer grafischen Oberfläche verschiedene Methoden zum Vergleich auswählen, und in einem automatisierten Prozess werden Klassifikatoren aller Kombinationen trainiert und verglichen.
     \item Außerdem sollen die ausgelesenen Eigenschaften der eingegebenen Zelldaten leicht zugänglich sein.
     In einer weiteren neuen Anwendung werden automatisch die Vorhersagen des Klassifikators mit dem besten Ergebnis im Methodenvergleich genutzt, um Nutzer*Innen Graphen mit den Eigenschaften der Zellkultur darzubieten.

@@ -83,9 +83,9 @@ Die \ac{sq} erfasst zwar, ob die Fläche der Segmentierungsmaske sich mit der An
 Die Interpretation der Ergebnisse der Genauigkeit von Klassifikatoren mit verschiedenen Encodern, Klassifikations-Köpfen, Vorverarbeitungsmethoden und Vortrainingsmethoden zeigt, dass die 3D-Zelldaten-Pipeline effizient optimale Klassifikator-Methoden identifiziert.
 Wie die Ergebnisse zeigen, ermöglicht die Anwendung der 3D-Zelldaten-Pipeline das Training eines Klassifikators, der deutlich leistungsfähiger ist als ein Klassifikator mit zufällig gewählten Methoden – und das ganz ohne Programmierkenntnisse oder Vorerfahrung mit Deep-Learning-Methoden seitens der Anwender*Innen.\\[0.5\baselineskip]%Encoder
 Die Ergebnisse haben gezeigt, dass die beiden ResNet-Encoder besonders hohe Genauigkeiten im Durchschnitt haben.
-Da die ResNet-Encoder auch die Encoder mit der geringsten Parameteranzahl sind, liegt die Vermutung nahe, dass die gewählten Encoder zu groß sind und schlechte Ergebnisse einem Architektur-bedingten Overfitting geschuldet sind.
+Da die ResNet-Encoder auch die Encoder mit der geringsten Parameteranzahl sind, liegt die Vermutung nahe, dass die gewählten Encoder zu groß sind und schlechte Ergebnisse einem Architektur-bedingten Overfitting geschuldet sind.\\[0.5\baselineskip]
 Abb. \ref{fig:Params_v_acc} zeigt die durchschnittliche Genauigkeit aller Klassifikatoren abhängig von der Parameteranzahl des genutzten Encoders.
-\begin{figure}[H]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=\linewidth]{Figures/ParametersVAcc.pdf}
     \caption{Durchschnittliche Genauigkeit aller Klassifikatoren abhängig von der Parameteranzahl ihres Encoders.
@@ -130,7 +130,7 @@ Links ist ein Beispiel besonders starker Überschneidung gegeben.
 Die Geometrie des Nucleus ist hier nicht ohne die angedeutete Kontur ersichtlich.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\linewidth]{Figures/Nuclei_Overlap.pdf}
+    \includegraphics[width=0.98\linewidth]{Figures/Nuclei_Overlap.pdf}
     \caption{Beispiele für eine starke und eine schwache Überschneidung von Nuclei nach Anwendung der Distanzmethode.
     In grau ist je eine Umrandung der betrachteten Nuclei angedeutet.
     }
@@ -157,7 +157,7 @@ Abb. \ref{fig:Params_v_pretrain} zeigt die Genauigkeiten der verschiedenen Vortr
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Figures/ParameterVPretrain.pdf}
-    \caption{Die Abbildung zeigt die Genauigkeiten der verschiedenen Vortrainingsmethoden abhängig von der Parameteranzahl des genutzen Encoders.}
+    \caption{Genauigkeiten der verschiedenen Vortrainingsmethoden abhängig von der Parameteranzahl des genutzen Encoders.}
     \label{fig:Params_v_pretrain}
 \end{figure}
 \noindent
@@ -201,11 +201,11 @@ Die Schwannzellen-Klasse wird mit einer höchst signifikant geringeren Genauigke
 Auch für die Klassifikatoren sind die beiden Klassen also schwer trennbar.
 Wie in \ref{subsec:RES_pretrain} beschrieben sind nur Klassifikatoren die mit der semi-supervised-Vortrainingsmethode trainiert wurden in der Lage, die beiden Klassen zuverlässig zu trennen.
 Die neu entwickelte Vortrainingsmethode und der neu entwickelte Pseudo-Labler sind demnach wichtige Beiträge der vorliegenden Arbeit. 
-Die Effizienz der Vortrainingsmethode zeigt insbesondere auch die Projektion der Klassenentscheidungen der Klassifikatoren auf einen niederdimensionalen, visualisierbaren Merkmalsraum.
+Die Effizienz der Vortrainingsmethode zeigt insbesondere auch die Projektion der Klassenentscheidungen der Klassifikatoren auf einen niederdimensionalen, visualisierbaren Merkmalsraum.\\[0.5\baselineskip]
 In Abb. \ref{fig:scatter} sind zwei exemplarische Merkmalsräume als 2D-Projektion zu sehen.
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{Figures/scatter.pdf}    
+    \includegraphics[width=0.98\linewidth]{Figures/scatter.pdf}    
     \caption{2D-Projektionen des Merkmalraums von zwei Klassifikatoren durch \ac{tsne}.
     Der linke Scatterplot zeigt den Merkmalsraum eines ImageNet-vortrainierten Klassifikatiors, der rechte eines semi-supervised-vortrainierten Klassifikators.
     Die Werte der X- und Y-Achse sind arbiträre Aktivierungsintensitäten ohne physische Interpretation. 

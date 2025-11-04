@@ -1,11 +1,7 @@
 % !TeX root = ../Thesis.tex
 
-\chapter{Zusammenfassung}\label{ch:Conclusion}
+\chapter{Zusammenfassung und Ausblick}\label{ch:Conclusion}
 
-\section{Überblick}
-Die nachfolgenden Abschnitte fassen die vorliegende Arbeit zusammen und geben einen Ausblick für mögliche kommende Forschung.
-
-\section{Zusammenfassung}
 Die Arbeit befasst sich mit der automatisierten Optimierung von Deep-Learing-Methoden.
 In der theoretischen Grundlage sind etablierte Deep-Learing-Methoden für die Instanzsegmentierung und Klassifikation gegeben.
 Vor allem Methoden die für biologische 3D-Daten geeignet sind werden beleuchtet.
@@ -24,13 +20,12 @@ Die Anwendung umfasst außerdem die neu eingeführte Labeling-App, eine Methode 
 Mithilfe der 3D-Zelldaten-Pipeline werden Experimente an einem Datensatz von dreidimensionalen Myotuben-Zellkultur-Aufnahmen durchgeführt.
 Die Ergebnisse dieser Experimente belegen die Effizienz der 3D-Zelldaten-Pipeline.
 Außerdem zeigen sie, dass die Anwendung der semi-supervised-Vortrainingsmethode mit dem neu eingeführten Pseudo-Labler zwar zu einer geringeren Durchschnittsgenauigkeit, aber auch zu einer stärkeren Generalisierung des Klassifikators führt.\\[0.5\baselineskip]
-In den Ergebnissen sind des Weiteren grundlegende Erkenntnisse zu den Nuclei von Myotuben-Zellkulturen ersichtlich.
+In den Ergebnissen sind des Weiteren grundlegende Erkenntnisse zu den Nuclei von \linebreak Myotuben-Zellkulturen ersichtlich.
 Oberflächenmerkmale von Nuclei sind nicht hilfreich für die Unterscheidung von Nucleus-Klassen.
 Nur anhand ihrer Geometrie wird eine konsistente Klassenentscheidung gelernt.
-Außerdem sind die Marker-Kanäle für die Klassenentscheidung genauso wichtig wie der Nucleus-Kanal.
-
-\section{Ausblick}
-Die Ergebnisse haben hezeigt, dass die Geometrie der Nuclei für die Klassifikation essenziell ist.
+Außerdem sind die Marker-Kanäle für die Klassenentscheidung genauso wichtig wie der Nucleus-Kanal.\\[0.5\baselineskip]
+%Ausblick
+Die Ergebnisse haben gezeigt, dass die Geometrie der Nuclei für die Klassifikation essenziell ist.
 Dementsprechend ist ein mögliches Anliegen kommender Forschung die Erweiterung der \ac{ipq}-Metrik, um Veränderungen der Geometrie durch das Segmentierungsmodell explizit zu bestrafen.
 In Anbetracht der Ergebnisse der Klassifikator-Methoden kann zukünftige Forschung weitere, kleinere \ac{cnn}-Encoder in Betracht ziehen, um die Hypothese zu prüfen, dass die Encoder zu groß sind um eine sinnvolle Repäsentation der räumlich relativ kleinen Nuclei zu finden. 
 Mit neuen Datensätzen kann außerdem die Hypothese geprüft werden, dass die Oberflächenmerkmale von Nuclei egal und die Geometrie ausschlaggebend sind, indem die neu eingeführten Vorverarbeitungsmethoden weiter verglichen werden. 

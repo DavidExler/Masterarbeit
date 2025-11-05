@@ -3,7 +3,7 @@
 \chapter{Neues Konzept} \label{ch:NewMethods}
 \section{Überblick}
 Das nachfolgende Kapitel beschreibt und diskutiert im Detail das angewandte Konzept der vorliegenden Thesis. 
-Es behandelt die selbstentwickelten Beiträge zu den Methoden sowie die vorliegenden dreidimensionalen Bildstapel der Myotuben-Zellkulturen.
+Es behandelt die selbstentwickelten Beiträge zu den Methoden sowie die vorliegenden dreidimensionalen Bildstapel der Myotubenkulturen.
 Auf die in Abschnitt \ref{sec:daten} beschriebenen Daten werden die eingeführten Methoden angewandt, um deren Effektivität zu demonstrieren.
 In Abschnitt \ref{sec:Kriterien} wird ein neues Bewertungskriterium für 3D-Instanzsegmentierungsmodelle eingeführt.
 Es bewertet Modelle im Hinblick auf ihre Eignung, interpretierbare Merkmale von Nuclei unverändert zu extrahieren.
@@ -14,7 +14,7 @@ Diese Anwendung wird hier als 3D-Zelldaten-Pipeline bezeichnet.
 Abb. \ref{fig:graph_abstract} bietet einen Überblick über die Methodik.
 Die Anwendung kann regulär angewandt (Inferenz) oder optimiert werden (Optimierung).
 Zur Optimierung werden die 3D-Daten einem Ablauf für den Vergleich der Segmentierungsmodelle oder der Klassifikatormethoden zur Verfügung gestellt.
-Zuerst wird das neu eingeführte Bewertungskriterium für Segmentierungsmodelle \acf{ipq} für verschiedene Modelle berechnet (siehe Kapitel \ref{sec:Kriterien}).
+Zuerst wird das neu eingeführte Bewertungskriterium für Segmentierungsmodelle \acf{ipq} für verschiedene Modelle berechnet (siehe Abschnitt \ref{sec:Kriterien}).
 Dieses Bewertungskriterium quantifiziert die Eignung der Segmentierungsmodelle zur Extraktion der gewünschten Zellkerneigenschaften.
 Mithilfe der \ac{ipq}-Werte wird das beste Segmentierungsmodell für die Anwendung gewählt.
 Die Architektur und Parameter des optimalen Modells werden in den Inferenzablauf eingesetzt.\\[0.5\baselineskip]
@@ -22,7 +22,7 @@ Um die Klassifikatormethoden zu optimieren, werden die 3D-Daten und die extrahie
 Die Labeling-App ermöglicht die zeiteffiziente Annotation von Nuclei, indem relevante Bildausschnitte automatisch anhand der Segmente extrahiert werden.
 Mit den erstellten Annotationen und den 3D-Daten werden iterativ verschiedene Klassifikatoren trainiert.
 Diese Klassifikatoren ergeben sich aus Kombinationen der verfügbaren Klassifikatormethoden.
-Die Klassifikatormethoden werden in Kapitel \ref{sec:MethodsClassifier} beschrieben und umfassen 1. Encoder-Architekturen, 2. Klassifikations-Kopf-Architekturen, 3. Vorverarbeitungsmethoden und 4. Vortrainingsmethoden.
+Die Klassifikatormethoden werden in Abschnitt \ref{sec:MethodsClassifier} beschrieben und umfassen 1. Encoder-Architekturen, 2. Klassifikations-Kopf-Architekturen, 3. Vorverarbeitungsmethoden und 4. Vortrainingsmethoden.
 Unter den Methoden sind sowohl etablierte als auch neu entwickelte Ansätze.
 Anhand der Genauigkeit der trainierten Klassifikatoren auf einem separaten Validierungsanteil des Datensatzes werden die Methoden verglichen und eine optimale Konfiguration ausgegeben.
 Die Architektur und Parameter dieser Konfiguration werden dann in den Inferenzablauf der Anwendung eingesetzt.\\[0.5\baselineskip]
@@ -79,7 +79,7 @@ Es besteht aus drei Faktoren, die jeweils eine Fehlerart bei Instanzsegmentierun
   \caption{\ac{ipq} Visualisierung - Das Ablaufdiagramm stellt den Prozess dar, durch den das Segmentierungsmodell gewählt wird, das für die Anwendung der vorliegenden Arbeit eingesetzt wird. 
   Ein peer-reviewed Benchmark-Datensatz aus dreidimensionalen Bildern (1) von diversen Zellkulturen mit den dazugehörigen Annotationen wird links eingegeben. 
   Das zu bewertende Segmentierungsmodell (2) führt für die Bilder des Benchmarks eine Inferenz durch, um Segmentierungsmasken (3) bereitzustellen. 
-  Die entstehenden Masken werden anschließend zur Berechnung der neu eingeführten \ac{ipq} (siehe Kapitel \ref{sec:Kriterien}) eingesetzt. 
+  Die entstehenden Masken werden anschließend zur Berechnung der neu eingeführten \ac{ipq} (siehe Abschnitt \ref{sec:Kriterien}) eingesetzt. 
   Der Ablauf der Bewertung ist in drei Phasen gegliedert.
   Aus jeder Maske werden zuerst die einzelnen Fragmente extrahiert, die sich mit einer einzelnen Instanz der Annotation überlagern (4).
   Außerdem wird ein Fehlerbild durch Berechnung der \acf{iou} hergestellt, hier als logische XOR-Fläche der Maske und der Annotation als Platzhalter dargestellt (5).
@@ -89,12 +89,12 @@ Es besteht aus drei Faktoren, die jeweils eine Fehlerart bei Instanzsegmentierun
   \label{fig:ipq}
 \end{figure}
 \noindent
-Als Datensatz wird aus den in Kapitel \ref{sec:bench} vorgestellten Benchmarks der S\_BIAD1518-Datensatz \cite{Kromp2020_Dataset, chen20223_Dataset} verwendet, da dieser nicht in den Trainingsdaten eines zu testenden Segmentierungsmodells vorkommt.
+Als Datensatz wird aus den in Abschnitt \ref{sec:bench} vorgestellten Benchmarks der S\_BIAD1518-Datensatz \cite{Kromp2020_Dataset, chen20223_Dataset} verwendet, da dieser nicht in den Trainingsdaten eines zu testenden Segmentierungsmodells vorkommt.
 Der Datensatz verfügt über manuelle Annotationen für Instanzsegmentierungsmasken und ist durch synthetisch generierte Daten und Masken erweitert.
 Im Gegensatz zu selbstentwickelten synthetischen Daten weicht die Bilddomäne dieses Benchmarks zwar stärker von der Domäne der Zieldaten ab, aber dafür sind die Daten an eine Veröffentlichung mit standardisiertem Peer-Review-Prozess gebunden.\\ [0.5\baselineskip]
 Die Aufgabe des Bewertungskriteriums ist es, zu quantifizieren, wie gut sich eine vorliegende Instanzsegmentierung eignet, um reale Eigenschaften einer Aufnahme, wie die Zellkernanzahl, die Größe der Zellkerne und die lokale Zellkerndichte auszuwerten. 
 Das neu entwickelte Kriterium ist eine Erweiterung der \ac{pq} \cite{kirillov2019PQ}. 
-Durch die \ac{pq} wird die \ac{iou} für individuelle Instanzen bewertet und es werden \ac{fp} sowie \ac{fn} Detektionen bestraft. 
+Durch die \ac{pq} wird die \ac{iou} für individuelle Instanzen bewertet und es werden \acf{fp} sowie \acf{fn} Detektionen bestraft. 
 Zusätzlich werden durch einen neuen Faktor Verletzungen der injektiven Abbildung von segmentierten Nuclei auf die Instanzen der Annotation negativ bewertet werden, da die genaue Anzahl der Nuclei und die räumliche Dichte der Nuclei eine bedeutungsvolle Metrik für die Auswertung sind. 
 Zur Berechnung wird im ersten Schritt der folgende Brute-Force-Algorithmus angewandt, der die Zuordnung von Segmentierungsinstanzen zu Annotationsinstanzen durchführt.
 
@@ -160,7 +160,7 @@ Der \ac{sq}-Faktor bestraft Fehler, die das Volumen von Nuclei verändern, mit d
 \subsection{Übersicht}
 Jedem instanzsegmentierten Nucleus wird eine Klasse zugewiesen, um die Ausgabe zur panoptischen Segmentierungsmaske zu erweitern.
 Erst die panoptische Segmentierungsmaske ermöglicht das automatische Extrahieren interpretierbarer Eigenschaften aus den Daten.
-Durch diese panoptische Maske und die extrahierten Eigenschaften der Myotuben-Kultur wird ein klarer Überblick über den aktuellen Stand der Zellkultur geboten.\\ [0.5\baselineskip]
+Durch diese panoptische Maske und die extrahierten Eigenschaften der Myotubenkultur wird ein klarer Überblick über den aktuellen Stand der Zellkultur geboten.\\ [0.5\baselineskip]
 Für die Klassenzuweisung ist ein Klassifikator notwendig, der einen Bildausschnitt mit einer Nucleus-Instanz als Eingabe annimmt und eine Klasse als Ausgabe ausgibt.
 Um diesen Klassifikator optimal zu entwerfen, wird ein umfangreicher Benchmark aus den Zieldaten erstellt, mit dem die vorgestellten Methoden verglichen werden.
 Benchmarks aus der Literatur umfassen weder dieselben Klassen noch dieselben Objektmerkmale.
@@ -251,7 +251,7 @@ In Abb. \ref{fig:preproc_methods} sind die Nucleus-Kanäle der verschiedenen Met
 \end{figure}
 \noindent
 Je nach Modellarchitektur müssen die Bilddaten noch skaliert werden, bevor sie den vortrainierten Modellen übergeben werden können, da die Klassifikatoren Eingaben konstanter Größe benötigen.
-Dazu wird einfache bilineare Interpolation verwendet (siehe Kap. \ref{sec:Klassifikation}). 
+Dazu wird einfache bilineare Interpolation verwendet (siehe Abschnitt \ref{sec:Klassifikation}). 
 Um Einfluss auf die Ergebnisse durch eine ungleichmäßige Verteilung der Annotationen auf die vorhandenen Klassen zu vermeiden, wird vor dem Training die Anzahl der Stichproben pro Klasse extrahiert.
 Mithilfe der Anzahlverteilung werden die Gradienten dann stärker gewichtet, die zu unterrepräsentierten Klassen gehören.
 Weil hier mit rechenzeitintensiven dreidimensionalen Daten umgegangen werden muss, ist auch ein dynamisches Speichermanagement Teil der Vorverarbeitungsmethoden. 
@@ -267,9 +267,9 @@ Hier werden:
 \end{itemize}
 betrachtet.
 Die Abb. \ref{fig:pretrain} zeigt die hier umgesetzten Methoden.
-\begin{figure}[h]
+\begin{figure}[h!]
   \centering
-  \includegraphics[width=0.98\linewidth]{Figures/PretrainingMethods.png}
+  \includegraphics[width=0.85\linewidth]{Figures/PretrainingMethods.png}
   \caption{Übersicht über die Vortrainingsmethoden. 
   Links zu sehen sind die beiden verfügbaren Bildermengen, ImageNet und die Zieldaten.
   Rechts von diesen Bildermengen werden den Bildern Annotationen hinzugefügt, entweder durch die ImageNet-Datenbank, Expert*Innen oder einen Algorithmus.
@@ -284,23 +284,24 @@ Die Abb. \ref{fig:pretrain} zeigt die hier umgesetzten Methoden.
   Die letzte Variante wird semi-supervised vortrainiert und anschließend mit den Zieldaten fine-tuned. }
   \label{fig:pretrain}
 \end{figure}
+\noindent
 \paragraph{Kein Vortraining}
 Ohne Vortraining startet der Encoder, der den Großteil der Gewichte umfasst, mit zufällig initialisierten Gewichtswerten.
 Da diese zufälligen Werte keine sinnvollen Merkmale extrahieren, wird ein besonders langes Training mit den Zieldaten durchgeführt.
 Jedes Modell wird jeweils für 75 Epochen trainiert.
  
 \paragraph{Semi supervised}
-Die semi-supervised Annotationen werden mithilfe eines few-shot-gestützten Cluster-Algorithmus erstellt, der hier als Pseudo-Labler bezeichnet wird.
+Die semi-supervised-Annotationen werden mithilfe eines few-shot-gestützten Cluster-Algorithmus erstellt, der hier als Pseudo-Labler bezeichnet wird.
 Ein*e Expert*In erstellt hierzu Annotationen von wenigen Nuclei.
 Danach werden aus den restlichen Segmentierungsmasken einige Merkmale extrahiert und zu einem Vektor zusammengefasst.
 Zuerst werden das Volumen, die Oberfläche und die Achsenlängen jedes Nucleus direkt bestimmt. 
 Außerdem wird die Exzentrizität aus dem Verhältnis der längsten und der kürzesten Achse berechnet.
 Für die Kompaktheit wird das Volumen der Maske durch die kleinste mögliche Begrenzungsbox geteilt.
 Darüber hinaus wird aus der Z-Schicht, in der die Segmentierungsmaske am größten ist, die 2D-Kontur erfasst.
-Aus dieser Kontur wird eine komplexe Zahlenfolge berechnet und der Absolutwert der ersten zehn Koeffizienten als einzelne weitere Merkmale dem Merkmalsvektor hinzugefügt (siehe Abschnitt \ref{sec:Klassifikation}). \\[0.5\baselineskip]
+Aus dieser Kontur wird eine komplexe Zahlenfolge berechnet und der Absolutwert der ersten zehn Fourier-Koeffizienten als einzelne weitere Merkmale dem Merkmalsvektor hinzugefügt (siehe Abschnitt \ref{sec:Klassifikation}). \\[0.5\baselineskip]
 Der Pseudo-Labler normalisiert die Werte der Merkmalsvektoren zu einem Mittelwert von Null und einer Varianz von Eins und wendet eine Principal Component Analysis \cite{Pearson1901} an, um redundante Informationen zu entfernen.
 Das Ziel dabei ist, einen Mittelweg zwischen Informationserhalt und Gefahr des Overfitting sowie zwischen Rechenaufwand zu finden.
-Mithilfe des Label-Spreading-Algorithmus \cite{Zhou2003}, mit einer Radial Basis Funktion \cite{Lowe1988} als Kernelfunktion, werden die manuellen Annotationen über die Struktur der Daten auf alle Stichproben ausgebreitet.
+Mithilfe des Label-Spreading-Algorithmus \cite{Zhou2003}, mit einer Radialen Basis Funktion \cite{Lowe1988} als Kernelfunktion, werden die manuellen Annotationen über die Struktur der Daten auf alle Stichproben ausgebreitet.
 Durch den Pseudo-Labler entstehen Annotationen für die Daten ohne manuelle Annotationen.
 Diese neuen Annotationen werden eingesetzt, um in 25 Epochen sowohl die Encoder, als auch die Klassifikations-Köpfe zu trainieren, mit dem Ziel unter geringem Aufwand für die Expert*Innen umfangreiche Klassifikatoren zu trainieren.
 Optional werden die Gewichte des Encoders hiernach, bis auf die letzten beiden Schichten, eingefroren und nur der Klassifikations-Kopf wird in weiteren 35 Epochen mit dem Trainingsdatensatz der Zieldaten trainiert.
@@ -320,9 +321,21 @@ An die Encoder werden verschiedene Klassifikations-Köpfe angehängt.
 Hier werden zwei neue Klassifikations-Kopf-Architekturen nach dem Vorbild vergleichbarer Anwendungen aus der Literatur eingeführt (siehe Abschnitt \ref{sec:Klassifikation}).
 Die etablierten Architekturen der Literatur beruhen auf 3D-\acp{cnn} und self-attention-Mechanismen über die Z-Dimension.\\[0.5\baselineskip]
 Abb. \ref{fig:classifiers} zeigt die beiden Architekturen systematisch.
-\begin{figure}[htbp]
+Der erste Klassifikator wird hier \textit{Volumen-Klassifikator} genannt.
+Er interpretiert die Merkmale, die der Encoder generiert, als Volumen und generiert daraus mithilfe von 3D-Faltungen und Pooling eine neue Repräsentation.
+Diese Repräsentation wird dann durch Linear Layers und Leaky ReLu als Aktivierungsfunktion zu vier Ausgabe-Klassen umgeformt.
+Die Idee des \textit{Volumen-Klassifikators} ist es, die Merkmale, die der Encoder generiert, möglichst vollständig zu erfassen und alle räumlichen Beziehungen, auch in Z-Richtung, festzustellen.
+Hierbei ist das Ziel, dass durch die 3D-Faltungen eine domänenspezifische Interpretation der Merkmale gelernt wird, sodass die neuen Merkmale nach dem anschließenden Pooling aussagekräftig und niederdimensional sind.\\[0.5\baselineskip]
+Außerdem wird hier der \textit{Schichten-Klassifikator} eingeführt.
+Der \textit{Schichten-Klassifikator} betrachtet die einzelnen Schichten des Bilds anhand der individuellen Merkmalsschichten, die der Encoder ausgibt, mithilfe eines Self-Attention-Mechanismus über die Z-Dimension. 
+Dazu werden die räumlichen X- und Y-Dimensionen durch einen spatial average zusammengefasst.
+Durch eine multihead attention mit vier attention-Köpfen mit embedding dimension 256 wird eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
+Lineare Layers und Leaky ReLu als Aktivierungsfunktion formen anschließend die Repräsentation zu den vier Klassen um.
+Für den \textit{Schichten-Klassifikator} ist das Ziel, dass durch die Vereinfachung der Daten aussagekräftige, schichtenweise Merkmale entstehen und dass diese räumlich invariant sind, da der betrachtete Nucleus in den Bildfenstern zentriert ist.
+\newpage
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\linewidth]{Figures/Klassifikatoren.png}
+  \includegraphics[width=0.95\linewidth]{Figures/Klassifikatoren.png}
   \caption{Architektur der beiden Klassifikatoren. Der Encoder wird jeweils modular ausgetauscht. 
   Links zu sehen ist die Architektur des \textit{Volumen-Klassifikators}, der die Merkmale, die der Encoder generiert, als Volumen interpretiert und mithilfe von 3D-Faltungen und Pooling daraus eine Repräsentation erzeugt.
   Diese Repräsentation wird anschließend durch Linear Layers in vier Ausgabe-Klassen umgeformt.
@@ -333,17 +346,6 @@ Abb. \ref{fig:classifiers} zeigt die beiden Architekturen systematisch.
   \label{fig:classifiers}
 \end{figure}
 \noindent
-Der erste Klassifikator wird hier \textit{Volumen-Klassifikator} genannt.
-Er interpretiert die Merkmale, die der Encoder generiert, als Volumen und generiert daraus mithilfe von 3D-Faltungen und Pooling eine neue Repräsentation.
-Diese Repräsentation wird dann durch Linear Layers zu vier Ausgabe-Klassen umgeformt.
-Die Idee des \textit{Volumen-Klassifikators} ist es, die Merkmale, die der Encoder generiert, möglichst vollständig zu erfassen und alle räumlichen Beziehungen, auch in Z-Richtung, festzustellen.
-Hierbei ist das Ziel, dass durch die 3D-Faltungen eine domänenspezifische Interpretation der Merkmale gelernt wird, sodass die neuen Merkmale nach dem anschließenden Pooling aussagekräftig und niederdimensional sind.\\[0.5\baselineskip]
-Außerdem wird hier der \textit{Schichten-Klassifikator} eingeführt.
-Der \textit{Schichten-Klassifikator} betrachtet die einzelnen Schichten des Bilds anhand der individuellen Schichten, die der Encoder ausgibt, mithilfe eines Self-Attention-Mechanismus über die Z-Dimension. 
-Dazu werden die räumlichen X- und Y-Dimensionen durch einen spatial average zusammengefasst.
-Durch eine Multihead Attention mit vier Attention-Köpfen und Embedding-Dimension 256 wird eine Repräsentation aus den individuellen Schichten der Merkmale erstellt.
-Lineare Layers formen anschließend die Repräsentation zu den vier Klassen um.
-Für den \textit{Schichten-Klassifikator} ist das Ziel, dass durch die Vereinfachung der Daten aussagekräftige, schichtenweise Merkmale entstehen und dass diese räumlich invariant sind, da der betrachtete Nucleus in den Bildfenstern zentriert ist.
 \newpage
 \section{Segmentierung}
 \subsection{Modelle}\label{sec:Seg_Modelle}
@@ -359,8 +361,8 @@ Für die Instanzsegmentierung der Nuclei werden die folgenden drei Modelle einge
 Zur Nachbearbeitung der Instanzsegmentierungsmasken wird der Instanztrenner eingeführt.
 Diese Methode dient dazu, separate Instanzen mit derselben numerischen Annotation (IDs) zu trennen und mit einzigartigen Zahlenwerten zu versehen. 
 Pro Instanz werden hierzu ein zufälliges Pixel betrachtet und davon ausgehend alle Pixel mit direkter Verbindung über die Segmentierungsmaske gesucht.
-Diese verbundenen Pixel werden als neue einzigartige Instanzen abgelegt, bis keine Pixel ohne Verbindung übrig bleiben. 
-Eine weitere Methode der Nachbearbeitung, die auf Segmentierungsmasken eingesetzt werden kann, ist der Watershed-Algorithmus. %(siehe Abschnitt \ref{sec:Segmentierung}).
+Diese verbundenen Pixel werden als neue Instanz mit einzigartiger ID abgelegt, bis keine Pixel ohne Verbindung übrig bleiben. 
+Eine weitere Methode der Nachbearbeitung, die auf Segmentierungsmasken eingesetzt werden kann, ist der Watershed-Algorithmus (siehe Abschnitt \ref{sec:Segmentierung}).
 Der Algorithmus trennt überlagerte Instanzen, die das Modell als einzelne Instanzen segmentiert hat. 
 %\begin{algorithm}
 %\caption{Watershed-Nachbearbeitung zur Trennung überlappender Instanzen}\label{alg:watershed}

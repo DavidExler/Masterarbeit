@@ -1,6 +1,3 @@
-\babel@toc {english}{}\relax 
-\babel@toc {ngerman}{}\relax 
-\babel@toc {ngerman}{}\relax 
 \babel@toc {ngerman}{}\relax 
 \contentsline {chapter}{\numberline {1}Einleitung}{1}{chapter.1}%
 \contentsline {chapter}{\numberline {2}Theorie}{3}{chapter.2}%
@@ -12,7 +9,7 @@
 \contentsline {section}{\numberline {2.3}Literaturrecherche}{10}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Benchmark}{10}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Segmentierungsmodelle}{11}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Klassifikator}{13}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.3}Klassifikator}{12}{subsection.2.3.3}%
 \contentsline {section}{\numberline {2.4}Offene Probleme}{14}{section.2.4}%
 \contentsline {section}{\numberline {2.5}Zielsetzung}{15}{section.2.5}%
 \contentsline {chapter}{\numberline {3}Neues Konzept}{17}{chapter.3}%
@@ -59,10 +56,10 @@
 \contentsline {section}{\numberline {6.2}Segmentierung}{59}{section.6.2}%
 \contentsline {section}{\numberline {6.3}Klassifikation}{61}{section.6.3}%
 \contentsline {chapter}{\numberline {7}Zusammenfassung und Ausblick}{69}{chapter.7}%
-\contentsline {chapter}{\numberline {A}Appendix}{73}{appendix.A}%
+\contentsline {chapter}{\numberline {A}Anhang}{73}{appendix.A}%
 \contentsline {section}{\numberline {A.1}SWINV2 Architektur}{73}{section.A.1}%
 \contentsline {section}{\numberline {A.2}\ac {ipq}-Ergebnisse}{74}{section.A.2}%
 \contentsline {section}{\numberline {A.3}Einzelne Ergebnisse aller Klassifikator Kombinationen}{80}{section.A.3}%
-\contentsline {chapter}{\nonumberline References}{83}{chapter*.70}%
+\contentsline {chapter}{\nonumberline Quellenverzeichnis}{83}{chapter*.70}%
 \babel@toc {ngerman}{}\relax 
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

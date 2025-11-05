@@ -14,7 +14,7 @@ In den meisten Fällen werden die Myotuben, ihre Zellkerne (Nuclei) und die zuge
 Die Bilddaten entstehen unter unterschiedlichen Herstellungsbedingungen, Färbungen und Aufnahmegeräten, was eine generalisierte Automatisierung erschwert \cite{Chua2019, Shahini2018, Brunetti2021, NogalesGadea2010}. \\[0.5\baselineskip]
 Im Zuge der vorliegenden Arbeit werden nach dem Protokoll von Couturier et al. \cite{Couturier2024} hergestellte in-vitro-Kulturen von Myotuben analysiert und die Ergebnisse automatisiert ausgewertet.
 Aus den Daten werden interpretierbare Merkmale wie die Zellkernanzahl, die Verteilung der Zellkernklassen und die Verteilung der Volumina der Instanzen extrahiert.
-Diese Merkmale ermöglichen die Entwicklung der Myotuben ohne manuellen Aufwand zu vermessen und zu überwachen.
+Diese Merkmale ermöglichen die Überwachung der Entwicklung der Myotuben ohne manuellen Aufwand.
 Alle hierzu angewandten Methoden sind auf Basis quantitativer Vergleiche aktueller Forschung gewählt und bestmöglich an die Anforderungen angepasst.\\[0.5\baselineskip]
 Um die Analyse biologischer 3D-Daten effizient und in großem Umfang durchführen zu können, sind Bildverarbeitungsprogramme erforderlich \cite{Noe2022}, da die manuelle Auswertung anspruchsvoll und zeitintensiv ist \cite{Weisrock2024}.
 Myotuben ordnen sich in Forschungsumgebungen zu chaotischen Netzen mit Verschränkungen und Überkreuzungen an \cite{Abdelmoez2020}.
@@ -24,7 +24,7 @@ Außerdem stellen die dreidimensionalen Daten eine große Herausforderung für H
 Besonders herausfordernd sind dabei die stark erhöhten Speicher- und GPU-Anforderungen sowie die geringere Zahl an etablierten Methoden und Datensätzen \cite{liu2021, James2023, Chan2020}. 
 Der Mehrwert einer dritten räumlichen Dimension kann die Ergebnisse allerdings wesentlich verbessern, was die Verarbeitung von 3D-Daten zu einem zentralen Forschungsaspekt macht \cite{Hirabayashi2024, Midgley2003}.\\[0.5\baselineskip]
 Das übergeordnete Ziel der vorliegenden Arbeit ist es, die Segmentierung und Klassifikation der Nuclei in den Myotubenkulturen zu optimieren. 
-Hierzu muss ein optimales Modell aus etablierten 3D-Segmentierungsmodellen für Nuclei gewählt werden, Annotationen für die Klassifikationen durch Expert*Innen erfasst werden und Methoden zur Klassifikation von 3D-Bildstapeln optimiert werden.
+Hierzu müssen ein optimales Modell aus etablierten 3D-Segmentierungsmodellen für Nuclei gewählt, Annotationen für die Klassifikationen durch Expert*Innen erfasst und Methoden zur Klassifikation von 3D-Bildstapeln optimiert werden.
 Um diese Anforderungen zu erfüllen, liefert die Arbeit folgende Neuheitswerte:
 \begin{itemize}
     \item Ein neues Qualitätskriterium zur Bewertung von Segmentierungsmodellen hinsichtlich der Eignung der entstehenden Segmentierungsmasken zur Extraktion interpretierbarer Merkmale.
@@ -39,7 +39,7 @@ Um diese Anforderungen zu erfüllen, liefert die Arbeit folgende Neuheitswerte:
 Die nachfolgende Ausarbeitung ist wie folgt strukturiert. 
 In Kapitel \ref{ch:Theory} werden die Grundlagen, die relevante Literatur und der Stand der Technik beschrieben. 
 Außerdem sind dort offene Probleme sowie die Ansätze, die die vorliegende Arbeit verfolgt, um sie zu lösen, dargestellt. 
-Die Methodik (Kapitel \ref{ch:NewMethods}) beschreibt das neue, praktische Konzept, das die Arbeit einführt, und Kapitel \ref{ch:Implementation} (Implementierung) behandelt, wie diese Methoden umgesetzt werden.
-Im Kapitel \ref{ch:results} (Ergebnisse) werden die Ergebnisse der durchgeführten Experimente ungewertet dargestellt; im Kapitel \ref{ch:Discussion} (Diskussion) werden sie anschließend ausgewertet.
-Mit dem Kapitel \ref{ch:Conclusion} (Zusammenfassung) schließt die Ausarbeitung ab, stellt kurz die gesamte Arbeit dar und liefert einen Ausblick auf zukünftige Ziele.
+Die Methodik (Kapitel \ref{ch:NewMethods}) beschreibt das neue, praktische Konzept, das die Arbeit einführt, und Kapitel \ref{ch:Implementation} (Implementierung) behandelt die praktische Umsetzung dieser Methoden.
+In Kapitel \ref{ch:results} (Ergebnisse) werden die Ergebnisse der durchgeführten Experimente ungewertet dargestellt; im Kapitel \ref{ch:Discussion} (Diskussion) werden sie anschließend ausgewertet.
+Mit dem Kapitel \ref{ch:Conclusion} (Zusammenfassung und Ausblick) schließt die Ausarbeitung ab, stellt kurz die gesamte Arbeit dar und liefert einen Ausblick auf zukünftige Ziele.
 Der Code dieser Arbeit ist verfügbar unter: \href{https://github.com/DavidExler/Masterarbeit}{github.com/DavidExler/Masterarbeit}.

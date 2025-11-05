@@ -105,12 +105,12 @@ Für die \ac{cnn}-Architekturen ist ein kurzes Training weniger problematisch.
 Bei Betrachtung ausschließlich der \ac{cnn} zeigt sich ein negativer Zusammenhang zwischen Parameteranzahl des Encoders und der durchschnittlichen Genauigkeit, allerdings ist die Stichprobenanzahl für eine Korrelationsanalyse sehr gering.
 \\[0.5\baselineskip]
 %Decodern
-Der Volumen-Klassifikator ist signifikant besser als der Schichten-Klassifikator (siehe Kapitel \ref{sec:resultsClassifier}).
+Der Volumen-Klassifikator ist signifikant besser als der Schichten-Klassifikator (siehe Abschnitt \ref{sec:resultsClassifier}).
 Diese Erkenntnis legt nahe, dass die dreidimensionalen Faltungsschichten besser den Zusammenhang der Merkmale erfassen können als der Attention-Mechanismus des Schichten-Klassifikators.
 Das kann daran liegen, dass die dreidimensionale Faltung räumliche Mittlungen nur mit gelernten Gewichten durchführt, während die Spatial Average Operation die räumliche Beziehung der Merkmale großflächig vernachlässigt.
 Außerdem ist es möglich, dass die für die Klassifikation ausschlaggebenden Informationen entlang der Z-Dimension nicht ausreichend erhalten werden, was zu schlechter Leistung des Z-Richtung-fokussierten Schichten-Klassifikators führt. 
 Stattdessen kann auch die Kombination aus räumlichen Merkmalen und Merkmalen entlang der Z-Achse wichtig sein, was die gute Leistung des Volumen-Klassifikators bedingen kann.
-Da der Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
+Da der \linebreak Schichten-Klassifikator mit dem ConvNeXt Encoder im Durchschnitt höhere Genauigkeiten erzielt, als mit dem Volumen-Klassifikator, ist die Abwägung zwischen den beiden Methoden dennoch für zukünftige Anwendungen sinnvoll. 
 Bestimmte Encoder erfassen die relevanten Merkmale auf unterschiedliche Weise, und beide Klassifikations-Köpfe haben das Potential, Zusammenhänge aus bestimmten Merkmalsräumen besonders gut zu erfassen. 
 Besonders da die ImageNet-Encoder nicht auf dreidimensionale Eingabedaten vortrainiert werden, ist die Abwägung zwischen einem Fokus auf Merkmale entlang der Z-Achse und räumlichen Merkmalen essenziell.
 Auch für zukünftige Encoder besteht die Möglichkeit, dass sie Beziehungen von Merkmalen innerhalb einer 2D-Schicht der Eingabedaten so effizient und einheitlich zusammenfassen, dass der Attention-Mechanismus des Schichten-Klassifikators die Informationen besser als der Volumen-Klassifikator erhalten kann. 
@@ -118,7 +118,7 @@ Auch für zukünftige Encoder besteht die Möglichkeit, dass sie Beziehungen von
 %Vorverarbeitungsmethoden
 Auch für die Vorverarbeitung ist eine der Methoden im Durchschnitt deutlich überlegen. 
 Die durchschnittliche Genauigkeit von Klassifikatoren mit der Masken-Methode ist signifikant höher als die Genauigkeit von Klassifikatoren mit der Distanz-Methode.
-Kapitel \ref{sec:MethodsClassifier} beschreibt die Vorteile und Risiken der Methoden.
+Abschnitt \ref{sec:MethodsClassifier} beschreibt die Vorteile und Risiken der Methoden.
 Insbesondere der Vorteil der Masken-Methode wird an den Ergebnissen sichtbar. 
 Anhand der GradCAM-Heatmap in Abb. \ref{fig:gradCAM} ist zu erkennen, dass die Oberflächenmerkmale der Nuclei für die Klassifikation keine Rolle spielen.
 Ein Risiko der Masken-Methode ist ein Qualitätsverlust aufgrund der Eliminierung der Oberflächenmerkmale, aber selbst mit der Distanz-Methode werden diese Merkmale nicht betrachtet.
@@ -163,8 +163,8 @@ Abb. \ref{fig:Params_v_pretrain} zeigt die Genauigkeiten der verschiedenen Vortr
 \noindent
 Die Abbildung zeigt, dass der Zusammenhang zwischen der Effizienz der Vortrainingsmethoden und der Parameteranzahl nicht trivial darzustellen ist.
 Mit den ResNet-Encodern ist es möglich, das ImageNet-Vortaining auszulassen und die Merkmalsextraktion direkt aus den Zieldaten zu lernen.
-Sowohl ohne Vortraining, als auch mit dem semi-supervised-Vortraining ist die Genauigkeit der Klassifikatoren vergleichbar mit dem ImageNet-Vortraining.
-In Anbetracht des hohen Rechenaufwands, den das ImageNet-Vortraining erfordert, ist dieses Ergebnis besonders interessant.
+Sowohl ohne Vortraining, als auch mit dem semi-supervised-Vortraining ist die Genauigkeit der Klassifikatoren vergleichbar mit dem \linebreak ImageNet-Vortraining.
+In Anbetracht des hohen Rechenaufwands, den das \linebreak ImageNet-Vortraining erfordert, ist dieses Ergebnis besonders interessant.
 Beide Methoden erhöhen den Rechenaufwand beim fine-tuning eines Klassifikators auf eine neue Domäne, machen dafür aber das exzessive Vortraining überflüssig.
 Insgesamt ergibt sich hierdurch vermutlich eine geringere Generalisierbarkeit, aber für den angewandten Datensatz ist die Genauigkeit besser.
 Auch die beiden anderen \ac{cnn}-Encoder können ohne ImageNet-Vortraining genutzt werden.
@@ -196,7 +196,7 @@ Die beiden Beispiele aus derselben Reihe sind visuell kaum voneinander zu unters
     \label{fig:schwann_myo}
 \end{figure}
 \noindent
-Die Schwannzellen-Klasse wird mit einer höchst signifikant geringeren Genauigkeit erkannt (siehe Kap. \ref{subsec:RES_allg}).
+Die Schwannzellen-Klasse wird mit einer höchst signifikant geringeren Genauigkeit erkannt (siehe Abschnitt \ref{subsec:RES_allg}).
 Auch für die Klassifikatoren sind die beiden Klassen also schwer voneinander zu trennen.
 Wie in \ref{subsec:RES_pretrain} beschrieben, sind nur Klassifikatoren, die mit der semi-supervised-Vortrainingsmethode trainiert wurden, in der Lage, die beiden Klassen zuverlässig zu trennen.
 Die neu entwickelte Vortrainingsmethode und der neu entwickelte Pseudo-Labler sind demnach wichtige Beiträge der vorliegenden Arbeit. 

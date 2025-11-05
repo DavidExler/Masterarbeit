@@ -7,13 +7,13 @@ Hierzu werden sowohl für die Arbeit relevante Methoden als auch die Literatur v
 Da die Arbeit im Kern die panoptische Segmentierung von Zelldaten behandelt, werden hier Methoden zur Instanzsegmentierung und Klassifikation vorgestellt.
 Die Methoden zur Instanzsegmentierung sind auf \ac{ki}-Methoden konzentriert; von klassischen Ansätzen wird abgesehen.
 Für die Klassifikation wird von grundlegenden Erklärungen der Deep-Learning-Methoden abgesehen.
-Stattdessen werden moderne Ansätze sowie relevante Methoden zur Visualisierung oder Optimierung von Klassifikatoren angeführt.
+Stattdessen werden einzelne moderne Ansätze sowie relevante Methoden der Visualisierung oder Optimierung von Klassifikatoren angeführt.
 Um die Methoden in einem vergleichbaren und reproduzierbaren Aufbau zu demonstrieren, werden zudem Benchmark-Methoden beleuchtet.
-Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag des vorliegenden Projekts zur Forschung zu verdeutlichen.
+Dem theoretischen Hintergrund wird der Neuheitswert der Arbeit gegenübergestellt, um den Beitrag der vorliegenden Arbeit zur Forschung zu verdeutlichen.
 
 \section{Methoden}
 \subsection{Benchmark}
-Um die Leistungsfähigkeit der im Rahmen der vorliegenden Thesis erstellten Applikation zu prüfen, sind umfangreiche Datensätze erforderlich. 
+Um die Leistungsfähigkeit der im Rahmen der vorliegenden Thesis eingeführten Methoden zu prüfen, sind umfangreiche Datensätze erforderlich. 
 Für jede isolierbare Aufgabe muss ein Datensatz gewählt werden, der Annotationen entsprechend dieser Aufgabe enthält.
 Die Herausforderung bei der Auswahl eines Datensatzes besteht darin, dass die darin enthaltenen Daten (Quelldaten) den Daten \textit{ähnlich} sein müssen, für die die Anwendung entworfen wird (Zieldaten).
 So wird sichergestellt, dass sich die auf den Quelldaten gemessene Qualität der Anwendung sinnvoll auf die Zieldaten übertragen lässt \cite{ganin2015domain_big}.
@@ -21,7 +21,7 @@ Der Begriff \textit{Ähnlichkeit} ist mehrdeutig, und das Definieren von Merkmal
 Metriken, die als Maß für \textit{Ähnlichkeit} herangezogen werden, müssen maßgeschneidert zur Anwendung passen und sind bereits breit erforscht \cite{zhu2020domain_similarity, koohi2018similarity, cai2009similarity}.
 Daten können mithilfe passender Metriken \textit{Ähnlichkeits-}Gruppen, sogenannten \textit{Domänen}, zugeordnet werden \cite{yuan2005domainsimilarity}.
 Beispiele für Domänenunterschiede in biomedizinischen Bildaufnahmen sind verschiedene Farbmarker, Aufnahmegeräte oder Zoomstufen. 
-In Abb. \ref{fig:domains} sind Zellkerne in verschiedenen Darstellungsarten abgebildet. 
+In Abb. \ref{fig:domains} sind Zellkerne verschiedener Domänen abgebildet. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.98\linewidth]{Figures/Cell_domains.pdf}
@@ -56,11 +56,15 @@ In der semantischen sowie in der panoptischen Maske sind die Farben der Objekte 
 \end{figure}
 \noindent
 Für die verschiedenen Segmentierungsarten werden Architekturen an die jeweilige Aufgabe angepasst \cite{Arnab2017, Chen2018}. 
-Modelle sind dabei in der Regel nach dem Vorbild des \textit{U-Net} \cite{Ronneberger2015} aus einem Merkmalsextraktor (Encoder) und einem Vorhersagenetz (Decoder) aufgebaut \cite{Girshick2014}
+Modelle sind dabei in der Regel nach dem Vorbild des \textit{U-Net} \cite{Ronneberger2015} aus einem Merkmalsextraktor (Encoder) und einem Vorhersagenetz (Decoder) aufgebaut \cite{Girshick2014}.
 Der Encoder nutzt zur Merkmalsextraktion beispielsweise Bildfaltungen mit Kernen, deren optimale Gewichte anhand annotierter Daten gelernt werden \cite{Long2015}.
 Dabei verringert der Encoder iterativ die Größe der Eingabe jeder Schicht des Netzes in X-, Y- und im dreidimensionalen Fall in Z-Richtung, erhöht dabei aber die Informationstiefe pro verbleibendem Pixel, bis ein hochdimensionaler Merkmalsvektor übrig bleibt. 
 Der Decoder hebt, meist durch transponierte Bildfaltungen \cite{Zeiler2010, Zeiler2014}, die räumliche Auflösung schrittweise wieder an, indem er die Bilddimensionen vergrößert und die Merkmalskanäle gleichzeitig reduziert \cite{Noh2015}. 
-Über sogenannte Skip-Connections \cite{Ronneberger2015} werden dabei Merkmale aus den entsprechenden Encoder-Schichten mit den Decoder-Stufen verknüpft, sodass sowohl globale Kontextinformationen als auch feine Strukturen für die Segmentierung erhalten bleiben \cite{Mostajabi2015, Gu2018}. \\ [0.5\baselineskip]
+Über sogenannte Skip connections \cite{Ronneberger2015} werden dabei Merkmale aus den entsprechenden Encoder-Schichten mit den Decoder-Stufen verknüpft, sodass sowohl globale Kontextinformationen als auch feine Strukturen für die Segmentierung erhalten bleiben \cite{Mostajabi2015, Gu2018}.\\ [0.5\baselineskip]
+Zur Nachbearbeitung von Segmentierungsmasken kann das Watershed-Verfahren eingesetzt werden \cite{Belaid2009}.
+Dabei wird zunächst aus der Segmentierungsmaske ein Gradientenbild erzeugt und anschließend eine Überflutungssimulation durchgeführt, bei der regionale Minima als Startpunkte dienen. 
+Der Algorithmus eignet sich insbesondere zur Trennung überlagerter Instanzen.
+\\ [0.5\baselineskip]
 Biologische und medizinische Bilddaten sind oft dreidimensionale Volumina. 
 Dreidimensionale Daten erhöhen sowohl den Rechenaufwand für die Segmentierung als auch die Komplexität von Segmentierungsmodellen und stellen damit eine besondere Herausforderung dar \cite{Taha2015, Zhang2022, Avesta2023a}.
 Methoden für zweidimensionale Segmentierung lassen sich anpassen, um direkt mit dreidimensionalen Daten zu operieren \cite{Yang2021}.
@@ -92,7 +96,7 @@ Merkmalsvektoren werden häufig abstrahiert und in ihrer Dimensionalität reduzi
 Sind keine Annotationen verfügbar, werden diese Metriken zum Clustering verwendet \cite{Jain1999, Xu2005}. 
 Wenn nur wenige Annotationen vorhanden sind, können semi-supervised-Verfahren angewandt werden, die insbesondere die Ähnlichkeit zwischen Stichproben ohne Annotationen herausarbeiten \cite{Boser1992, Yarowsky1995}.
 Eine prominente Methode des semi-supervised-Lernens ist das Label-Spreading, das mithilfe einer Kernfunktion \cite{Schoelkopf1997, Smola1998} die Dimensionen von Merkmalsvektoren ändert und in einen alternativen Merkmalsraum transformiert \cite{Zhou2003}.
-Verschiedene Kernfunktionen wie die Radiale-Basis-Funktion \cite{Lowe1988}
+Verschiedene Kernfunktionen wie die Radiale Basis Funktion \cite{Lowe1988}
 \begin{equation}
     \phi(x, y) = \exp\!\left(-\gamma \|x - y\|^2\right), \quad \gamma > 0
 \end{equation}
@@ -102,7 +106,7 @@ Die meist genutzten Methoden der Klassifikation sind logikbasierte Ansätze wie 
 Diese Methoden basieren direkt auf Ähnlichkeiten zwischen den Merkmalen unbekannter Stichproben und Stichproben mit bekannter Klasse \cite{Hughes1968}.
 Moderne Anwendungen nutzen zur Merkmalsextraktion verschiedene Deep-Learning-basierte Methoden \cite{Khan2023}.
 Vor allem \linebreak \acp{cnn} \cite{Krizhevsky2012} und \acp{vit} \cite{Bain2021} können aus Bildern aussagekräftige, abstrakte Merkmale extrahieren \cite{Plested2022}.
-Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} bezeichnet.%\\ [0.5\baselineskip]
+Ein Netz, das zur Merkmalsextraktion eingesetzt wird, wird als \textbf{Encoder} bezeichnet. \\ [0.5\baselineskip]
 Als \textbf{Klassifikations-Kopf} wird der zusammenfassende Teil des Klassifikators bezeichnet; er gibt einen Zuversichtlichkeitswert für jede Klasse aus.
 Der State-of-the-Art für den Klassifikations-Kopf ist ein neuronales Netz, das auf Basis der abstrakten Merkmale des Encoders eine Zuversichtlichkeit für jede Klasse ausgibt \cite{Ghods2019}.
 Hierzu lernt in der Regel ein Multi-Layer-Perzeptron auf Basis von Trainingsdaten mit zugehöriger Annotation den Zusammenhang zwischen den Merkmalen und der assoziierten Klasse \cite{Schmidhuber2015}.\\ [0.5\baselineskip]
@@ -133,9 +137,9 @@ Zur Schätzung des neuen Wertes wird dabei ein gewichtetes Mittel aus den vier b
 \end{equation}
 wobei $\hat{f}(x,y)$ der neue Wert, $p, q \in [0, 1]$ die relativen Abstände zu den Nachbarpixeln, $i, j$ die Indizes der Nachbarpixel und $f$ die Intensitäten der Nachbarpixel sind. \\ [0.5\baselineskip]
 Normierungsmethoden werden während des Trainings eingesetzt, um die Daten zu regulieren und Signale weder unverhältnismäßig groß noch verschwindend klein werden zu lassen.
-Batch Normalization normalisiert die Eingänge einer Schicht über ein Mini-Batch, indem für jedes abstrakte Merkmal der Schicht, das bei der Dimensionsreduktion des Bildes entsteht, eine Transformation durchgeführt wird \cite{Ioffe2015}.
-Für die Transformation wird der Mittelwert des Mini-Batches vom Wert abgezogen und durch die Standardabweichung geteilt.
-Layer Normalization verfolgt einen ähnlichen Ansatz, berechnet den Mittelwert und die Varianz aber pro Schicht von allen Neuronen \cite{Ba2016}.
+Batch normalization normalisiert die Eingänge einer Schicht über ein mini batch, indem für jedes abstrakte Merkmal der Schicht, das bei der Dimensionsreduktion des Bildes entsteht, eine Transformation durchgeführt wird \cite{Ioffe2015}.
+Für die Transformation wird der Mittelwert des mini batches vom Wert abgezogen und durch die Standardabweichung geteilt.
+Layer normalization verfolgt einen ähnlichen Ansatz, berechnet den Mittelwert und die Varianz aber pro Schicht von allen Neuronen \cite{Ba2016}.
 Beide stabilisieren das Training tiefer neuronaler Netze und lassen die Normalisierung als Bestandteil der Modellarchitektur lernen, statt sie nur als Vorverarbeitungsschritt durchzuführen \cite{Santurkar2018, Xu2019}.\\ [0.5\baselineskip]
 Als Vergleichsmetrik der Klassifikation wird für gewöhnlich die Genauigkeit des getesteten Netzes auf den annotierten Daten verwendet:
 \begin{equation}
@@ -151,7 +155,8 @@ Abb. \ref{fig:gradCam_example} zeigt zwei Beispiele einer solchen Heatmap \cite{
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{Figures/gradCAM_example.pdf}
-    \caption{Die Abbildung zeigt links ein Bild.
+    \caption{Grad-CAM Beispiel.
+    Links ist das Originalbild zu sehen.
     Daneben sind zwei Heatmaps platziert, die mit Grad-CAM die Wichtigkeit räumlicher Regionen des Bilds für die Klassen \glqq Katze\grqq und \glqq Hund\grqq visualisieren.}
     \label{fig:gradCam_example}
 \end{figure}
@@ -159,9 +164,9 @@ Abb. \ref{fig:gradCam_example} zeigt zwei Beispiele einer solchen Heatmap \cite{
 Mithilfe der extrahierten Gradientenkarten lassen sich neben der Wichtigkeit bestimmter räumlicher Regionen der Eingangsdaten auch die relative Wichtigkeit der Eingangskanäle bestimmen.
 Durch die Integration des Gradientenfelds werden stabilere und interpretierbarere Aussagen möglich. 
 Die Integration gleicht lokale Schwankungen der Gradienten aus.
-Mithilfe der Kosinus-Ähnlichkeit, die den Winkel zwischen zwei Vektoren im Merkmalsraum beschreibt und damit die Übereinstimmung ihrer Richtungen quantifiziert, werden die integrierte und die nicht integrierte Karte auf Konsistenz geprüft. 
-Eine hohe Kosinus-Ähnlichkeit weist darauf hin, dass beide Karten auf ähnliche Eingabemuster reagieren und das Modell intern konsistente Repräsentationen der relevanten Merkmale gelernt hat.\\ [0.5\baselineskip]
-Eine weitere Möglichkeit, die Effizienz eines Klassifikators zu visualisieren, ist ein Scatterplot, das den Merkmalsraum, in den der Klassifikator die Eingangsdaten abbildet, niederdimensional darstellt.
+Mithilfe der Kosinusähnlichkeit, die den Winkel zwischen zwei Vektoren im Merkmalsraum beschreibt und damit die Übereinstimmung ihrer Richtungen quantifiziert, werden die integrierte und die nicht integrierte Karte auf Konsistenz geprüft. 
+Eine hohe Kosinusähnlichkeit weist darauf hin, dass beide Karten auf ähnliche Eingabemuster reagieren und das Modell intern konsistente Repräsentationen der relevanten Merkmale lernt.\\ [0.5\baselineskip]
+Eine weitere Möglichkeit, die Effizienz eines Klassifikators zu visualisieren, ist ein Scatterplot, der den Merkmalsraum, in den der Klassifikator die Eingangsdaten abbildet, niederdimensional darstellt.
 Im Scatterplot werden Stichproben aus verschiedenen Klassen eingetragen.
 Die Clusterbildung im Scatterplot visualisiert, wie gut die Klassen im Merkmalsraum getrennt sind, und liefert eine Schätzung der Güte des Klassifikators auf den vorliegenden Daten.
 Um den Merkmalsraum in eine visualisierbar niedrige Dimension zu projizieren, wird häufig die \ac{tsne} eingesetzt \cite{Maaten2008, Cai2022}.
@@ -180,7 +185,7 @@ Links sind die Klassen-Cluster schlechter getrennt als rechts.
     \begin{subfigure}[b]{0.49\textwidth}
         \includegraphics[width=\textwidth]{Figures/scatter_good.pdf}
     \end{subfigure}
-    \caption{Die Abbildung zeigt zwei Scatterplots.
+    \caption{Zwei Scatterplots.
     Beide Scatterplots visualisieren den Merkmalsraum eines Klassifikators, links nach der ersten Epoche des Trainings, rechts nach 25 Epochen.
     Mithilfe der \ac{tsne} wird die hochdimensionale interne Repräsentation der Merkmale in eine zweidimensionale Ansicht projiziert.
     Einige Stichproben des MNIST-Datensatzes sind in dieser zweidimensionalen Ansicht platziert und ihre Klassen sind farblich markiert.}
@@ -190,7 +195,7 @@ Links sind die Klassen-Cluster schlechter getrennt als rechts.
 Dreidimensionale Daten stellen eine besondere Herausforderung für die Klassifikation dar \cite{Tran2018}.
 Vortrainierte Methoden der 2D-Klassifikation wie \ac{cnn}-Encodern können auf einzelne Schichten eines 3D-Volumens angewandt werden, und die extrahierten Merkmale können anschließend aneinandergereiht werden, aber explizite 3D-Methoden sind oft besser \cite{Feichtenhofer2020}.
 Die Methoden können auch an dreidimensionale Daten angepasst werden, indem ihre 2D-Operationen auf drei Dimensionen ausgeweitet werden, wodurch der Rechenaufwand steigt \cite{Carreira2017}.
-Angepasste Methoden wie 3D-\acp{cnn} sind nicht in der Lage, Beziehungen zu erfassen, wenn die relevanten Bildregionen räumlich weit voneinander entfernt sind und sich schräg in den drei Dimensionen verteilt sind \cite{Tran2015}. 
+Angepasste Methoden wie 3D-\acp{cnn} sind nicht in der Lage, Beziehungen zu erfassen, wenn die relevanten Bildregionen räumlich weit voneinander entfernt sind und schräg in den drei Dimensionen verteilt sind \cite{Tran2015}. 
 Um dieses Problem zu lösen, schlägt die Literatur self-attention-Mechanismen über die Z-Dimension vor, die auch nicht-lokale Informationen erfassen \cite{Bertasius2021, Wang2018}. 
 \section{Literaturrecherche}
 \subsection{Benchmark}\label{sec:bench}
@@ -204,7 +209,7 @@ Einige prominente Datensätze mit Annotationen für eine Instanzsegmentierung, d
     \item die Cell Tracking Challenge \cite{ulman2017cellTrackingChallenge}, eine Sammlung aus 13 Datensätzen verschiedener Mikroskopiemodalitäten, die sich zur Messung der Segmentierungs- und Verfolgungsfähigkeiten für verschiedene Zelltypen eignen.
     \item MoNuSeg \cite{kumar2017MoNuSeg}, eine Zusammenstellung manuell annotierter Gewebeschnitte aus sieben verschiedenen Organen. Über 21.000 Zellen sind pro Bild in den 30 Bildern mit verschiedenen Färbungen und Aufnahmetechniken verteilt.
     \item TissueNet \cite{greenwald2022Tissuenet} ist ein umfassender Datensatz mit über 1.000.000 Zellen aus verschiedenen Gewebearten und unterschiedlichen Aufnahmetechniken.
-    \item S\_BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset}, ein Datensatz, der neben manuell annotierten Bildern von acht verschiedenen Zellarten synthetisch erzeugte Daten enthält. Mit Hilfe von SpCycleGAN \cite{fu2018cycleGAN} wurden dazu auf Basis simulierter Annotationen Bilder generiert, die anstreben, die Merkmale der realen Bilder zu reproduzieren. Es handelt sich um 3D-Multispektraldaten, aufgenommen mittels Fluoreszenzbildgebung. 
+    \item S\_BIAD1518 \cite{Kromp2020_Dataset, chen20223_Dataset}, ein Datensatz, der neben manuell annotierten Bildern von acht verschiedenen Zellarten synthetisch erzeugte Daten enthält. Mithilfe von SpCycleGAN \cite{fu2018cycleGAN} wurden dazu auf Basis simulierter Annotationen Bilder generiert, die anstreben, die Merkmale der realen Bilder zu reproduzieren. Es handelt sich um 3D-Multispektraldaten, aufgenommen mittels Fluoreszenzbildgebung. 
 \end{itemize}
 Aufgrund des geringen Volumens an frei zugänglichen Daten sind diese Sammlungen auch für das Training von Segmentierungsnetzen begehrt. 
 Neben annotierten Datensätzen bietet die Literatur auch Methoden zum eigenständigen Erzeugen domänenspezifischer Datensätze \cite{Abay2019, Raghunathan2021, Nikolenko2021, Choi2017, Lu2023}.
@@ -220,7 +225,7 @@ Es besteht aus einem Bild-Encoder, einem Prompt-Encoder und einem Masken-Decoder
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Figures/SAM_Architecture.png}
-    \caption{Architektur des \ac{sam}. 
+    \caption{Architektur des \ac{sam}-Modells. 
     Eingabebilder werden durch einen Bildencoder in Repräsentationen umgewandelt. 
     Zusätzliche optionale Hinweise zum zu segmentierenden Objekt werden durch Bildfaltungen oder einen Prompt-Encoder repräsentiert. 
     Anschließend prädiziert der Decoder mehrere mögliche Masken und die zugehörigen Zuversichtlichkeiten \cite{kirillov2023sam}.}
@@ -234,10 +239,10 @@ Für textuelle Prompts wird der Encoder des CLIP-Modells \cite{Radford2021} verw
 Außerdem werden Bildfaltungen als Encoder auf Maskeneingaben angewandt.
 Mithilfe dieser Encoder wird dem Modell eine Repräsentation des zu segmentierenden Bildes sowie optional Hinweise auf das erwünschte Ergebnis bereitgestellt, die bereits semantische Informationen und abstrakte Bildmerkmale enthalten.
 Aus diesen Repräsentationen generiert der Decoder anschließend mehrere mögliche Masken mit zugehörigen Zuversichtlichkeiten, aus denen ein finales Segmentierungsergebnis ausgewählt wird.\\ [0.5\baselineskip]
-\ac{sam} wurde bereits für viele explizite Mikroskopie-Zelldaten-Anwendungen angepasst \cite{archit2025samfine, israel2023samfine, vandeloo2025samfine}. 
+Das \ac{sam}-Modell wurde bereits für viele explizite Mikroskopie-Zelldaten-Anwendungen angepasst \cite{archit2025samfine, israel2023samfine, vandeloo2025samfine}. 
 Auch für bestehende biologische Segmentierungsanwendungen, wie etwa Cellpose\cite{stringer2021cellpose}, wurde \ac{sam} auf Zelldaten angepasst \cite{pachitariu2025samcellpose}.
 Dieser \textit{Fine-tune} nennt sich CellposeSAM.
-Er kombiniert den Bild-Encoder von \ac{sam} mit dem \textit{Flow}-Segmentierungsansatz von Cellpose.
+Er kombiniert den Bild-Encoder von \ac{sam} mit dem \linebreak \textit{Flow}-Segmentierungsansatz von Cellpose.
 Dabei generiert der Bild-Encoder direkt Vektoren, die Zwischenrepräsentationen, sogenannte \textit{Flows}, darstellen.
 Diese \textit{Flows} werden pixelweise zu einem Gradientenfeld überführt.
 Mithilfe der Gradienten werden Objektinstanzen vorhergesagt.
@@ -265,12 +270,12 @@ Der Klassifikations-Kopf muss an die Klassen des vorliegenden Problems angepasst
 State-of-the-Art für Bild-Encoder sind \acp{cnn} oder \acp{vit}, die auf dem ImageNet-Datensatz \cite{Russakovsky2015} vortrainiert werden \cite{You2018, Kornblith2019}.
 Klassifikatoren profitieren stark von ImageNet-Vortraining \cite{Beyer2020, Recht2019}.\\[0.5\baselineskip]
 \textbf{ResNet} ist ein Residual Neural Network, ein \ac{cnn} mit sogenannten residual connections \cite{He2016}.
-Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten und verbessern die Leistungsfähigkeit tiefer neuronaler Netze \cite{He2016, He2015, srivastava2015highway} (siehe Abb. \ref{fig:ResDiagramms} a)).
+Diese residual connections verbinden den Ein- und Ausgang modularer Faltungsschichten und verbessern die Leistungsfähigkeit tiefer neuronaler Netze \cite{He2016, He2015, srivastava2015highway} (siehe Abb. \ref{fig:ResDiagramms} a).
 In ihrem Paper stellen die Autoren fünf unterschiedlich tiefe Varianten der \textbf{ResNet}-Architektur vor.
 Jede Variante enthält fünf Blöcke mit residual connections.
-Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, Batch Normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\\[0.5\baselineskip]
-\textbf{EfficientNetV2} ist ein Nachfolger der EfficientNet-Modellfamilie \cite{Tan2021, Tan2019}.
-Die Architektur basiert auf modularen Blöcken von Bildfaltungsoperatoren mit besonders kleinen Faltungskernen und Squeeze-and-Excitations, genannt MBConv \cite{Tan2019, Sandler2018} und Fused-MBConv \cite{Gupta2019} (siehe Abb. \ref{fig:ResDiagramms} b)).\newline
+Die Blöcke bestehen aus Faltungen mit verschiedenen Kernelgrößen und Strides, batch normalization \cite{Ioffe2017} und der ReLU \cite{Nair2010} Aktivierungsfunktion.\\[0.5\baselineskip]
+\textbf{EfficientNet V2} ist ein Nachfolger der EfficientNet-Modellfamilie \cite{Tan2021, Tan2019}.
+Die Architektur basiert auf modularen Blöcken von Bildfaltungsoperatoren mit besonders kleinen Faltungskernen und Squeeze-and-Excitations, genannt MBConv \cite{Tan2019, Sandler2018} und \linebreak Fused-MBConv \cite{Gupta2019} (siehe Abb. \ref{fig:ResDiagramms} b).\newline
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.98\textwidth]{Figures/Convs.pdf}
@@ -280,15 +285,15 @@ Die Architektur basiert auf modularen Blöcken von Bildfaltungsoperatoren mit be
 \noindent
 \textbf{ConvNeXt} \cite{Liu2022} ist eine \ac{cnn}-Modellfamilie mit besonders großen Faltungskernen. 
 Die \textbf{ConvNeXt}-Architektur umfasst fünf modulare Blöcke mit Faltungen und residual connections, wie die ResNet-Architektur \cite{He2016}.
-Allerdings verändert dabei \textbf{ConvNeXt} einige Details der ResNet-Architektur, wie beispielsweise die GeLU-Aktivierungsfunktion \cite{Hendrycks2016} und Layer Normalization \cite{Ba2016}.\\ [0.5\baselineskip]
+Allerdings verändert dabei \textbf{ConvNeXt} einige Details der ResNet-Architektur, wie beispielsweise die GeLU-Aktivierungsfunktion \cite{Hendrycks2016} und layer normalization \cite{Ba2016}.\\ [0.5\baselineskip]
 Swin Transformer \cite{liu2021} ist eine beliebte Modellfamilie der \acp{vit}.
-Ihr Nachfolger, die \textbf{Swin Transformer V2} \cite{Liu2022a}, vergrößert die Modelle weiter.
+Ihr Nachfolger, die \textbf{Swin Transformer V2}-Familie \cite{Liu2022a}, vergrößert die Modelle weiter.
 Die Architektur kombiniert Bildausschnitte mit einem Positionsbias.
-Hierzu werden ein Bildfenster $z$ und dessen relative Koordinaten im Bild, $\Delta x$ und $\Delta y$, in einem Attention-Mechanismus zusammengeführt.
+Hierzu werden ein Bildfenster $z$ und dessen relative Koordinaten im Bild, $\Delta x$ und $\Delta y$, in einem attention-Mechanismus zusammengeführt.
 Die Positionen werden in einem MLP-Netz verarbeitet, während das Bildfenster mit drei verschiedenen Gewichtsmatrizen multipliziert wird.
-Mithilfe einer Kosinus-Ähnlichkeitsfunktion, der Softmax-Funktion \cite{Bridle1989}, der elementweisen Multiplikation sowie der Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
-Zwei Layer-Normalization-Schichten \cite{Ba2016}, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2}-Block.
-Dieser Aufbau ist in Abb. \ref{fig:SwinArchitecture} dargestellt. 
+Mithilfe einer Kosinusähnlichkeitsfunktion, der Softmax-Funktion \cite{Bridle1989}, der elementweisen Multiplikation sowie der Addition werden diese Ergebnisse in einen Merkmalsraum überführt.
+Zwei layer normalizations \cite{Ba2016}, ein weiteres MLP-Netz und residual connections vervollständigen anschließend den modularen \textbf{Swin Transformer V2}-Block.
+Dieser Aufbau ist in Abb. \ref{fig:SwinArchitecture} im Anhang dargestellt. 
 Der Abschnitt \ref{supp:swin} des Anhangs zeigt die Architektur als Diagramm.
 \section{Offene Probleme}
 Einzelne Myotuben lassen sich nicht mithilfe eines Segmentierungsmodells aus der Literatur instanzsegmentieren.
@@ -306,7 +311,7 @@ Diesen Lösungen fehlt bislang ein Arbeitsablauf, der Daten unmittelbar segmenti
 \newpage
 \section{Zielsetzung}
 Im Zuge der vorliegenden Arbeit soll die automatische Extraktion interpretierbarer Eigenschaften der Myotubenkulturen ermöglicht werden.
-Zu diesem Ziel bearbeitet die vorliegende Arbeit Zwischenziele und liefert Folgendes:
+Zu diesem Ziel definiert die vorliegende Arbeit folgende Zwischenziele:
 \begin{itemize}
     \item Es soll ein Segmentierungsmodell gefunden werden, das die Eigenschaften wie Zellkernvolumina und die lokale Nucleidichte möglichst unverändert aus den vorliegenden, dreidimensionalen Daten extrahieren kann.
     Dazu wird ein neues Bewertungskriterium für die Instanzsegmentierung eingeführt und auf einige etablierte Modelle angewandt.

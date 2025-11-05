@@ -5,13 +5,13 @@
 
 \section{Überblick}
 Das nachfolgende Kapitel beschreibt die Ergebnisse der durchgeführten Experimente.
-Die Experimente werden in mehreren Durchläufen des neu entwickelten Konzepts \linebreak \glqq 3D-Zelldaten-Pipeline\grqq zur Auswertung von 3D-Zelldaten durchgeführt.
+Die Experimente werden in mehreren Durchläufen der neu entwickelten 3D-Zelldaten-\linebreak Pipeline zur Auswertung von 3D-Zelldaten durchgeführt.
 Auf Grundlage der Messergebnisse der 3D-Zelldaten-Pipeline wird eine statistische Auswertung durchgeführt. 
-Zuerst werden die Bewertungen der Instanzsegmentierungsmasken anhand der \ac{ipq}-Metrik und anschließend die der Klassifikatoren anhand ihrer Genauigkeit betrachtet.
-Die \ac{ipq}-Ergebnisse werden in die drei Faktoren: \acf{sq}, \acf{rq} und die neu eingeführte \acf{iq} gegliedert (siehe Kap. \ref{sec:Kriterien}).
+Zuerst werden die Bewertungen der Instanzsegmentierungsmasken anhand der \ac{ipq}-Metrik und anschließend die der Klassifikatoren anhand ihrer Genauigkeit betrachtet.\\[0.5\baselineskip]
+Die \ac{ipq}-Ergebnisse werden in die drei Faktoren: \acf{sq}, \acf{rq} und die neu eingeführte \acf{iq} gegliedert (siehe Abschnitt \ref{sec:Kriterien}).
 Daraus wird ersichtlich, dass jedes der Segmentierungsmodelle in einem der Faktoren dominiert, insgesamt aber CellposeSAM den anderen Modellen signifikant überlegen ist. 
 Auch die Ergebnisse der Klassifikation werden unterteilt, um den Einfluss einzelner Methoden auf die Genauigkeit des Klassifikators zu identifizieren.
-Vergleiche der Ergebnisse verschiedener Methoden zeigen, dass die neu eingeführten Methoden wie der Pseudo-Labler (siehe Kap. \ref{sec:Pretrain}) je nach Anforderung dem Stand der Technik entsprechen.
+Vergleiche der Ergebnisse verschiedener Methoden zeigen, dass die neu eingeführten Methoden wie der Pseudo-Labler (siehe Abschnitt \ref{sec:Pretrain}) je nach Anforderung dem Stand der Technik entsprechen.
 Außerdem zeigen die Ergebnisse, dass die Anwendung der 3D-Zelldaten-Pipeline optimale Methoden für die Segmentierung und Klassifikation von Zelldaten effizient ermittelt und gegenüber nicht-optimalen Methoden einen signifikanten Qualitätsunterschied aufweist.
 Mithilfe ausführlicher Analysen lassen sich des Weiteren grundlegende Erkenntnisse über das Verhalten von Klassifikatoren im Umgang mit biologischen 3D-Bildstapeln gewinnen.
 
@@ -20,8 +20,8 @@ Für die Anwendung wird eine NVIDIA GeForce RTX 3090 Ti mit 24 GB VRAM verwendet
 Der verwendete Server verfügt über eine 12th-Gen-Intel(R) Core(TM) i9-12900KF-CPU mit 16 Kernen und 64 GB RAM.
 
 \section{Segmentierung}
-Für die Wahl eines Segmentierungsmodells wird in Kapitel \ref{ch:NewMethods} das Bewertungskriterium \ac{ipq} eingeführt.
-Außerdem wird in Kapitel \ref{ch:NewMethods} der annotierte S\_BIAD1518-Datensatz vorgestellt.
+Für die Wahl eines Segmentierungsmodells wird in Abschnitt \ref{sec:Kriterien} das Bewertungskriterium \ac{ipq} eingeführt.
+Außerdem wird in Abschnitt \ref{sec:bench} der annotierte S\_BIAD1518-Datensatz vorgestellt.
 Die \ac{ipq} wird auf dem Datensatz mit den Masken der drei vortrainierten Segmentierungsmodelle und zur Validierung anhand der Annotationen durchgeführt.
 Alle Annotationen erreichen einen \ac{ipq}-Wert von genau Eins.
 Abb. \ref{fig:example_masks} zeigt exemplarisch einen 2D-Schnitt eines 3D-Bildes mit roten Linien als Konturen der Annotation bzw. der vorhergesagten Segmentierungsmaske je Modell.
@@ -112,7 +112,7 @@ Der Fehler führt zu einer Fehleinschätzung des Nucleivolumens.\\[0.5\baselines
 Abb. \ref{fig:contour_examples} zeigt ein Beispiel für eine Instanzsegmentierungsmaske der Zieldaten mit dem CellposeSAM-Modell.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{Figures/contour_examples.pdf}
+    \includegraphics[width=0.98\linewidth]{Figures/contour_examples.pdf}
     \caption{Exemplische Darstellung einer Zieldaten-Instanzsegmentierungsmaske des CellposeSAM-Modells.
     Links ist eine 2D-Schicht des Original-Bildes zu sehen, daneben die Instanzsegmentierungsmaske und rechts eine Überlagerung von den Konturen der Instanzen über die Marker-Kanäle des Originals. 
     Zu jeder der drei Ansichten sind auch 2D-Schnitte der X-Z-Ebene und der Y-Z-Ebene gegeben.
@@ -165,8 +165,11 @@ Abb. \ref{fig:contours_classes} zeigt exemplarisch eine panoptische Maske.
     \label{fig:contours_classes}
 \end{figure}
 \noindent
-Die Klassen eins bis vier sind der Reihe nach Myotuben-Kerne, Debris, \glqq Andere\grqq und Schwannzellen-Kerne.
-Die Konturfarben der Nuclei kennzeichnen ihre Klassen.
+Die Klassen eins bis vier sind der Reihe nach Myotuben-Kerne, Debris, \glqq Andere\grqq und \linebreak Schwannzellen-Kerne.
+Die Konturfarben der Nuclei kennzeichnen ihre Klassen.\\[0.5\baselineskip]
+Ganz rechts in der Mitte der 2D-Schicht ist ein Beispiel für eine fehlklassifizierung zu sehen. 
+Die Kontur ist gelb, was bedeutet, die Vorhersage ist die Klasse \glqq Andere\grqq.
+Tatsächlich spricht aber die grüne Umgebung des Nucleus dafür, dass es sich um einen Myotuben-Zellkern handelt, der untypischerweise nicht elliptisch, sondern annähernd kreisförmig ist, weil die Muskelfaser orthogonal zur Bildebene verläuft.
 \subsection{Encoder}\label{subsec:RES_encoder}
 In Abb. \ref{fig:bars_encoders} ist die Genauigkeit der Klassifikatoren pro Encoder gegeben.
 Zu sehen ist sowohl das Maximum, als auch der Durchschnitt der Genauigkeitswerte der verschiedenen Methodenkombinationen jedes Klassifikators.
@@ -214,7 +217,7 @@ Auf der vertikalen Achse sind die verschiedenen Encoder sowie der Durchschnitt a
 Auf der horizontalen Achse sind die vier Vortrainingsmethoden aufgeführt.
 Links ist nur semi-supervised-Training zu sehen.
 Daneben steht das semi-supervised-Vortraining, also das Vortraining mit den Pseudo-Labler-Annotationen, Einfrieren der \linebreak Encoder-Gewichte und Fortsetzen des Trainings mit vollständig annotierten Daten zu sehen. 
-Rechts ist das fully-supervised ImageNet-Vortraining mit eingefrorenen Encoder-Gewichten und \glqq kein Vortraining\grqq aufgetragen (siehe Kap. \ref{sec:Pretrain}).\\[0.5\baselineskip]
+Rechts ist das fully-supervised ImageNet-Vortraining mit eingefrorenen Encoder-Gewichten und \glqq kein Vortraining\grqq aufgetragen (siehe Abschnitt \ref{sec:Pretrain}).\\[0.5\baselineskip]
 Zu sehen ist, dass das Vortraining mit semi-supervised-Daten durchschnittlich deutlich schlechtere Ergebnisse liefert als das fully-supervised ImageNet-Vortraining und etwas schlechtere Ergebnisse als kein Vortraining.
 Im Durchschnitt führt das Fortführen des Trainings mit den annotierten Daten nach dem semi-supervised-Vortraining zu einer Steigerung der Genauigkeit um 13 Prozentpunkte.
 Für den ConvNeXt-Encoder ist der Vorteil des fortgesetzten Trainings besonders hoch mit 39 Prozentpunkten.
@@ -258,7 +261,7 @@ Die Nuclei der Klasse Myotuben-Kern Schwannzellen-Kern sind optisch sehr ähnlic
 Die Unterscheidung ist nur durch die Betrachtung der umliegenden Strukturen möglich.\\[0.5\baselineskip] 
 Wie eingangs beschrieben, sind im Datensatz nur 16 Beispiele der Klasse Schwannzellen-Nucleus enthalten, davon acht im Trainings- und acht im Test-Anteil.
 Zu sehen ist, dass insbesondere die Schwannzellen-Kerne schlecht erkannt werden.
-Wie in Abschnitt \ref{sec:Preproc} beschrieben, wird dieses Problem der ungleichen Verteilung der Klassen mit Hilfe des Retreivers durch eine Gewichtung der Gradienten unterrepräsentierter Klassen angegangen.
+Wie in Abschnitt \ref{sec:Preproc} beschrieben, wird dieses Problem der ungleichen Verteilung der Klassen mithilfe des Retreivers durch eine Gewichtung der Gradienten unterrepräsentierter Klassen angegangen.
 In der Abbildung ist jedoch zu sehen, dass dieser Ansatz das Problem nicht vollständig löst. 
 Die unterrepräsentierte Klasse der Schwannzellen-Nuclei wird dennoch schlechter erkannt als alle anderen Klassen.
 Beinahe alle Methoden ergeben isoliert betrachtet eine ähnliche Verteilung der Genauigkeit pro Klassen, nur das Vortraining hat einen Einfluss.
@@ -294,7 +297,7 @@ Die blauen Balken des Balkendiagramms zeigen jeweils die Ergebnisse der Architek
 Auf der X-Achse sind als Gruppen zuerst die Encoder und zuletzt der Durchschnitt aufgetragen, und auf der Y-Achse die durchschnittliche Genauigkeit der Modelle mit dem jeweiligen Klassifikations-Kopf.
 An den Daten lässt sich erkennen, dass der Einfluss des Klassifikations-Kopfes nicht homogen ist.
 Mit dem ConvNeXt-Encoder ist der Schichten-Klassifikator performanter als der Volumen-Klassifikator, während es bei allen anderen Encodern umgekehrt ist.
-Für den CellposeSAM Encoder ist der Genauigkeitsunterschied 12,6 Prozentpunkte groß, für EfficientNetV2 einen halben Prozentpunkt.\\[0.5\baselineskip]
+Für den CellposeSAM Encoder ist der Genauigkeitsunterschied 12,6 Prozentpunkte groß, für EfficientNetV2 einen halben Prozentpunkt.\newline%\\[0.5\baselineskip]
 Die Daten zeigen also, dass die Intensität des Unterschieds in der Genauigkeit der beiden Klassifikations-Köpfe stark vom Encoder abhängt.
 Die Balken rechts, die je den Durchschnitt aller Modelle mit einem Klassifikations-Kopf darstellen, zeigen signifikant, dass der Volumen-Klassifikator bessere Ergebnisse liefert.\\[0.5\baselineskip]
 Mit dem Schichten-Klassifikator werden häufig Nuclei fehlerhaft klassifiziert, die nicht in der mittleren Schicht des Bildausschnitts vorkommen.
@@ -345,12 +348,12 @@ Abb. \ref{fig:nuclei_overlap_examples} zeigt Nuclei mit der Distanz-Methode und 
 Die Nuclei in den Beispielen sind alle in Clustern angeordnet und berühren umliegende Nuclei.
 Mit der Masken-Methode sind die umliegenden Nuclei ausgeblendet, mit der Distanz-Methode gehen sie in den betrachteten Nucleus über.
 Intuitiv lassen sich die Nuclei auch mit der Distanz-Methode trennen, wie die Ergebnisse zeigen, ist das den Klassifikatoren aber nicht immer möglich.\\[0.5\baselineskip]
-Mithilfe von GradCAM \cite{Selvaraju2017} wird außerdem das Verhalten der Klassifikatoren exemplarisch visualisiert.
+Mithilfe von Grad-CAM \cite{Selvaraju2017} wird außerdem das Verhalten der Klassifikatoren exemplarisch visualisiert.
 Abb. \ref{fig:gradCAM} zeigt den Nucleus-Kanal und einen Marker-Kanal aus zwei 2D-Schichten.
 \begin{figure}[h!]
     \raggedright
     \includegraphics[width=0.8\linewidth]{Figures/gradCAM.pdf}
-    \caption{GradCAM-Visualisierung für zwei exemplarische 2D-Schichten, jeweils mit einem Nucleus-Kanal und einem Marker-Kanal.
+    \caption{Grad-CAM-Visualisierung für zwei exemplarische 2D-Schichten, jeweils mit einem Nucleus-Kanal und einem Marker-Kanal.
     Links ist ein Beispiel einer Stichprobe gegeben, die mit der Masken-Methode trainiert wurde, rechts mit der Distanz-Methode.
     Die Nucleus-Kanäle zeigen die Segmentierungsmasken der Nuclei in Weiß, überlagert mit den gradientenbasierten Heatmaps, die die Wichtigkeit räumlicher Regionen für die Klassifikation darstellen.
     In beiden Nucleus-Kanälen ist die Wichtigkeit der Nucleus-Oberfläche nur sehr gering.

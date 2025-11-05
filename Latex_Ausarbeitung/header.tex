@@ -31,10 +31,8 @@
 	wallpaper,
 	xparse,
 	subcaption,
-	longtable,
-	tabularx
+	longtable
 }
-\captionsetup[table]{skip=10pt}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
@@ -57,7 +55,6 @@
 \renewcommand{\algorithmicreturn}{\textbf{Rückgabe}}
 \renewcommand{\algorithmicdo}{\textbf{tue:}}
 \renewcommand{\algorithmicelse}{\textbf{Sonst:}}
-\floatname{algorithm}{Algorithmus}
 
 
 % Fonts
@@ -112,9 +109,16 @@
 
 % References
 %\usepackage[backend=biber, style=ieee]{biblatex}
-%\usepackage[hyphens]{url}
-%\usepackage{xurl}
-\usepackage[backend=biber, style=numeric, sorting=none, url=true, doi=true]{biblatex}
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none,
+  doi=false,
+  url=false,
+  isbn=false,
+  eprint=false
+]{biblatex}
+%\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
 %\usepackage[backend=biber, style=apa]{biblatex}
 %\DeclareLanguageMapping{ngerman}{english-apa}
 %\DeclareLanguageMapping{english}{english-apa}
@@ -162,10 +166,10 @@
 	colorlinks=true,
 	citecolor=blue!50!black!100,
 	urlcolor=blue!50!black!100,
-	pdftitle={Optimierung von Deep-Learning-Methoden zur Auswertung biologischer 3D-Bildstapel},
+	pdftitle={3D-Segmentierung und Merkmalsextraktion in Mikroskopiedaten},
 	pdfauthor={David Exler},
 	pdfsubject={},
-	pdfkeywords={Master's thesis, Klassifikation, 3D, Segmentierung, Zellmikroskopie, Cellpose, Segment Anything model},
+	pdfkeywords={Master's thesis, Segmentierung, 3D-Segmentierung, Zellmikroskopie, Cellpose, Stardist},
 }
 
 

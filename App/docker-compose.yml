@@ -1,0 +1,7 @@
+services:
+  dash:
+    build: .
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./data:/app

@@ -28,8 +28,8 @@ import argparse
 # helpers/optimize_helper.py
 from itertools import product
 
-from helpers.classifier_helper import get_loaders, get_model
-from helpers.classifier_helper import ClassificatorBlobHelper, Hybrid3Dto2D, read_new_blob_folder
+from helpers.classifier_helper import get_loaders, get_model, create_pseudo_labels
+from helpers.classifier_helper import ClassificatorBlobHelper, read_new_blob_folder
 from helpers.classifier_helper import ObjectPatchDataset, calculate_test_loss
 # 
 # takes: masks, images
@@ -83,11 +83,42 @@ def run_optimize_job(encoders, decoders, preprocessors, pretrains, in_folder, ou
 #    return 0.5
 def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
     print(f"train thread initiated for {encoder, decoder, preproc, pretrain}")
+    
+
+    label_path = os.path.join(BASE_DIR, 'data', in_folder, 'label_store.json')
+    print(f"looking for labels in Labeling App directory {label_path}")
+    with open(os.path.join(label_path), "r") as f:
+        label_data = json.load(f)
+
+    all_indices = []
+    all_labels = []
+    label_stores_list = []
+
+    # convert JSON to flat lists
+    for img_name, instances in label_data.items():
+        # assume img_name is like "img0", "img1", etc.
+        img_idx = int(img_name.replace("img", ""))
+        while len(label_stores_list) <= img_idx:
+            label_stores_list.append({})
+        label_stores_list[img_idx] = instances
+        for inst_idx_str, class_label in instances.items():
+            inst_idx = int(inst_idx_str)
+            all_indices.append((img_idx, inst_idx))
+            all_labels.append(class_label)
+
+    print(f"found {len(all_labels)} regular labels")
+
     pseudo_all_indices = []
     pseudo_all_labels = []
 
-    with open(os.path.join(BASE_DIR, 'data', 'pseudo_labels','pseudo_labels.json'), "r") as f:
-        pseudo_label_json = json.load(f)
+    if os.path.exists(os.path.join(BASE_DIR, 'data', in_folder, 'pseudo_labels.json')):
+        print("loading pseudo labels")
+        with open(os.path.join(BASE_DIR, 'data', in_folder,'pseudo_labels.json'), "r") as f:
+            pseudo_label_json = json.load(f)
+    else:
+        print("no pseudo labels found, creating")
+        pseudo_label_json = create_pseudo_labels(in_folder, label_stores_list)
+
     total_instances = sum(len(instances) for instances in pseudo_label_json.values())
     print(f"found {total_instances} pseudo instances")
     for img_idx, blobs in pseudo_label_json.items():
@@ -97,31 +128,12 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
             pseudo_all_labels.append(int(lbl))
     print(f"found {len(pseudo_all_labels)} pseudo labels")
 
-    label_path = os.path.join(BASE_DIR, "..", 'output','label_store.json')
-    print(f"looking for labels in Labeling App directory {label_path}")
-    with open(os.path.join(label_path), "r") as f:
-        label_data = json.load(f)
-
-    all_indices = []
-    all_labels = []
-
-    # convert JSON to flat lists
-    for img_name, instances in label_data.items():
-        # assume img_name is like "img0", "img1", etc.
-        img_idx = int(img_name.replace("img", ""))
-        for inst_idx_str, class_label in instances.items():
-            inst_idx = int(inst_idx_str)
-            all_indices.append((img_idx, inst_idx))
-            all_labels.append(class_label)
-
-    print(f"found {len(all_labels)} regular labels")
-    # now you can do your train/test split
     train_idx, val_idx, train_lbls, val_lbls = train_test_split(
         all_indices,
         all_labels,
         test_size=0.2,
         random_state=42,
-        stratify=all_labels  # keeps class distribution balanced
+        stratify=all_labels  
     )
 
     pseudo_train_idx, pseudo_val_idx, pseudo_train_lbls, pseudo_val_lbls = train_test_split(
@@ -137,13 +149,6 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
         print(f"Image {img_idx}, Blob {blob_idx} → Class {label}")
 
 
-
-    #torch.cuda.empty_cache()
-    #torch.cuda.ipc_collect()
-
-    #model = models.CellposeModel(gpu=False)
-    #enc = model.net.encoder
-
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print(f"[DEBUG] device: {device}")
     #enc.to(device)
@@ -151,7 +156,9 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
 
 
     blb = ClassificatorBlobHelper()
-    pseudo_blb = ClassificatorBlobHelper(use_pseudo=True)
+    pseudo_blb = ClassificatorBlobHelper()
+    blb.reload_images(in_folder)
+    pseudo_blb.reload_images(in_folder)
     print("[DEBUG] loaded new folder in Optimizer")
 
     train_transforms = Compose([
@@ -270,7 +277,7 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
             use_pseudo = False
             if pretrain == "KeinVortraining":
                 pretrain = "Kein Vortraining"
-            model, _, _, _ = get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset)
+            model, _, _ = get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset)
             model = model.to(device)
             if os.path.exists(pseudo_checkpoint_path) and use_pseudo:
                 checkpoint = torch.load(pseudo_checkpoint_path, map_location=device)
@@ -347,12 +354,12 @@ def train(encoder, decoder, preproc, pretrain, in_folder, out_folder):
             best_val_acc = val_acc  
             if use_pseudo:
                 best_model_path = os.path.join(checkpoint_dir, f"best_pseudo_model_{encoder}{decoder}{pretrain}{preproc}.pt")
-                val_acc_path = os.path.join(checkpoint_dir, f"val_acc_{encoder}{decoder}{pretrain}{preproc}.json")
-                predictions_path = os.path.join(checkpoint_dir, f"predictions_{encoder}{decoder}{pretrain}{preproc}.json")
-            else:
-                best_model_path = os.path.join(checkpoint_dir, f"best_model_{encoder}{decoder}{pretrain}{preproc}.pt")
                 val_acc_path = os.path.join(checkpoint_dir, f"pseudo_val_acc_{encoder}{decoder}{pretrain}{preproc}.json")
                 predictions_path = os.path.join(checkpoint_dir, f"pseudo_predictions_{encoder}{decoder}{pretrain}{preproc}.json")
+            else:
+                best_model_path = os.path.join(checkpoint_dir, f"best_model_{encoder}{decoder}{pretrain}{preproc}.pt")
+                val_acc_path = os.path.join(checkpoint_dir, f"val_acc_{encoder}{decoder}{pretrain}{preproc}.json")
+                predictions_path = os.path.join(checkpoint_dir, f"predictions_{encoder}{decoder}{pretrain}{preproc}.json")
 
             val_acc_json = {"val_loss": val_loss, "val_acc": val_acc}
             

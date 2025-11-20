@@ -62,7 +62,7 @@ def segment_folder(in_folder, out_folder):
         pickle.dump(masks3D, f)  
     with open(os.path.join(BASE_DIR, 'data', 'masks.pkl'), 'wb') as f:
         pickle.dump(masks3D, f)  
-    read_new_blob_folder()
+    read_new_blob_folder(out_folder)
     del(model)
     torch.cuda.empty_cache()
     return num_segments

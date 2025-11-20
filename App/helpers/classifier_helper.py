@@ -2,36 +2,38 @@ import pickle
 import os
 import numpy as np
 import torch
+import torch.nn as nn
 import scipy.ndimage as ndi
 from torch.utils.data import DataLoader
 from cellpose import models as cellpose_models
-#from helpers.visualization_helper import normalize_with_cutoffs
+from skimage.measure import label as sklabel, regionprops, marching_cubes, mesh_surface_area, find_contours
+from numpy.fft import fft
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.semi_supervised import LabelSpreading
+import json
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # load the masks
-masks3D_20xRenamed = []
-with open(os.path.join(BASE_DIR,'data','masks.pkl'), 'rb') as f:
-    masks3D_20xRenamed = pickle.load(f)
+masks3D = []
+masks3D.append(np.zeros((24,1024,1024)))
+masks3D[0][11:13, 400:501, 400:501] = 1
+#if os.path.exists(os.path.join(BASE_DIR,'data','masks.pkl')):
+#    masks3D = []
+#    with open(os.path.join(BASE_DIR,'data','masks.pkl'), 'rb') as f:
+#        masks3D = pickle.load(f)
 
-images3D_20xRenamed_full = []
-with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
-    images3D_20xRenamed_full = pickle.load(f)
-images3D_20xRenamed_full = [np.transpose(img, (0, 3, 1, 2)) for img in images3D_20xRenamed_full]
+images3D_full = []
+#with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
+#    images3D_full = pickle.load(f)
+#images3D_full = [np.transpose(img, (0, 3, 1, 2)) for img in images3D_full]
 
-images3D_20xRenamed = []
-for im in images3D_20xRenamed_full:
-    images3D_20xRenamed.append(im[:,(0,1,3),:,:])
+images3D = []
+images3D.append(np.zeros((24,1024,1024,4)))
+images3D[0][11:13, 400:501, 400:501] = 1
+#for im in images3D_full:
+#    images3D.append(im[:,(0,1,3),:,:])
 
-pseudo_imgs_20xRenamed_full = []
-with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
-    pseudo_imgs_20xRenamed_full = pickle.load(f)
-pseudo_imgs_20xRenamed = []
-for im in pseudo_imgs_20xRenamed_full:
-    pseudo_imgs_20xRenamed.append(im[:,:,:,(0,1,3)].transpose(0,3,1,2))
-
-pseudo_masks_20xRenamed = []
-with open(os.path.join(BASE_DIR,'data','masks.pkl'), 'rb') as f:
-    pseudo_masks_20xRenamed = pickle.load(f)
 
 
 
@@ -42,84 +44,79 @@ def normalize_channel(data):
     return ((data - lower) / (upper - lower) * 255).astype(np.uint8)
 
 def read_new_blob_folder(in_path):
+    global images3D, masks3D
     print(f"reading from {in_path}")
     with open(os.path.join(BASE_DIR, 'data', in_path, 'masks.pkl'), 'rb') as f:
-        masks3D_20xRenamed = pickle.load(f)
+        masks3D = pickle.load(f)
 
     with open(os.path.join(BASE_DIR, 'data', in_path, 'images.pkl'), 'rb') as f:
-        images3D_20xRenamed_full = pickle.load(f)
-    images3D_20xRenamed_full = [np.transpose(img, (0, 3, 1, 2)) for img in images3D_20xRenamed_full]
+        images3D_full = pickle.load(f)
+    images3D_full = [np.transpose(img, (0, 3, 1, 2)) for img in images3D_full]
 
-    for im in images3D_20xRenamed_full:
-        images3D_20xRenamed.append(im[:,(0,1,3),:,:])
-
-    with open(os.path.join(BASE_DIR, 'data', in_path, 'images.pkl'), 'rb') as f:
-        pseudo_imgs_20xRenamed_full = pickle.load(f)
-    for im in pseudo_imgs_20xRenamed_full:
-        pseudo_imgs_20xRenamed.append(im[:,:,:,(0,1,3)].transpose(0,3,1,2))
-
-    with open(os.path.join(BASE_DIR, 'data', in_path, 'masks.pkl'), 'rb') as f:
-        pseudo_masks_20xRenamed = pickle.load(f)
+    for im in images3D_full:
+        images3D.append(im[:,(0,1,3),:,:])
 
 
 class ClassificatorBlobHelper:
-    def __init__(self, use_pseudo=False):
+    def __init__(self):
         self.last_image = 0
-        self.li = len(pseudo_imgs_20xRenamed)
-        self.image = pseudo_imgs_20xRenamed[self.last_image]
-        #self.mask = pseudo_masks_20xRenamed[self.last_image]
-        if use_pseudo:
-            self.use_pseudo = True
-            #self.li = len(pseudo_imgs_20xRenamed)
-            #self.image = pseudo_imgs_20xRenamed[self.last_image]
-            self.mask = pseudo_masks_20xRenamed[self.last_image]
-        else:
-            self.use_pseudo = False
-            #self.li = len(images3D_20xRenamed)
-            #self.image = images3D_20xRenamed[self.last_image]
-            self.mask = masks3D_20xRenamed[self.last_image]
+        self.li = len(images3D)
+        self.image = images3D[self.last_image]
+        self.mask = masks3D[self.last_image]
         self.last_blob = 1
         self.lum = len(np.unique(self.mask))
         self.blob = self.mask == 1
 
+    def reload_images(self, in_folder):
+        print(f"[DEBUG] Reloading images from disk.")
+        with open(os.path.join(BASE_DIR,'data', in_folder, 'masks.pkl'), 'rb') as f:
+            masks3D = pickle.load(f)
+            images3D_full = []
+        with open(os.path.join(BASE_DIR,'data', in_folder, 'images.pkl'), 'rb') as f:
+            images3D_full = pickle.load(f)
+        images3D_full = [np.transpose(img, (0, 3, 1, 2)) for img in images3D_full]
+
+        images3D = []
+        for im in images3D_full:
+            images3D.append(im[:,(0,1,3),:,:])
+
+        self.last_image = 0
+        self.image = images3D[self.last_image]
+        self.mask = masks3D[self.last_image]
+
     def get_blob(self, image_index, blob_index, in_channel_dist=True, start_size = 64, offset=0, gaus_exp_nuc=10.0, gaus_exp_myo=20.0, binary_mask=False, z_size = 24):
+        overflow = False
         if not self.last_image == image_index:
             # image index overflow protect
-            image_index = image_index % self.li
+            if image_index >= self.li:
+                image_index = image_index % self.li
+                overflow = True
             # image index underflow protect
             if image_index < 0:
                 image_index = self.li - image_index
-            self.image = images3D_20xRenamed[image_index]
-            #self.mask = masks3D_20xRenamed[image_index]
-            if self.use_pseudo:
-                #self.image = pseudo_imgs_20xRenamed[image_index]
-                self.mask = pseudo_masks_20xRenamed[image_index]
-                #print(f"[DEBUG] switch to pseudo mask {image_index} with {len(np.unique(self.mask))} blobs")
-            else:
-                #self.image = images3D_20xRenamed[image_index]
-                self.mask = masks3D_20xRenamed[image_index]
-            #self.lum = len(np.unique(self.mask))
-            #print(f"image changed from {self.last_image} to {image_index} -> loaded img of shape {self.image.shape}  and mask of shape {self.mask.shape} which has {self.lum} indices. The selected blob is {blob_index}")
-        
-        #else:
-        #    print(f"still at {self.last_image} == {image_index} -> Still img of shape {self.image.shape} and mask of shape {self.mask.shape} which has {self.lum} indices. The selected blob is {blob_index}")
-        self.last_image = image_index
+            self.image = images3D[image_index]
+            self.mask = masks3D[image_index]
+            self.lum = len(np.unique(self.mask))
+            self.last_image = image_index
 
-        mistake = False
         # blob index overflow protect
         if blob_index == self.lum:
             blob_index = 1
+            self.image_index = image_index + 1
+            if image_index >= self.li:
+                image_index = image_index % self.li
+                overflow = True
             print(f"[DEBUG] blob index overflow, set to 1")
-            mistake = True
+            
         # blob index underflow protect
         if blob_index < 0:
             blob_index = self.lum + blob_index
             print(f"[DEBUG] blob index underflow, set to {blob_index}")
-            mistake = True
+
         if blob_index == 0:
             blob_index = self.lum - 1
             print(f"[DEBUG] blob index underflow, set to {blob_index}")
-            mistake = True
+
 
         #print(f"reading mask with {len(np.unique(self.mask))} blobs at {blob_index}")
         self.blob = self.mask == blob_index
@@ -252,7 +249,7 @@ class ClassificatorBlobHelper:
 
             # Stack into 3 channels: nuc, myo, mask (all float32)
             final_blob = np.stack([masked_myo.astype(np.float32), masked_nuc.astype(np.float32), cropped_mask.astype(np.float32)], axis=0)
-        return final_blob, mistake
+        return final_blob, overflow
     
 import torch.nn.functional as F
 
@@ -378,7 +375,7 @@ class ObjectPatchDataset(Dataset):
             #print("-"*100)
             #print(f"[DEBUG] getting blob for image {img_idx}, blob {blob_idx}, label {label}")
             blob, oob = self.blob_helper.get_blob(img_idx, blob_idx, in_channel_dist=False, binary_mask=False)
-            if blob is None: raise IndexError(f"Empty blob for image {img_idx} blob {blob_idx} — check mask/pseudo labels")
+            if blob is None: raise IndexError(f"Empty blob for image {img_idx} blob {blob_idx}")
             #else: print(f"[DEBUG] Retrieved blob shape: {blob.shape} for image {img_idx}, blob {blob_idx}, label {label}, oob={oob}")
             blob = bicubic_upsample_3d(blob, (256, 256))  # Ensure blob is padded to 256
         elif self.version == 3:
@@ -450,34 +447,6 @@ def calculate_test_loss(model, loader, criterion, device):
     accuracy = correct / total if total > 0 else 0.0
     return avg_loss, accuracy, all_predicted, all_labels
 
-
-import torch.nn as nn
-
-#
-# BESSERE KLASSIFIKATOREN!!!
-# mit eventuell anderen forwards, so ist das seltsam! 
-#
-class Hybrid3Dto2D(nn.Module):
-    def __init__(self, pretrained_densenet):
-        super().__init__()
-
-        self.stem = nn.Sequential(
-            nn.Conv3d(4, 4, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.AdaptiveAvgPool3d((1, 64, 64))
-        )
-
-
-        self.backbone = pretrained_densenet 
-
-    def forward(self, x):  # x: [B, 3, 32, 64, 64]
-        x = self.stem(x)    # → [B, 8, 1, 64, 64]
-        x = x.squeeze(2)    # → [B, 8, 64, 64]
-        return self.backbone(x)
-
-
-import torch
-import torch.nn as nn
 
 #X shape: torch.Size([32, 3, 32, 254, 254]), y shape: torch.Size([32])
 class LearnableUpsampler(nn.Module):
@@ -825,7 +794,7 @@ from monai.networks.nets import (
     ViT, DenseNet121
 )
 
-def get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset):
+def get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset, inference=False):
     print(encoder, decoder, preproc, pretrain)
     if preproc == 'Segmentierungsmaske':
         preproc = 5
@@ -833,8 +802,9 @@ def get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset):
         preproc = 2
     else:
         print(f"[ERROR] no Preprocessing \"{preproc}\" found, use Segmentierungsmaske")
-    train_dataset.change_version(preproc)
-    val_dataset.change_version(preproc)
+    if not inference:
+        train_dataset.change_version(preproc)
+        val_dataset.change_version(preproc)
     
     if pretrain == 'Kein Vortraining':
         pretrained = False
@@ -874,10 +844,14 @@ def get_model(encoder, decoder, preproc, pretrain, train_dataset, val_dataset):
         print(f"[ERROR] no decoder \"{decoder}\" found, use Volumen-Klassifikator")
         model = SAMClassifier3D_CENTER_AWARE(enc, num_classes=4)
         
-    train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=1)
+    if not inference:
+        train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+        val_loader = DataLoader(val_dataset, batch_size=1)
+        print(f"successfully loaded model and Dataloader of size {len(train_loader.dataset)} with {len(train_loader)} batches")
+    else:
+        train_loader = None
+        val_loader = None
                
-    print(f"successfully loaded model and Dataloader of size {len(train_loader.dataset)} with {len(train_loader)} batches")
     return model, train_loader, val_loader
 
 
@@ -885,3 +859,138 @@ def get_loaders(train_dataset, val_dataset, batch_size=1):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size)
     return train_loader, val_loader
+
+
+def extract_features_3d(mask3D):
+    labels = np.unique(mask3D)
+    labels = labels[labels != 0]
+    out = {}
+    for label_id in labels:
+        if label_id % 100 == 0:
+            print(f"Feature Extractor processing label {label_id} / {labels[-1]}")
+        binmask = (mask3D == label_id)
+        if not np.any(binmask):
+            continue
+        vol = int(binmask.sum())
+        z_any = binmask.any(axis=(1,2))
+        num_slices = int(z_any.sum())
+        labeled = sklabel(binmask.astype(np.uint8))
+        props = regionprops(labeled)
+        if len(props) == 0:
+            continue
+        p = props[0]
+        bbox = p.bbox
+        if len(bbox) == 6:
+            dz = bbox[3] - bbox[0]
+            dy = bbox[4] - bbox[1]
+            dx = bbox[5] - bbox[2]
+        else:
+            dz = 1
+            dy = bbox[2] - bbox[0]
+            dx = bbox[3] - bbox[1]
+        bbox_vol = max(int(dz * dy * dx), 1)
+        extent = float(vol) / float(bbox_vol)
+        try:
+            verts, faces, _, _ = marching_cubes(binmask.astype(np.uint8), level=0.5)
+            surf_area = float(mesh_surface_area(verts, faces))
+        except Exception:
+            surf_area = 0.0
+        try:
+            maj = float(p.major_axis_length)
+        except Exception:
+            maj = 0.0
+        try:
+            minr = float(p.minor_axis_length)
+        except Exception:
+            minr = 0.0
+        try:
+            ecc = float(p.eccentricity)
+        except Exception:
+            ecc = 0.0
+        slice_indices = np.where(z_any)[0]
+        if slice_indices.size > 0:
+            areas = [int(binmask[z].sum()) for z in slice_indices]
+            z_max = int(slice_indices[int(np.argmax(areas))])
+        else:
+            z_max = 0
+        slice_mask = binmask[z_max].astype(np.uint8)
+        contours = find_contours(slice_mask, 0.5)
+        if len(contours) == 0:
+            fourier_abs = np.zeros(10, dtype=float)
+            best_contour = np.zeros((0,2), dtype=float)
+        else:
+            lengths = [c.shape[0] for c in contours]
+            best_contour = contours[int(np.argmax(lengths))]
+            complex_contour = best_contour[:,1] + 1j * best_contour[:,0]
+            f = fft(complex_contour)
+            fourier_abs = np.abs(f[:10])
+            if fourier_abs.shape[0] < 10:
+                fourier_abs = np.pad(fourier_abs, (0, 10 - fourier_abs.shape[0]))
+        features = [
+            vol,
+            surf_area,
+            extent,
+            num_slices,
+            maj,
+            minr,
+            ecc,
+            *fourier_abs.tolist()
+        ]
+        out[int(label_id)] = {
+            "features": features,
+            "max_area_slice": z_max,
+            "contour": best_contour
+        }
+    return out
+
+def cluster_features_3d(masks3D_list, label_stores_list):
+    pseudo_label_json = {}
+    for img_idx, mask3D in enumerate(masks3D_list):
+        print("*" * 50)
+        print(f"Clustering features for image {img_idx} / {len(masks3D_list)}")
+        label_store = label_stores_list[img_idx]
+        features_dict = extract_features_3d(mask3D)
+        print(f"Extracted features for {len(features_dict)} instances")
+
+        labels = []
+        X = []
+        for k, v in features_dict.items():
+            X.append(v["features"])
+            labels.append(k)
+        X = np.array(X)
+
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+        print("Features scaled")
+
+        pca = PCA(n_components=10, random_state=42)
+        X_reduced = pca.fit_transform(X_scaled)
+        print("PCA completed")
+
+        y = np.full(len(labels), -1)
+        for idx, inst_id in enumerate(labels):
+            if str(inst_id) in label_store:
+                y[idx] = label_store[str(inst_id)]
+
+        label_spread = LabelSpreading(kernel="rbf", alpha=0.2)
+        y_spread = label_spread.fit(X_reduced, y).transduction_
+
+        pseudo_labels = {str(inst_id): int(lbl) for inst_id, lbl in zip(labels, y_spread)}
+        pseudo_label_json[str(img_idx)] = pseudo_labels
+        
+        
+        print("*" * 50)
+
+    return pseudo_label_json
+
+
+def create_pseudo_labels(in_folder, label_stores_list):
+    masks = []
+    with open(os.path.join(BASE_DIR,'data', in_folder, 'masks.pkl'), 'rb') as f:
+        masks = pickle.load(f)
+    pseudo_label_json = cluster_features_3d(masks, label_stores_list)
+
+    with open(os.path.join(BASE_DIR,'data', in_folder, "pseudo_labels.json"), "w") as f:
+        json.dump(pseudo_label_json, f, indent=2)
+
+    return pseudo_label_json

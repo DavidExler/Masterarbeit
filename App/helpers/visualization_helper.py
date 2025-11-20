@@ -8,8 +8,10 @@ import pandas as pd
 import json
 import plotly.express as px
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 def visualizer(in_path, out_path):
+    print("test")
     # --- Load all masks and predictions ---
     mask_file = os.path.join(BASE_DIR, 'data', in_path, 'masks.pkl')
     pred_file = os.path.join(BASE_DIR, 'data', in_path, 'predictions.json')
@@ -52,6 +54,37 @@ def visualizer(in_path, out_path):
         all_volumes.extend(volumes)
     df_volumes = pd.DataFrame({"Volume (voxels)": all_volumes})
     volumes_fig = px.histogram(df_volumes, x="Volume (voxels)", nbins=20, title="3D Segment Volumes")
+
+    out_path = os.path.join(BASE_DIR, 'data', out_path)
+    os.makedirs(out_path, exist_ok=True)
+
+    # Save all figures using matplotlib engine
+    plt.imshow(mask_slice, cmap='gray')
+    plt.title("Mittlere Schicht der ersten Maske")
+    plt.axis('off')
+    plt.savefig(os.path.join(out_path, "mask_slice.png"), bbox_inches='tight')
+    plt.close()
+
+    # --- Save class distribution ---
+    df_classes.plot(x="Class", y="Count", kind="bar", legend=False, title="Segment Class Distribution")
+    plt.ylabel("Count")
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_path, "class_distribution.png"))
+    plt.close()
+
+    # --- Save 3D segment volumes histogram ---
+    plt.hist(df_volumes["Volume (voxels)"], bins=20)
+    plt.title("3D Segment Volumes")
+    plt.xlabel("Volume (voxels)")
+    plt.ylabel("Count")
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_path, "segment_volumes.png"))
+    plt.close()
+
+
+    print(f"Saved PNG figures to {out_path}")
+
+
 
     return mask_fig, classes_fig, volumes_fig
 
@@ -118,7 +151,8 @@ def extract_contours_from_mask(mask2D):
 
 
 def normalize_with_cutoffs(data, lower_pct=1, upper_pct=99):
-    data = np.asarray(data)
+    #data = np.asarray(data)
+    print(data)
     normalized = np.zeros_like(data, dtype=np.float32)
     for c in range(data.shape[-1]):
         if not np.max(data[..., c]) == 0:
@@ -148,3 +182,8 @@ def plot_image_with_clustered_contours_RGB(image, contours_with_classes):
     plt.title('Image with Contours. Colors correspond to classes')
     plt.axis('off')
     plt.show()
+
+
+
+    if __name__ == "__main__":
+        visualizer('Demo/Vis', 'Demo/Vis')

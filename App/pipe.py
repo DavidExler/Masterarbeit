@@ -3,7 +3,7 @@ Combined Dash app: 4 tabs
 - Segmentierung
 - Labeling (your provided labeling UI, integrated as Tab 2)
 - Methoden Vergleich
-- Training
+- Inference
 
 Constraints respected:
 - I integrated your labeling UI almost verbatim and kept its callbacks / logic.
@@ -12,7 +12,7 @@ Constraints respected:
   with the single Dash server. I did NOT otherwise alter the internal logic of your labeling
   callbacks or the data-handling lines; I left your helper imports and variables intact.)
 
-- Input/Output folder selection: each of the three pipeline tabs (Seg / Methods / Train)
+- Input/Output folder selection: each of the three pipeline tabs (Seg / Methods / Inference)
   has a "Select folder" button that opens a small dialog (modal) with either:
     * a text input for the path, OR
     * an optional "Use demo" preset.
@@ -37,7 +37,6 @@ import json
 import os
 
 from dash import no_update
-from dash import ctx  # you already import ctx earlier
 import threading, uuid
 
 
@@ -46,7 +45,7 @@ from helpers.visualization_helper import normalize_with_cutoffs
 from helpers.optimize import run_optimize_job
 from helpers.segmentation import segment_folder
 from helpers.visualization_helper import visualizer
-from helpers.train import train_combo
+from helpers.inference import inference_combo
 
 # ---- Labeling code ----
 
@@ -68,13 +67,8 @@ save_counter = 0
 image_size = '550px'
 
 # ---- Load Label Store ----
-if os.path.exists(SAVE_FILE):
-    with open(SAVE_FILE, 'r') as f:
-        label_store = json.load(f)
-    print("[INFO] Loaded label store from disk")
-else:
-    label_store = {}
-    print("[INFO] Initialized new label store")
+label_store = {}
+print("[INFO] Initialized new label store")
 
 # ---- Load first blob (we assume helpers/mock data present) ----
 volume, blob_index, image_index, edge_blob, rel_coords = blob_data_helper.get_blob(image_index, blob_index, overlay_channels, offset=offset_left)
@@ -82,22 +76,21 @@ fullscreen, abs_coords = blob_data_helper.get_fullscreen_for_current_blob(10, of
 z_slices = volume.shape[0]
 print("loaded first blob")
 
-# ---- End labeling code block (we'll reuse variables & callbacks below) ----
 
 
 # ---- Main app initialization ----
 app = dash.Dash(__name__)
 server = app.server
-app.title = "Zell Pipeline (Seg / Label / Methods / Train)"
+app.title = "Zell Pipeline (Seg / Label / Methods / Inference)"
 
 # --- Layout ---------------------------------------------------------------
 app.layout = html.Div([
-    html.H2("Zell-Labeling Pipeline (Dash)"),
+    html.H2("3D-Zelldaten-Pipeline"),
     dcc.Tabs(id='main-tabs', value='tab-seg', children=[
         dcc.Tab(label='Segmentierung', value='tab-seg'),
-        dcc.Tab(label='Labeling', value='tab-label'),
-        dcc.Tab(label='Methoden Vergleich', value='tab-methods'),
-        dcc.Tab(label='Training', value='tab-train'),
+        dcc.Tab(label='Labeling-App', value='tab-label'),
+        dcc.Tab(label='Methodenvergleich', value='tab-methods'),
+        dcc.Tab(label='Inference', value='tab-inference'),
         dcc.Tab(label='Visualisierung', value='tab-vis'),
     ]),
     html.Div(id='tab-content'),
@@ -105,10 +98,14 @@ app.layout = html.Div([
     # Stores for chosen folders
     dcc.Store(id='seg-input-folder'),
     dcc.Store(id='seg-output-folder'),
+    dcc.Store(id='label-input-folder'),
+    dcc.Store(id='label-output-folder'),
     dcc.Store(id='methods-input-folder'),
     dcc.Store(id='methods-output-folder'),
-    dcc.Store(id='train-input-folder'),
-    dcc.Store(id='train-output-folder'),
+    dcc.Store(id='inference-input-folder'),
+    dcc.Store(id='inference-output-folder'),
+    dcc.Store(id="reload-trigger", data=0)
+
 ])
 
 
@@ -130,22 +127,22 @@ def render_tab(tab):
             html.H3("1) Segmentierung"),
 
             html.Div([
-                html.Label("Input Folder"),
-                dcc.Input(id="seg-input-folder-path", type="text", value="Demo/Segmentation", style={"width": "70%"}),
-                html.Button("Select", id="select-input-folder", n_clicks=0)
+                html.Label("Eingabe Ordner"),
+                dcc.Input(id="seg-input-folder-path", type="text", value="Demo/Input", style={"width": "70%"}),
+                html.Button("Auswahl", id="select-input-folder", n_clicks=0)
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
 
             html.Div([
-                html.Label("Output Folder"),
-                dcc.Input(id="seg-output-folder-path", type="text", value="Demo/Methodenvergleich", style={"width": "70%"}),
-                html.Button("Select", id="select-output-folder", n_clicks=0)
+                html.Label("Ausgabe Ordner"),
+                dcc.Input(id="seg-output-folder-path", type="text", value="Demo/Data", style={"width": "70%"}),
+                html.Button("Auswahl", id="select-output-folder", n_clicks=0)
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
 
             html.Div(id='seg-folders-display', style={'marginTop': '10px', 'fontStyle': 'italic'}),
             html.Br(),
 
-            html.Button("Start Segmentation", id='seg-start-btn'),
-            html.Button("Abort", id='seg-abort-btn', style={'marginLeft': '10px'}),
+            html.Button("Starte Segmentierung", id='seg-start-btn'),
+            html.Button("Abbrechen", id='seg-abort-btn', style={'marginLeft': '10px'}),
             html.Br(), html.Br(),
 
             # Running state + job id store + polling interval
@@ -159,66 +156,78 @@ def render_tab(tab):
             ], type="circle"),
             html.Div(id="seg-results-display", style={"marginTop":"6px","fontSize":"14px","color":"#006600"}),
 
-            html.Div(style={'marginTop': '20px', 'color': '#666'}, children=[
-                html.P("HELPER / BACKEND HOOK: call your segmentation helper here when Start pressed.")
-            ])
 
         ], style={'padding': '20px'})
 
     if tab == 'tab-label':
-        # Insert the exact labeling UI (kept as in your snippet)
-        # NOTE: the callback update_view is attached below (same IDs).
+        blob_data_helper.reload_images()
         labeling_layout = html.Div(style={'maxWidth': '1200px', 'margin': '0 auto', 'fontSize': '20px', 'fontFamily': 'inherit'}, children=[
             html.H2(id='title', style={'textAlign': 'center'}),
+            html.Div([
+                html.Label("Eingabe Ordner", style={'fontSize': 16}),
+                dcc.Input(id="labeling-input-folder-path", type="text", value="Demo/Data", style={"width": "70%"}),
+                html.Button("Auswahl", id="labeling-select-input-folder", n_clicks=0)
+            ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
+            html.Div([
+                html.Label("Ausgabe Ordner", style={'fontSize': 16}),
+                dcc.Input(id="labeling-output-folder-path", type="text", value="Demo/Data", style={"width": "70%"}),
+                html.Button("Auswahl", id="labeling-select-output-folder", n_clicks=0)
+            ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
+            html.Div(id="labeling-folders-display", style={"marginTop": "10px", "fontStyle": "italic"}),
 
             html.Div(style={'display': 'flex'}, children=[
 
-                html.Div(style={'flex': '0 0 200px', 'paddingRight': '10px', 'display': 'flex', 'flexDirection': 'column', 'gap': '20px'}, children=[
+                html.Div(style={'flex': '0 0 300px', 'paddingRight': '10px', 'display': 'flex', 'flexDirection': 'column', 'gap': '20px'}, children=[
                     # Image navigation
                     html.Div([
-                        html.Button("Previous picture", id='prev-image', n_clicks=0, style={'width': '90px'}),
-                        html.Button("Next picture", id='next-image', n_clicks=0, style={'width': '90px'}),
+                        html.Button("Previous picture", id='prev-image', n_clicks=0, style={'width': '140px'}),
+                        html.Button("Next picture", id='next-image', n_clicks=0, style={'width': '140px'}),
                     ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
 
                     # Blob navigation
                     html.Div([
-                        html.Button("Previous nucleus", id='prev-blob', n_clicks=0, style={'width': '90px'}),
-                        html.Button("Next nucleus", id='next-blob', n_clicks=0, style={'width': '90px'}),
+                        html.Button("Previous nucleus", id='prev-blob', n_clicks=0, style={'width': '140px'}),
+                        html.Button("Next nucleus", id='next-blob', n_clicks=0, style={'width': '140px'}),
                     ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
 
                     # Jump to next undefined
-                    html.Button("Next undefined", id='next-undef', n_clicks=0, style={'width': '190px'}),
+                    # Save
+                    html.Div([
+                        html.Button("Next undefined", id='next-undef', n_clicks=0, style={'width': '140px'}),
+                        html.Button("Save", id='save-now', n_clicks=0, style={'width': '140px'}),
+                    ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
+
 
                     # Go to specific image/blob
                     html.Div([
-                        html.Label("Image", style={'fontSize': 12, 'alignSelf': 'center'}),
-                        dcc.Input(id='image-input', type='number', value=0, min=0, max=22, step=1, style={'width': '40px'}),
-                        html.Label("Nucleus", style={'fontSize': 12, 'alignSelf': 'center'}),
-                        dcc.Input(id='blob-input', type='number', value=1, min=1, max=9999, step=1, style={'width': '40px'}),
-                        html.Button("go to...", id='goto-btn', n_clicks=0, style={'width': '190px'}),
+                        html.Label("Image", style={'fontSize': 16, 'alignSelf': 'center'}),
+                        dcc.Input(id='image-input', type='number', value=0, min=0, max=22, step=1, style={'width': '60px', 'fontSize': 16}),
+                        html.Label("Nucleus", style={'fontSize': 16, 'alignSelf': 'center'}),
+                        dcc.Input(id='blob-input', type='number', value=1, min=1, max=9999, step=1, style={'width': '60px', 'fontSize': 16}),
+                        html.Button("go to...", id='goto-btn', n_clicks=0, style={'width': '280px'}),
                     ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
 
                     # Class selection buttons
                     html.Div([
-                        html.Button("Myo", id='class-1', n_clicks=0, style={'width': '90px'}),
-                        html.Button("Debris", id='class-2', n_clicks=0, style={'width': '90px'}),
-                        html.Button("Others", id='class-3', n_clicks=0, style={'width': '90px'}),
-                        html.Button("Schwann", id='class-4', n_clicks=0, style={'width': '90px'}),
-                    ], style={'display': 'flex', 'flexWrap': 'wrap', 'gap': '10px'}),
+                        html.Button("Myo", id='class-1', n_clicks=0, style={'width': '140px', 'flexShrink': '0'}),
+                        html.Button("Debris", id='class-2', n_clicks=0, style={'width': '140px', 'flexShrink': '0'}),
+                    ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap'}),
+                    html.Div([
+                        html.Button("Others", id='class-3', n_clicks=0, style={'width': '140px', 'flexShrink': '0'}),
+                        html.Button("Schwann", id='class-4', n_clicks=0, style={'width': '140px', 'flexShrink': '0'}),
+                    ], style={'display': 'flex', 'gap': '10px', 'flexWrap': 'wrap', 'minWidth': '300px'}),
 
-                    # Save
-                    html.Button("Save", id='save-now', n_clicks=0, style={'width': '190px'}),
 
                     html.Div([
-                        html.Label("Overlay Myotubes (Green)", style={'fontSize': 14}),
+                        html.Label("Overlay Myotubes (Green)", style={'fontSize': 16}),
                         dcc.Checklist(
                             id='overlay-ch1',
                             options=[{'label': 'Enable', 'value': 'ch1'}],
                             value=[],  # empty = off
                             inline=True,
-                            style={'fontSize': 14}
+                            style={'fontSize': 16}
                         ),
-                        html.Label("Overlay Marker (Blue)", style={'fontSize': 14}),
+                        html.Label("Overlay Marker (Blue)", style={'fontSize': 16}),
                         html.Div([
                             dcc.RadioItems(
                                 id='overlay-ch2to4',
@@ -229,24 +238,22 @@ def render_tab(tab):
                                     {'label': 'None', 'value': 'none'},
                                 ],
                                 value='none',
-                                labelStyle={'display': 'inline-block', 'width': '90px', 'fontSize': 14},
+                                labelStyle={'display': 'inline-block', 'width': '90px', 'fontSize': 16},
                                 style={'columnCount': 2}
                             )
                         ])
                     ]),
-
-
                     # Normalization controls
                     html.Div([
                         html.Div([
                             html.Div([
-                                html.Label("Lower percentile", style={'fontSize': 14}),
-                                dcc.Input(id='lower-pct', type='number', value=1, min=0, max=100, step=0.1, style={'width': '30px'}),
+                                html.Label("Lower percentile", style={'fontSize': 16}),
+                                dcc.Input(id='lower-pct', type='number', value=1, min=0, max=100, step=0.1, style={'width': '50px'}),
                             ], style={'display': 'flex', 'alignItems': 'center', 'gap': '5px'}),
 
                             html.Div([
-                                html.Label("Upper percentile", style={'fontSize': 14}),
-                                dcc.Input(id='upper-pct', type='number', value=97, min=0, max=100, step=0.1, style={'width': '30px'}),
+                                html.Label("Upper percentile", style={'fontSize': 16}),
+                                dcc.Input(id='upper-pct', type='number', value=97, min=0, max=100, step=0.1, style={'width': '50px'}),
                             ], style={'display': 'flex', 'alignItems': 'center', 'gap': '5px'}),
                         ], style={'display': 'flex', 'flexDirection': 'column', 'gap': '10px'}),
 
@@ -302,16 +309,16 @@ def render_tab(tab):
 
     if tab == 'tab-methods':
         return html.Div([
-            html.H3("2) Methoden Vergleich / Optimierung"),
+            html.H3("3) Methodenvergleich"),
             html.Div([
-                html.Label("Input Folder"),
-                dcc.Input(id="methods-input-folder-path", type="text", value="Demo/Methodenvergleich", style={"width": "70%"}),
-                html.Button("Select", id="methods-select-input-folder", n_clicks=0)
+                html.Label("Eingabe Ordner"),
+                dcc.Input(id="methods-input-folder-path", type="text", value="Demo/Data", style={"width": "70%"}),
+                html.Button("Auswahl", id="methods-select-input-folder", n_clicks=0)
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
             html.Div([
-                html.Label("Output Folder"),
-                dcc.Input(id="methods-output-folder-path", type="text", value="Demo/Training", style={"width": "70%"}),
-                html.Button("Select", id="methods-select-output-folder", n_clicks=0)
+                html.Label("Ausgabe Ordner"),
+                dcc.Input(id="methods-output-folder-path", type="text", value="Demo/Models", style={"width": "70%"}),
+                html.Button("Auswahl", id="methods-select-output-folder", n_clicks=0)
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
             html.Div(id="methods-folders-display", style={"marginTop": "10px", "fontStyle": "italic"}),
 
@@ -319,13 +326,13 @@ def render_tab(tab):
             html.Label("Methoden Optimierung (Mindestens eine Methode je Gruppe)"),
             html.Div([
                 html.Div([html.B('Encoder'), dcc.Checklist(['CellposeSAM', 'ResNet18', 'ResNet101', 'SwinV2', 'ConvNeXt', 'EfficientNetV2'], id='methods-group-1')]),
-                html.Div([html.B('Decoder'), dcc.Checklist(['Schichten-Klassifikator', 'Volumen-Klassifikator'], id='methods-group-2')]),
+                html.Div([html.B('Klassifikations-Kopf'), dcc.Checklist(['Schichten-Klassifikator', 'Volumen-Klassifikator'], id='methods-group-2')]),
                 html.Div([html.B('Vorverarbeitung (Nucleus Kanal)'), dcc.Checklist(['Distanztransformation', 'Segmentierungsmaske'], id='methods-group-3')]),
                 html.Div([html.B('Vortraining'), dcc.Checklist(['Kein Vortraining', 'Semi-supervised', 'Fully-supervised'], id='methods-group-4')]),
             ], style={'columnCount': 2, 'gap': '10px', 'marginTop': '10px'}),
             html.Br(),
-            html.Button("Start Optimization / Comparison", id='methods-start-btn'),
-            html.Button("Stop", id='methods-stop-btn', style={'marginLeft': '10px'}),
+            html.Button("Starte Methodenvergleich", id='methods-start-btn'),
+            html.Button("Abbrechen", id='methods-stop-btn', style={'marginLeft': '10px'}),
             html.Br(), html.Br(),
 
             dcc.Store(id="methods-running", data=False),
@@ -334,55 +341,54 @@ def render_tab(tab):
             html.Div(id="methods-running-indicator", style={"marginTop":"6px","fontSize":"16px","color":"#333"}),
             html.Div(id="methods-best-result", style={"marginTop":"6px","fontSize":"14px","color":"#006600"}),
 
-            html.Div(style={'marginTop': '20px', 'color': '#666'}, children=[
-                html.P("HELPER / BACKEND HOOK: start your optimizer here.")
-            ])
         ], style={'padding': '20px'})
 
-    if tab == 'tab-train':
+    if tab == 'tab-inference':
         return html.Div([
-            html.H3("3) Finales Training"),
+            html.H3("4) Inferenz"),
             html.Div([
-                html.Label("Input Folder"),
-                dcc.Input(id="train-input-folder-path", type="text", value="Demo/Training", style={"width": "70%"}),
-                html.Button("Select", id="train-select-input-folder", n_clicks=0),
+                html.Label("Eingabe Ordner (Bilder und Masken)", style={"width": "12%"}),
+                dcc.Input(id="inference-input-folder-path-images", type="text", value="Demo/Data", style={"width": "40%"}),
+                html.Button("Auswahl", id="inference-select-input-folder-images", n_clicks=0),
+            ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
+            html.Div([
+                html.Label("Eingabe Ordner (Modelle)", style={"width": "12%"}),
+                dcc.Input(id="inference-input-folder-path", type="text", value="Demo/Models", style={"width": "40%"}),
+                html.Button("Auswahl", id="inference-select-input-folder", n_clicks=0),
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
 
             html.Div([
-                html.Label("Output Folder"),
-                dcc.Input(id="train-output-folder-path", type="text", value="Demo/Vis", style={"width": "70%"}),
-                html.Button("Select", id="train-select-output-folder", n_clicks=0),
+                html.Label("Ausgabe Ordner", style={"width": "12%"}),
+                dcc.Input(id="inference-output-folder-path", type="text", value="Demo/Output", style={"width": "40%"}),
+                html.Button("Auswahl", id="inference-select-output-folder", n_clicks=0),
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
-            html.Div(id="train-selected-folder-display", style={"marginTop": "10px", "fontStyle": "italic"}),
+            html.Div(id="inference-selected-folder-display", style={"marginTop": "10px", "fontStyle": "italic"}),
             html.Br(),
-            html.Button("Start Training", id='train-start-btn'),
+            html.Button("Starte Inferenz", id='inference-start-btn'),
             html.Br(), html.Br(),
 
             # Stores / status / polling
-            dcc.Store(id="train-job-id", data=""),
-            dcc.Interval(id="train-complete-interval", interval=1000, n_intervals=0, disabled=True),
-            html.Div(id="train-running-indicator", style={"marginTop":"6px","fontSize":"16px","color":"#333"}),
-            html.Div(id="train-results-display", style={"marginTop":"6px","fontSize":"14px","color":"#006600"}),
+            dcc.Store(id="inference-job-id", data=""),
+            dcc.Interval(id="inference-complete-interval", interval=1000, n_intervals=0, disabled=True),
+            html.Div(id="inference-running-indicator", style={"marginTop":"6px","fontSize":"16px","color":"#333"}),
+            html.Div(id="inference-results-display", style={"marginTop":"6px","fontSize":"14px","color":"#006600"}),
 
-            html.Div(style={'marginTop': '20px', 'color': '#666'}, children=[
-                html.P("HELPER / BACKEND HOOK: start training here.")
-            ])
         ], style={'padding': '20px'})
     if tab == 'tab-vis':
         return html.Div([
-            html.H3("3) Visualization"),
+            html.H3("5) Visualisierung"),
 
             html.Div([
-                html.Label("Input Folder"),
-                dcc.Input(id="vis-input-folder-path", type="text", value="Demo/Vis", style={"width": "70%"})
+                html.Label("Eingabe Ordner"),
+                dcc.Input(id="vis-input-folder-path", type="text", value="Demo/Output", style={"width": "70%"})
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
             html.Div([
-                html.Label("Input Folder"),
-                dcc.Input(id="vis-output-folder-path", type="text", value="Demo/Vis", style={"width": "70%"})
+                html.Label("Ausgabe Ordner"),
+                dcc.Input(id="vis-output-folder-path", type="text", value="Demo/Output", style={"width": "70%"})
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
 
             html.Br(),
-            html.Button("Start Visualization", id='vis-start-btn'),
+            html.Button("Starte Visualisierung", id='vis-start-btn'),
 
             html.Br(), html.Br(),
 
@@ -396,7 +402,7 @@ def render_tab(tab):
     return html.Div()
 
 # --- Folder modal open/close & confirming handling --------------------------
-# For each of seg/methods/train we need to open modal when respective select button clicked,
+# For each of seg/methods/inference we need to open modal when respective select button clicked,
 # and write chosen path into the corresponding dcc.Store.
 
 # Generic pattern: button opens modal; modal OK writes to store + closes; Cancel closes; Use demo populates demo path.
@@ -410,7 +416,7 @@ def render_tab(tab):
 )
 def seg_update_folder_display(input_path, output_path):
     return html.Div([
-        html.Div(f"📁 Input folder: {input_path or '(not set)'}"),
+        html.Div(f"📁 Eingabe Ordner: {input_path or '(not set)'}"),
         html.Div(f"📁 Output folder: {output_path or '(not set)'}")
     ])
 
@@ -435,7 +441,7 @@ def seg_control(start_clicks, n_intervals, in_folder, out_folder, job_id):
     # --- Start segmentation ---
     if trigger == "seg-start-btn":
         if not in_folder:
-            return dash.no_update, dash.no_update, "Please set input folder", "", True  # keep interval disabled
+            return dash.no_update, dash.no_update, "Please set Eingabe Ordner", "", True  # keep interval disabled
 
         job_id = str(uuid.uuid4())
 
@@ -476,8 +482,8 @@ def seg_control(start_clicks, n_intervals, in_folder, out_folder, job_id):
 )
 def methods_update_folder_display(input_path, output_path):
     return html.Div([
-        html.Div(f"📁 Input folder: {input_path or '(not set)'}"),
-        html.Div(f"📁 Output folder: {output_path or '(not set)'}")
+        html.Div(f"📁 Eingabe Ordner: {input_path or '(not set)'}"),
+        html.Div(f"📁 Ausgabe Ordner: {output_path or '(not set)'}")
     ])
 
 @app.callback(
@@ -525,53 +531,56 @@ def vis_update(n_clicks, in_folder, out_folder):
 
     return fig1, fig2, fig3
 
-# --- Training folders ---
+# --- Inference folders ---
 @app.callback(
-    Output("train-folders-display", "children"),
-    Input("train-input-folder-path", "value"),
-    Input("train-output-folder-path", "value"),
+    Output("inference-folders-display", "children"),
+    Input("inference-input-folder-path", "value"),
+    Input("inference-input-folder-path-images", "value"),
+    Input("inference-output-folder-path", "value"),
 )
-def train_update_folder_display(input_path, output_path):
+def inference_update_folder_display(input_path, input_path_images, output_path):
     return html.Div([
-        html.Div(f"📁 Input folder: {input_path or '(not set)'}"),
-        html.Div(f"📁 Output folder: {output_path or '(not set)'}")
+        html.Div(f"Eingabe Ordner (Bilder und Masken): {input_path or '(not set)'}"),
+        html.Div(f"Eingabe Ordner (Modelle): {input_path_images or '(not set)'}"),
+        html.Div(f"Output folder: {output_path or '(not set)'}")
     ])
 @app.callback(
-    Output("train-job-id", "data"),                 # 1
-    Output("train-running-indicator", "children"),  # 2
-    Output("train-results-display", "children"),    # 3
-    Output("train-complete-interval", "disabled"),  # 4
-    Input("train-start-btn", "n_clicks"),
-    Input("train-complete-interval", "n_intervals"),
-    State("train-input-folder-path", "value"),
-    State("train-output-folder-path", "value"),
-    State("train-job-id", "data"),
+    Output("inference-job-id", "data"),                 # 1
+    Output("inference-running-indicator", "children"),  # 2
+    Output("inference-results-display", "children"),    # 3
+    Output("inference-complete-interval", "disabled"),  # 4
+    Input("inference-start-btn", "n_clicks"),
+    Input("inference-complete-interval", "n_intervals"),
+    State("inference-input-folder-path", "value"),
+    State("inference-input-folder-path-images", "value"),
+    State("inference-output-folder-path", "value"),
+    State("inference-job-id", "data"),
     prevent_initial_call=True,
 )
-def train_control(start_clicks, n_intervals, in_folder, out_folder, job_id):
+def inference_control(start_clicks, n_intervals, in_folder, in_folder_images, out_folder, job_id):
     trigger = ctx.triggered_id
 
-    # --- Start training ---
-    if trigger == "train-start-btn":
+    # --- Start inference ---
+    if trigger == "inference-start-btn":
         if not in_folder:
             # keep job_id unchanged, show message, keep interval disabled
-            return dash.no_update, dash.no_update, "Please set input folder", True
+            return dash.no_update, dash.no_update, "Bitte setze Eingabe Ordner", True
 
         job_id = str(uuid.uuid4())
 
-        def _train_worker(job_id, in_folder, out_folder):
+        def _inference_worker(job_id, in_folder, in_folder_images, out_folder):
             try:
-                best = train_combo(in_folder, out_folder)
+                best = inference_combo(in_folder, in_folder_images, out_folder)
                 RESULTS[job_id] = {"best": best}
             except Exception as e:
                 RESULTS[job_id] = {"error": str(e)}
 
-        threading.Thread(target=_train_worker, args=(job_id, in_folder, out_folder), daemon=True).start()
+        threading.Thread(target=_inference_worker, args=(job_id, in_folder, in_folder_images, out_folder), daemon=True).start()
         # set job id, show running text, clear results area, enable polling (disabled=False)
-        return job_id, "Training running…", "", False
+        return job_id, "Inference running…", "", False
 
     # --- Polling interval checks results ---
-    elif trigger == "train-complete-interval":
+    elif trigger == "inference-complete-interval":
         if not job_id:
             # nothing running: disable interval
             return dash.no_update, None, "", True
@@ -583,17 +592,48 @@ def train_control(start_clicks, n_intervals, in_folder, out_folder, job_id):
                 return "", None, f"Error: {val['error']}", True
             best = val.get("best", None)
             # success: clear job_id, stop polling, show result
-            return "", None, f"Best training result: {best}", True
+            return "", None, f"Best Inference result: {best}", True
 
         # still running: no change to job_id, keep indicator and polling enabled
-        return dash.no_update, "Training running…", dash.no_update, False
+        return dash.no_update, "Inference running…", dash.no_update, False
 
     return dash.no_update, dash.no_update, dash.no_update, True
 
 # --- Labeling callbacks ---------------------------------------------------
-# We reuse your update_view callback body but register it on the single Dash app.
-# To keep code identical to what you provided, the function body below is taken from your snippet.
-# NOTE: we changed the decorator to app.callback to register callbacks in this combined app.
+@app.callback(
+    Output("labeling-folders-display", "children"),
+    Output("reload-trigger", "data"),
+    Input("labeling-select-input-folder", "n_clicks"),
+    Input("labeling-select-output-folder", "n_clicks"),
+    State("labeling-input-folder-path", "value"),
+    State("labeling-output-folder-path", "value"),
+)
+def labeling_update_folder_display(in_click, out_click, input_path, output_path):
+    global SAVE_FILE, label_store
+    trigger = ctx.triggered_id
+    new_store_value = 0
+    if trigger == "labeling-select-input-folder":
+        print(f"[INFO] Setting labeling input folder to: {input_path}")
+        blob_data_helper.set_input_folder(input_path)
+        new_store_value = int(time.time())
+        #update_view(z=12,next_img = "initialize",prev_img = 0,next_blob = 0,prev_blob = 0,goto = 1,n1 = 0, n2 = 0, n3 = 0, n4 = 0,save_now = 0,next_undef = 0,normalize = 0,zoom_in_left = 0,zoom_in_right = 0,zoom_out_left = 0,zoom_out_right = 0,overlay_ch1 = 0,overlay_ch2to4 = 0,image_input = 0,blob_input = 1,offset_right = 0,offset_left = 0,img_idx = 1,blob_idx = 1,current_class = 1,lower_pct=1,upper_pct=99)
+    if trigger == "labeling-select-output-folder":
+        SAVE_FILE = os.path.join(BASE_DIR, 'helpers/data', output_path, "label_store.json")
+        if os.path.exists(SAVE_FILE):
+            with open(SAVE_FILE, 'r') as f:
+                label_store = json.load(f)
+            print(f"[INFO] Loaded label store from {SAVE_FILE}")
+        else:
+            label_store = {}
+            os.makedirs(os.path.dirname(SAVE_FILE), exist_ok=True)
+            print(f"[INFO] Initialized new label store to: {SAVE_FILE}")
+            with open(SAVE_FILE, 'w') as f:
+                json.dump(label_store, f, indent=2)
+
+    return html.Div([
+        html.Div(f"Eingabe Ordner: {input_path or '(not set)'}", style={"fontSize":"14px"}),
+        html.Div(f"Ausgabe Ordner: {output_path or '(not set)'}", style={"fontSize":"14px"})
+    ]), new_store_value
 
 @app.callback(
     Output('image-display', 'figure'),
@@ -629,6 +669,7 @@ def train_control(start_clicks, n_intervals, in_folder, out_folder, job_id):
     Input('zoom-out-right', 'n_clicks'),
     Input('overlay-ch1', 'value'),
     Input('overlay-ch2to4', 'value'),
+    Input("reload-trigger", "data"),
 
     State('image-input', 'value'),
     State('blob-input', 'value'),
@@ -657,6 +698,7 @@ def update_view(
     zoom_out_right,
     overlay_ch1,
     overlay_ch2to4,
+    reload_trigger,
     image_input,
     blob_input,
     offset_right,
@@ -667,8 +709,6 @@ def update_view(
     lower_pct,
     upper_pct
 ):
-    # This function is your original implementation with minimal modifications to work
-    # inside the combined app. Logic and calls to helpers remain unchanged.
     global save_counter
     start = time.time()
     trigger = dash.callback_context.triggered_id
@@ -720,6 +760,8 @@ def update_view(
         else:
             img_idx, blob_idx = img_idx_new, blob_idx_new
 
+    if next_img == 'initialize':
+        blob_data_helper.first_load = True
     # Update class selection
     selected = current_class
     class_click_map = {
@@ -736,7 +778,7 @@ def update_view(
         if save_counter >= SAVE_INTERVAL:
             with open(SAVE_FILE, 'w') as f:
                 json.dump(label_store, f, indent=2)
-            print("[INFO] Autosave triggered")
+            print(f"[INFO] Autosave triggered to {SAVE_FILE}")
             save_counter = 0
 
     overlay_channels = []
@@ -766,6 +808,7 @@ def update_view(
         slice_img = normalize_with_cutoffs(slice_img, lower_pct, upper_pct)
         fullscreen_img = normalize_with_cutoffs(fullscreen_img, lower_pct, upper_pct)
 
+    print(f"[DEBUG] Update view with shapes {slice_img.shape}, {fullscreen_img.shape}")
     fig = px.imshow(slice_img)
     fig.update_layout(coloraxis_showscale=False)
     (x_min, x_max, y_min, y_max) = rel_coords

@@ -4,42 +4,38 @@ import os
 # needs (Z,X,Y,C)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-masks3D_20xRenamed = []
-#with open('helpers/masks3D_CELLPOSE_RUN_1.pkl', 'rb') as f:
-#    masks3D_20xRenamed = pickle.load(f)
-with open(os.path.join(BASE_DIR,'data','masks.pkl'), 'rb') as f:
-    masks3D_20xRenamed = pickle.load(f)
-blobs_per_image = [len(np.unique(mask)) for mask in masks3D_20xRenamed]
-
-#images3D_20xRenamed_full = []
-#with open('helpers/imgs_20xRenamed.pkl', 'rb') as f:
-#    images3D_20xRenamed_full = pickle.load(f)
-#
-#images3D_20xRenamed = []
-#for im in images3D_20xRenamed_full:
-#    images3D_20xRenamed.append(im[:,0,:,:])
-#li = len(images3D_20xRenamed)
+masks3D = []
+masks3D.append(np.zeros((24,1024,1024)))
+masks3D[0][11:13, 400:501, 400:501] = 1
+blobs_per_image = [len(np.unique(mask)) for mask in masks3D]
 
 normalized_channels = []
-with open(os.path.join(BASE_DIR,'data','images.pkl'), 'rb') as f:
-    normalized_channels = pickle.load(f)
+normalized_channels.append(np.zeros((24,1024,1024,4)))
+
+normalized_channels[0][11:13, 400:501, 400:501] = 1
 
 
-def read_new_blob_folder():
-    with open(os.path.join(BASE_DIR, 'data', 'masks.pkl'), 'rb') as f:
-        masks3D_20xRenamed = pickle.load(f)
 
-    with open(os.path.join(BASE_DIR, 'data', 'images.pkl'), 'rb') as f:
+def read_new_blob_folder(in_folder):
+    global masks3D
+    global normalized_channels
+    with open(os.path.join(BASE_DIR, 'data', in_folder, 'masks.pkl'), 'rb') as f:
+        masks3D = pickle.load(f)
+    print(f"[DEBUG] Loaded {len(masks3D)} masks from {in_folder}")
+    with open(os.path.join(BASE_DIR, 'data', in_folder, 'images.pkl'), 'rb') as f:
         normalized_channels = pickle.load(f)
-
-
+    print(f"[DEBUG] Loaded {len(normalized_channels)} images from {in_folder}")
 
 
 def normalize_channel(data):
     lower = np.percentile(data, 1)
     upper = np.percentile(data, 99)
+    if upper == lower:
+        # all values are identical → return zeros
+        return np.zeros_like(data, dtype=np.uint8)
     data = np.clip(data, lower, upper)
     return ((data - lower) / (upper - lower) * 255).astype(np.uint8)
+
 
 #with open('helpers/quadrant_cutoffs.pkl', 'rb') as f:
 #    cutoffs = pickle.load(f)
@@ -50,11 +46,24 @@ class BlobDataHelper:
         self.last_image = 0
         self.last_blob = 1
         self.image = np.stack([normalized_channels[self.last_image]] * 3, axis=-1)
-        self.mask = masks3D_20xRenamed[self.last_image]
+        self.mask = masks3D[self.last_image]
         self.lum = len(np.unique(self.mask))
         self.blob = self.mask == 1
         self.abs_coords = (0,0,0,0)
         self.selected_channel = []
+        self.first_load = True
+
+    def set_input_folder(self, in_folder):
+        self.first_load = True
+        read_new_blob_folder(in_folder)
+        print(len(np.unique(masks3D)))
+        self.reload_images()
+
+    def reload_images(self, use_pseudo=False):
+        print(f"[DEBUG] Reloading images from disk.")
+        self.last_image = 0
+        self.mask = masks3D[self.last_image]
+        self.image = normalized_channels[self.last_image]
 
     def get_blob(self, image_index, blob_index, selected_channels, start_size = 45, offset=2):
         """
@@ -82,7 +91,8 @@ class BlobDataHelper:
         for ch in selected_channels:
             print(f"[DEBUG] Channel {ch}")
         # Load new image only if necessary
-        if not self.last_image == image_index or self.selected_channel != selected_channels:
+        if not self.last_image == image_index or self.selected_channel != selected_channels or self.first_load:
+            self.first_load = False
             # image index overflow protect
             image_index = image_index % self.li
             # image index underflow protect
@@ -92,7 +102,7 @@ class BlobDataHelper:
             self.selected_channel = selected_channels
             full_image = normalized_channels[image_index]
             self.select_channel(full_image, selected_channels)
-            self.mask = masks3D_20xRenamed[image_index]
+            self.mask = masks3D[image_index]
             self.lum = len(np.unique(self.mask))
             print(f"image changed from {self.last_image} to {image_index} -> loaded img of shape {self.image.shape} with additional channels {selected_channels} and mask of shape {self.mask.shape} which has {self.lum} indices. The selected blob is {blob_index}")
         
@@ -112,7 +122,7 @@ class BlobDataHelper:
         self.last_blob = blob_index
         
         if not np.any(self.blob):
-            return None, None  
+            return None, None, None, None, None  
 
         # Get coordinates where mask is True
         coords = np.argwhere(self.blob)
@@ -281,7 +291,7 @@ def sort_cells_by_position():
     new_masks3D = []
     all_mappings = []  
 
-    for i, mask in enumerate(masks3D_20xRenamed):
+    for i, mask in enumerate(masks3D):
         print(f"----- Processing image {i} -----")
         unique_labels = np.unique(mask)
         unique_labels = unique_labels[unique_labels != 0]  # Skip background

@@ -35,6 +35,8 @@ import numpy as np
 import time
 import json
 import os
+import pandas as pd
+import itertools
 
 from dash import no_update
 import threading, uuid
@@ -105,6 +107,7 @@ app.layout = html.Div([
     dcc.Store(id='inference-input-folder'),
     dcc.Store(id='inference-output-folder'),
     dcc.Store(id="reload-trigger", data=0)
+
 
 ])
 
@@ -377,10 +380,13 @@ def render_tab(tab):
     if tab == 'tab-vis':
         return html.Div([
             html.H3("5) Visualisierung"),
-
             html.Div([
-                html.Label("Eingabe Ordner"),
-                dcc.Input(id="vis-input-folder-path", type="text", value="Demo/Output", style={"width": "70%"})
+                html.Label("Eingabe Ordner (Bilder und Masken)", style={"width": "12%"}),
+                dcc.Input(id="vis-input-folder-path-images", type="text", value="Demo/Data", style={"width": "40%"}),
+            ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
+            html.Div([
+                html.Label("Eingabe Ordner (Vorhersagen)", style={"width": "12%"}),
+                dcc.Input(id="vis-input-folder-path", type="text", value="Demo/Output", style={"width": "40%"}),
             ], style={"display": "flex", "gap": "10px", "alignItems": "center"}),
             html.Div([
                 html.Label("Ausgabe Ordner"),
@@ -507,29 +513,78 @@ def methods_control(start_clicks, g1, g2, g3, g4, in_folder, out_folder):
     except Exception as e:
         return f"Error during training: {e}"
 
+VISUALIZER_CACHE = None
+
 @app.callback(
     Output("vis-graph-volumes", "figure"),
     Output("vis-graph-classes", "figure"),
     Output("vis-graph-mask", "figure"),
     Input("vis-start-btn", "n_clicks"),
+    Input("vis-graph-classes", "hoverData"),
+    State("vis-input-folder-path-images", "value"),
     State("vis-input-folder-path", "value"),
     State("vis-output-folder-path", "value"),
     prevent_initial_call=True
 )
-def vis_update(n_clicks, in_folder, out_folder):
-    if not in_folder or not out_folder:
-        raise dash.exceptions.PreventUpdate
+def vis_update(n_clicks, hoverData, in_folder_images, in_folder, out_folder):
+    global VISUALIZER_CACHE
+    trigger = dash.callback_context.triggered[0]["prop_id"].split(".")[0]
 
     try:
-        fig1, fig2, fig3 = visualizer(in_folder, out_folder)
-    except Exception as e:
-        # fallback: empty figures with error message
-        import plotly.graph_objects as go
-        fig1 = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
-        fig2 = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
-        fig3 = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
+        # Button click → compute visualizer and store results
+        if trigger == "vis-start-btn" or VISUALIZER_CACHE is None:
+            mask_fig, classes_fig, volumes_fig, class_volumes_dict = visualizer(
+                in_folder_images, in_folder, out_folder
+            )
+            # Save precomputed volumes dict for later hover updates
+            VISUALIZER_CACHE = {
+                "mask_fig": mask_fig,
+                "classes_fig": classes_fig,
+                "class_volumes_dict": class_volumes_dict
+            }
+        else:
+            # Use cached visualizer output
+            print("Using cached visualizer data")
+            mask_fig = VISUALIZER_CACHE["mask_fig"]
+            classes_fig = VISUALIZER_CACHE["classes_fig"]
+            class_volumes_dict = VISUALIZER_CACHE["class_volumes_dict"]
 
-    return fig1, fig2, fig3
+        # Hover → update only volumes figure
+        if hoverData and "points" in hoverData and hoverData["points"]:
+            print("Updating volumes figure for hover")
+            class_label = hoverData["points"][0]["x"]
+            #print(f"Hovered class label: {class_label}")
+            class_idx = int(class_label.split()[-1])
+            #print(f"Extracted class index: {class_idx}")
+            volumes = class_volumes_dict.get(class_idx, [])
+            df_volumes = pd.DataFrame({"Volume (voxels)": volumes})
+            volumes_fig = px.histogram(
+                df_volumes,
+                x="Volume (voxels)",
+                nbins=20,
+                title=f"Volumes for Class {class_idx}"
+            )
+        else:
+            # Default: all volumes
+            all_vols = list(itertools.chain.from_iterable(class_volumes_dict.values()))
+            df_volumes = pd.DataFrame({"Volume (voxels)": all_vols})
+            volumes_fig = px.histogram(
+                df_volumes,
+                x="Volume (voxels)",
+                nbins=20,
+                title="3D Segment Volumes"
+            )
+
+    except Exception as e:
+        import plotly.graph_objects as go
+        mask_fig = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
+        classes_fig = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
+        volumes_fig = go.Figure().add_annotation(text=f"Error: {e}", x=0.5, y=0.5, showarrow=False)
+
+    return mask_fig, classes_fig, volumes_fig
+
+
+
 
 # --- Inference folders ---
 @app.callback(

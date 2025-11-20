@@ -7,72 +7,116 @@ import pickle
 import pandas as pd
 import json
 import plotly.express as px
-
+import itertools
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-def visualizer(in_path, out_path):
+def visualizer(in_path_images, in_path, out_path):
     print("test")
-    # --- Load all masks and predictions ---
-    mask_file = os.path.join(BASE_DIR, 'data', in_path, 'masks.pkl')
-    pred_file = os.path.join(BASE_DIR, 'data', in_path, 'predictions.json')
-    
-    with open(mask_file, "rb") as f:
-        masks_list = pickle.load(f)  # list of 3D masks
-        print(f"found {len(masks_list)} masks")
-    
-    with open(pred_file, "r") as f:
-        predictions_list = json.load(f)  # list of predictions arrays
-        predictions_list = predictions_list["predicted"]
-        print(f"found {len(predictions_list)} predictions")
 
-    if len(masks_list) == 0:
+    # --- Load files ---
+    mask_file = os.path.join(BASE_DIR, "data", in_path_images, "masks.pkl")
+    pred_file = os.path.join(BASE_DIR, "data", in_path, "predicted.json")
+
+    with open(mask_file, "rb") as f:
+        masks_list = pickle.load(f)
+    print(f"found {len(masks_list)} masks")
+
+    with open(pred_file, "r") as f:
+        predictions_json = json.load(f)
+
+    # preserve order of JSON keys (Python 3.7+ guarantees insertion order)
+    predictions_list = [list(v.values()) for v in predictions_json.values()]
+    print(f"found predictions for {len(predictions_list)} masks")
+
+    if not masks_list:
         raise RuntimeError("No masks found.")
 
     # --- Graph 3: middle slice of first mask ---
     first_mask = masks_list[0]
-    depth = first_mask.shape[0]
-    mask_slice = first_mask[depth//2, :, :]
-    mask_fig = px.imshow(mask_slice, color_continuous_scale='gray', title="mittlere Schicht der ersten Maske")
+    mid_slice = first_mask[first_mask.shape[0] // 2]
+    mask_fig = px.imshow(
+        mid_slice,
+        color_continuous_scale="gray",
+        title="mittlere Schicht der ersten Maske"
+    )
+    print("Generated middle slice figure.")
+    # --- Graph 2: class distribution ---
+    flat_preds = list(itertools.chain.from_iterable(predictions_list))
+    class_counts = (
+        pd.Series(flat_preds)
+        .value_counts()
+        .reindex(range(4), fill_value=0)
+        .sort_index()
+    )
 
-    # --- Graph 2: class distribution across all predictions ---
-    class_counts = pd.Series(predictions_list).value_counts().sort_index()
-    for i in range(4):
-        if i not in class_counts:
-            class_counts[i] = 0
-    class_counts = class_counts.sort_index()
-    print(class_counts)
-    df_classes = pd.DataFrame({"Class": [f"Class {i}" for i in class_counts.index],
-                               "Count": class_counts.values})
-    classes_fig = px.bar(df_classes, x="Class", y="Count", title="Segment Class Distribution")
+    df_classes = pd.DataFrame({
+        "Class": [f"Class {i}" for i in class_counts.index],
+        "Count": class_counts.values
+    })
 
-    # --- Graph 1: 3D volumes aggregated over all masks ---
+    classes_fig = px.bar(
+        df_classes,
+        x="Class",
+        y="Count",
+        title="Segment Class Distribution"
+    )
+    print("Generated class distribution figure.")
+    # --- Graph 1 + Precompute class-to-volumes mapping ---
     all_volumes = []
-    for mask in masks_list:
-        unique_labels = np.unique(mask)
-        unique_labels = unique_labels[unique_labels != 0]  # remove background
-        volumes = [np.sum(mask == label) for label in unique_labels]
-        all_volumes.extend(volumes)
-    df_volumes = pd.DataFrame({"Volume (voxels)": all_volumes})
-    volumes_fig = px.histogram(df_volumes, x="Volume (voxels)", nbins=20, title="3D Segment Volumes")
+    class_to_volumes = defaultdict(list)
 
-    out_path = os.path.join(BASE_DIR, 'data', out_path)
+    for img_idx, mask in enumerate(masks_list):
+        instance_ids = np.unique(mask)
+        instance_ids = instance_ids[instance_ids != 0]  # remove background
+
+        predicted_classes = predictions_list[img_idx]
+        assert len(instance_ids) == len(predicted_classes), (
+            f"Mismatch: mask has {len(instance_ids)} instances "
+            f"but predictions have {len(predicted_classes)}"
+        )
+        # compute instance volumes and assign to both structures
+        for inst_id, inst_class in zip(instance_ids, predicted_classes):
+            if inst_id % 100 == 0:
+                print(f"Processing image {img_idx}, instance {inst_id}...")
+            vol = int(np.sum(mask == inst_id))
+            all_volumes.append(vol)
+            class_to_volumes[inst_class].append(vol)
+
+    # ensure all classes exist in dict
+    for c in range(4):
+        class_to_volumes[c] = class_to_volumes.get(c, [])
+
+    # finalize volumes figure
+    df_volumes = pd.DataFrame({"Volume (voxels)": all_volumes})
+    volumes_fig = px.histogram(
+        df_volumes,
+        x="Volume (voxels)",
+        nbins=20,
+        title="3D Segment Volumes"
+    )
+
+    # --- Save PNG files ---
+    out_path = os.path.join(BASE_DIR, "data", out_path)
     os.makedirs(out_path, exist_ok=True)
 
-    # Save all figures using matplotlib engine
-    plt.imshow(mask_slice, cmap='gray')
+    plt.imshow(mid_slice, cmap="gray")
     plt.title("Mittlere Schicht der ersten Maske")
-    plt.axis('off')
-    plt.savefig(os.path.join(out_path, "mask_slice.png"), bbox_inches='tight')
+    plt.axis("off")
+    plt.savefig(os.path.join(out_path, "mask_slice.png"), bbox_inches="tight")
     plt.close()
 
-    # --- Save class distribution ---
-    df_classes.plot(x="Class", y="Count", kind="bar", legend=False, title="Segment Class Distribution")
+    df_classes.plot(
+        x="Class",
+        y="Count",
+        kind="bar",
+        legend=False,
+        title="Segment Class Distribution"
+    )
     plt.ylabel("Count")
     plt.tight_layout()
     plt.savefig(os.path.join(out_path, "class_distribution.png"))
     plt.close()
 
-    # --- Save 3D segment volumes histogram ---
     plt.hist(df_volumes["Volume (voxels)"], bins=20)
     plt.title("3D Segment Volumes")
     plt.xlabel("Volume (voxels)")
@@ -81,12 +125,11 @@ def visualizer(in_path, out_path):
     plt.savefig(os.path.join(out_path, "segment_volumes.png"))
     plt.close()
 
-
     print(f"Saved PNG figures to {out_path}")
 
+    # --- REQUIRED RETURN ORDER ---
+    return mask_fig, classes_fig, volumes_fig, dict(class_to_volumes)
 
-
-    return mask_fig, classes_fig, volumes_fig
 
 
 def plot_mask_with_all_contours(mask2D, contours_all, title="Mask with Contours"):

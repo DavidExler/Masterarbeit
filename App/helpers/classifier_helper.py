@@ -91,6 +91,7 @@ class ClassificatorBlobHelper:
             if image_index >= self.li:
                 image_index = image_index % self.li
                 overflow = True
+                return None, overflow
             # image index underflow protect
             if image_index < 0:
                 image_index = self.li - image_index
@@ -106,15 +107,13 @@ class ClassificatorBlobHelper:
             if image_index >= self.li:
                 image_index = image_index % self.li
                 overflow = True
+                return None, overflow
             print(f"[DEBUG] blob index overflow, set to 1")
             
         # blob index underflow protect
-        if blob_index < 0:
-            blob_index = self.lum + blob_index
-            print(f"[DEBUG] blob index underflow, set to {blob_index}")
 
-        if blob_index == 0:
-            blob_index = self.lum - 1
+        if blob_index <= 0:
+            blob_index = 1
             print(f"[DEBUG] blob index underflow, set to {blob_index}")
 
 

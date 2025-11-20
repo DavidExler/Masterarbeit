@@ -45,8 +45,12 @@ def infer(encoder, decoder, preprocessor, pretraining, in_folder, in_folder_imag
     preds = {}
     overflow = False
     img_idx = 0
-    blob_idx = 0
+    blob_idx = 1
+    i = 0
     while overflow == False:
+        if i % 100 == 0:
+            print(f"Processing blob {i}")
+        i += 1
         if blob_idx >= classificator_helper.lum:
             img_idx += 1
             blob_idx = 0
@@ -59,14 +63,15 @@ def infer(encoder, decoder, preprocessor, pretraining, in_folder, in_folder_imag
         blob = preprocess_blob(blob)
         blob_batched = blob.unsqueeze(0).to(device)
         pred = model(blob_batched).detach().cpu().numpy()
-        print(pred)
+        #print(pred)
         pred_label = np.argmax(pred, axis=1)
-        print(pred_label)
+        #print(pred_label)
         if img_idx not in preds:
             preds[img_idx] = {}
         preds[img_idx][blob_idx] = int(pred_label[0])
         blob_idx += 1
-        i += 1
+    print("Inference completed.")
     with open(os.path.join(BASE_DIR, 'data', out_folder, 'predicted.json'), 'w') as f:
         json.dump(preds, f)
+    print(f"Saved predictions of {len(preds)} masks with {sum(len(preds[key]) for key in preds)} instances overall to {os.path.join(BASE_DIR, 'data', out_folder, 'predicted.json')}")
     return preds
